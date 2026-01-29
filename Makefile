@@ -69,7 +69,7 @@ proto: protoc-gen-bff
 proto-openapi:
 	@for dir in $$(find api/proto -type d -mindepth 1 -maxdepth 1); do \
 		echo "Processing directory: $$dir"; \
-		proto_files=$$(find $$dir -name "*.proto"); \
+		proto_files=$$(find $$dir -name "*.proto" ! -name "article*"); \
 		if [ -n "$$proto_files" ]; then \
 		  protoc \
           			--proto_path=./api/proto \
@@ -88,7 +88,7 @@ swagger-install:
 
 .PHONY: swagger-gen # 生成 Swagger 文档
 swagger-gen:
-	$(SWAG_BIN) init -g internal/apis/server.go -o docs --parseDependency --parseInternal
+	$(SWAG_BIN) init -g internal/apis/server.go -o docs --parseDependency --parseInternal --exclude internal/apis/handler/web/v1/article
 
 .PHONY: swagger-fmt # 格式化 Swagger 注释
 swagger-fmt:
