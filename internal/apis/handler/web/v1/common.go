@@ -21,12 +21,12 @@ type Common struct {
 
 // SendSms 发送短信验证码接口
 //
-//	@Summary		Send SMS
-//	@Description	Send SMS verification code for login, register, or change account
-//	@Tags			Common
+//	@Summary		发送短信
+//	@Description	发送用于登录、注册或更换账号的短信验证码
+//	@Tags			公共
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.CommonSendSmsRequest	true	"Send SMS request"
+//	@Param			request	body		web.CommonSendSmsRequest	true	"发送短信请求"
 //	@Success		200		{object}	web.CommonSendSmsResponse
 //	@Router			/api/v1/common/send-sms [post]
 func (c *Common) SendSms(ctx context.Context, in *web.CommonSendSmsRequest) (*web.CommonSendSmsResponse, error) {
@@ -64,12 +64,12 @@ func (c *Common) SendSms(ctx context.Context, in *web.CommonSendSmsRequest) (*we
 
 // SendEmail 发送邮件验证码接口
 //
-//	@Summary		Send Email
-//	@Description	Send email verification code
-//	@Tags			Common
+//	@Summary		发送邮件
+//	@Description	发送邮件验证码
+//	@Tags			公共
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.CommonSendEmailRequest	true	"Send Email request"
+//	@Param			request	body		web.CommonSendEmailRequest	true	"发送邮件请求"
 //	@Success		200		{object}	web.CommonSendEmailResponse
 //	@Router			/api/v1/common/send-email [post]
 func (c *Common) SendEmail(ctx context.Context, req *web.CommonSendEmailRequest) (*web.CommonSendEmailResponse, error) {
@@ -77,14 +77,14 @@ func (c *Common) SendEmail(ctx context.Context, req *web.CommonSendEmailRequest)
 	panic("implement me")
 }
 
-// Test 俺们就开始的那
+// Test 发送测试接口
 //
-//	@Summary		Test Endpoint
-//	@Description	Internal test endpoint
-//	@Tags			Common
+//	@Summary		测试端点
+//	@Description	内部测试端点
+//	@Tags			公共
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.CommonSendTestRequest	true	"Test request"
+//	@Param			request	body		web.CommonSendTestRequest	true	"测试请求"
 //	@Success		200		{object}	web.CommonSendTestResponse
 //	@Router			/api/v1/common/send-test [post]
 func (c *Common) Test(ctx context.Context, req *web.CommonSendTestRequest) (*web.CommonSendTestResponse, error) {

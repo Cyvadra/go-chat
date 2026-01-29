@@ -23,12 +23,12 @@ type Group struct {
 
 // List 联系人分组列表接口
 //
-//	@Summary		Contact Group List
-//	@Description	Get list of contact groups
-//	@Tags			ContactGroup
+//	@Summary		联系人分组列表
+//	@Description	获取联系人分组列表
+//	@Tags			联系人分组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactGroupListRequest	true	"Group List request"
+//	@Param			request	body		web.ContactGroupListRequest	true	"分组列表请求"
 //	@Success		200		{object}	web.ContactGroupListResponse
 //	@Router			/api/v1/contact-group/list [post]
 //	@Security		Bearer
@@ -66,12 +66,12 @@ func (g *Group) List(ctx context.Context, in *web.ContactGroupListRequest) (*web
 
 // Save 保存联系人分组接口
 //
-//	@Summary		Save Contact Group
-//	@Description	Create or update a contact group
-//	@Tags			ContactGroup
+//	@Summary		保存联系人分组
+//	@Description	创建或更新联系人分组
+//	@Tags			联系人分组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactGroupSaveRequest	true	"Save Group request"
+//	@Param			request	body		web.ContactGroupSaveRequest	true	"保存分组请求"
 //	@Success		200		{object}	web.ContactGroupSaveResponse
 //	@Router			/api/v1/contact-group/save [post]
 //	@Security		Bearer

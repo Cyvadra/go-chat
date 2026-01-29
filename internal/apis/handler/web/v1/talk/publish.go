@@ -30,14 +30,13 @@ type BaseMessageRequest struct {
 }
 
 // Send 发送消息接口
-// Send 发送消息接口
 //
-//	@Summary		Send Message
-//	@Description	Send various types of messages (text, image, file, etc.)
-//	@Tags			Message
+//	@Summary		发送消息
+//	@Description	发送各种类型的消息（文本、图片、文件等）
+//	@Tags			消息
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		talk.BaseMessageRequest	true	"Send Message request"
+//	@Param			request	body		talk.BaseMessageRequest	true	"发送消息请求"
 //	@Success		200		{object}	map[string]string
 //	@Router			/api/v1/message/send [post]
 //	@Security		Bearer

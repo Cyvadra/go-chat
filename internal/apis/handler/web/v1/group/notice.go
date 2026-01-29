@@ -30,12 +30,12 @@ type Notice struct {
 // Edit 添加或编辑群公告
 // Edit 编辑群组公告接口
 //
-//	@Summary		Edit Group Notice
-//	@Description	Create or update a group announcement
-//	@Tags			GroupNotice
+//	@Summary		编辑群公告
+//	@Description	创建或更新群组公告
+//	@Tags			群公告
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupNoticeEditRequest	true	"Edit Notice request"
+//	@Param			request	body		web.GroupNoticeEditRequest	true	"编辑公告请求"
 //	@Success		200		{object}	web.GroupNoticeEditResponse
 //	@Router			/api/v1/group-notice/edit [post]
 //	@Security		Bearer

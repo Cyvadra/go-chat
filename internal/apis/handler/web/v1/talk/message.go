@@ -36,12 +36,12 @@ type Message struct {
 
 // Records 获取会话消息记录
 //
-//	@Summary		Get Message Records
-//	@Description	Get recent message history for a session
-//	@Tags			Message
+//	@Summary		获取消息记录
+//	@Description	获取会话的近期消息历史
+//	@Tags			消息
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.MessageRecordsRequest	true	"Records request"
+//	@Param			request	body		web.MessageRecordsRequest	true	"消息记录请求"
 //	@Success		200		{object}	web.MessageRecordsResponse
 //	@Router			/api/v1/message/records [post]
 //	@Security		Bearer
@@ -114,12 +114,12 @@ func (m *Message) Records(ctx context.Context, in *web.MessageRecordsRequest) (*
 
 // HistoryRecords 获取会话历史消息记录
 //
-//	@Summary		Get History Records
-//	@Description	Search and filter message history for a session
-//	@Tags			Message
+//	@Summary		获取历史消息记录
+//	@Description	搜索和筛选会话的历史消息记录
+//	@Tags			消息
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.MessageHistoryRecordsRequest	true	"History Records request"
+//	@Param			request	body		web.MessageHistoryRecordsRequest	true	"历史消息请求"
 //	@Success		200		{object}	web.MessageHistoryRecordsResponse
 //	@Router			/api/v1/message/history-records [post]
 //	@Security		Bearer
@@ -194,12 +194,12 @@ func (m *Message) HistoryRecords(ctx context.Context, in *web.MessageHistoryReco
 
 // ForwardRecords 转发消息记录
 //
-//	@Summary		Forward Records
-//	@Description	Get list of messages to be forwarded
-//	@Tags			Message
+//	@Summary		转发消息记录
+//	@Description	获取待转发的消息列表
+//	@Tags			消息
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.MessageForwardRecordsRequest	true	"Forward Records request"
+//	@Param			request	body		web.MessageForwardRecordsRequest	true	"转发消息请求"
 //	@Success		200		{object}	web.MessageRecordsClearResponse
 //	@Router			/api/v1/message/forward-records [post]
 //	@Security		Bearer
@@ -231,12 +231,12 @@ func (m *Message) ForwardRecords(ctx context.Context, in *web.MessageForwardReco
 
 // Revoke 撤回消息接口
 //
-//	@Summary		Revoke Message
-//	@Description	Recall a previously sent message
-//	@Tags			Message
+//	@Summary		撤回消息
+//	@Description	撤回之前发送的消息
+//	@Tags			消息
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.MessageRevokeRequest	true	"Revoke request"
+//	@Param			request	body		web.MessageRevokeRequest	true	"撤回请求"
 //	@Success		200		{object}	web.MessageRevokeResponse
 //	@Router			/api/v1/message/revoke [post]
 //	@Security		Bearer
@@ -256,12 +256,12 @@ func (m *Message) Revoke(ctx context.Context, in *web.MessageRevokeRequest) (*we
 
 // Delete 删除消息记录
 //
-//	@Summary		Delete Message
-//	@Description	Permanently remove a message from history
-//	@Tags			Message
+//	@Summary		删除消息
+//	@Description	从历史记录中永久移除消息
+//	@Tags			消息
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.MessageDeleteRequest	true	"Delete request"
+//	@Param			request	body		web.MessageDeleteRequest	true	"删除请求"
 //	@Success		200		{object}	web.MessageDeleteResponse
 //	@Router			/api/v1/message/delete [post]
 //	@Security		Bearer
@@ -286,15 +286,14 @@ type DownloadChatFileRequest struct {
 }
 
 // Download 聊天文件下载
-// Download 聊天文件下载
 //
-//	@Summary		Download Chat File
-//	@Description	Download a file shared in a chat session
-//	@Tags			Message
+//	@Summary		下载聊天文件
+//	@Description	下载聊天会话中分享的文件
+//	@Tags			消息
 //	@Accept			json
 //	@Produce		octet-stream
-//	@Param			talk_mode	query		int		true	"Talk Mode (1:Private, 2:Group)"
-//	@Param			msg_id		query		string	true	"Message ID"
+//	@Param			talk_mode	query		int		true	"对话模式 (1:私聊, 2:群聊)"
+//	@Param			msg_id		query		string	true	"消息 ID"
 //	@Success		200			{file}		binary
 //	@Router			/api/v1/talk/file-download [get]
 //	@Security		Bearer

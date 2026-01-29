@@ -26,14 +26,13 @@ type Vote struct {
 }
 
 // Create 创建投票
-// Create 创建投票
 //
-//	@Summary		Create Group Vote
-//	@Description	Start a new vote in a group chat
-//	@Tags			GroupVote
+//	@Summary		发起投票
+//	@Description	在群聊中发起新的投票
+//	@Tags			群投票
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupVoteCreateRequest	true	"Create Vote request"
+//	@Param			request	body		web.GroupVoteCreateRequest	true	"创建投票请求"
 //	@Success		200		{object}	web.GroupVoteCreateResponse
 //	@Router			/api/v1/group-vote/create [post]
 //	@Security		Bearer
@@ -76,14 +75,13 @@ func (v *Vote) Create(ctx context.Context, in *web.GroupVoteCreateRequest) (*web
 }
 
 // Submit 提交投票
-// Submit 提交投票
 //
-//	@Summary		Submit Group Vote
-//	@Description	Cast a vote in a group chat
-//	@Tags			GroupVote
+//	@Summary		提交投票
+//	@Description	在群聊中提交投票
+//	@Tags			群投票
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupVoteSubmitRequest	true	"Submit Vote request"
+//	@Param			request	body		web.GroupVoteSubmitRequest	true	"提交投票请求"
 //	@Success		200		{object}	web.GroupVoteSubmitResponse
 //	@Router			/api/v1/group-vote/submit [post]
 //	@Security		Bearer
@@ -103,14 +101,13 @@ func (v *Vote) Submit(ctx context.Context, in *web.GroupVoteSubmitRequest) (*web
 }
 
 // Detail 投票详情
-// Detail 投票详情
 //
-//	@Summary		Group Vote Detail
-//	@Description	Get detailed information and results of a group vote
-//	@Tags			GroupVote
+//	@Summary		投票详情
+//	@Description	获取群投票的详细信息和结果
+//	@Tags			群投票
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupVoteDetailRequest	true	"Vote Detail request"
+//	@Param			request	body		web.GroupVoteDetailRequest	true	"投票详情请求"
 //	@Success		200		{object}	web.GroupVoteDetailResponse
 //	@Router			/api/v1/group-vote/detail [post]
 //	@Security		Bearer

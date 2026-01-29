@@ -32,12 +32,12 @@ type Session struct {
 
 // SessionCreate 会话创建接口
 //
-//	@Summary		Create Talk Session
-//	@Description	Create a new chat session with a user or group
-//	@Tags			TalkSession
+//	@Summary		创建会话
+//	@Description	与用户或群组创建一个新的聊天会话
+//	@Tags			会话
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.TalkSessionCreateRequest	true	"Create Session request"
+//	@Param			request	body		web.TalkSessionCreateRequest	true	"创建会话请求"
 //	@Success		200		{object}	web.TalkSessionCreateResponse
 //	@Router			/api/v1/talk/session-create [post]
 //	@Security		Bearer
@@ -126,12 +126,12 @@ func (s *Session) SessionCreate(ctx context.Context, in *web.TalkSessionCreateRe
 
 // SessionDelete 会话删除接口
 //
-//	@Summary		Delete Talk Session
-//	@Description	Remove a chat session from the list
-//	@Tags			TalkSession
+//	@Summary		删除会话
+//	@Description	从列表中移除聊天会话
+//	@Tags			会话
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.TalkSessionDeleteRequest	true	"Delete Session request"
+//	@Param			request	body		web.TalkSessionDeleteRequest	true	"删除会话请求"
 //	@Success		200		{object}	web.TalkSessionDeleteResponse
 //	@Router			/api/v1/talk/session-delete [post]
 //	@Security		Bearer
@@ -147,12 +147,12 @@ func (s *Session) SessionDelete(ctx context.Context, in *web.TalkSessionDeleteRe
 
 // SessionTop 会话置顶接口
 //
-//	@Summary		Top Talk Session
-//	@Description	Pin or unpin a chat session to the top
-//	@Tags			TalkSession
+//	@Summary		置顶会话
+//	@Description	将聊天会话置顶或取消置顶
+//	@Tags			会话
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.TalkSessionTopRequest	true	"Top Session request"
+//	@Param			request	body		web.TalkSessionTopRequest	true	"置顶会话请求"
 //	@Success		200		{object}	web.TalkSessionTopResponse
 //	@Router			/api/v1/talk/session-top [post]
 //	@Security		Bearer
@@ -172,12 +172,12 @@ func (s *Session) SessionTop(ctx context.Context, in *web.TalkSessionTopRequest)
 
 // SessionDisturb 会话免打扰接口
 //
-//	@Summary		Disturb Talk Session
-//	@Description	Enable or disable do-not-disturb for a chat session
-//	@Tags			TalkSession
+//	@Summary		会话免打扰
+//	@Description	为聊天会话启用或禁用免打扰模式
+//	@Tags			会话
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.TalkSessionDisturbRequest	true	"Disturb Session request"
+//	@Param			request	body		web.TalkSessionDisturbRequest	true	"免打扰会话请求"
 //	@Success		200		{object}	web.TalkSessionDisturbResponse
 //	@Router			/api/v1/talk/session-disturb [post]
 //	@Security		Bearer
@@ -197,12 +197,12 @@ func (s *Session) SessionDisturb(ctx context.Context, in *web.TalkSessionDisturb
 
 // SessionList 会话列表接口
 //
-//	@Summary		Talk Session List
-//	@Description	Get list of all chat sessions for the user
-//	@Tags			TalkSession
+//	@Summary		会话列表
+//	@Description	获取用户的所有聊天会话列表
+//	@Tags			会话
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.TalkSessionListRequest	true	"Session List request"
+//	@Param			request	body		web.TalkSessionListRequest	true	"会话列表请求"
 //	@Success		200		{object}	web.TalkSessionListResponse
 //	@Router			/api/v1/talk/session-list [post]
 //	@Security		Bearer
@@ -262,12 +262,12 @@ func (s *Session) SessionList(ctx context.Context, req *web.TalkSessionListReque
 
 // SessionClearUnreadNum 会话未读数清除接口
 //
-//	@Summary		Clear Session Unread
-//	@Description	Mark all messages in a session as read
-//	@Tags			TalkSession
+//	@Summary		清除会话未读数
+//	@Description	将某个会话中的所有消息标记为已读
+//	@Tags			会话
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.TalkSessionClearUnreadNumRequest	true	"Clear Unread request"
+//	@Param			request	body		web.TalkSessionClearUnreadNumRequest	true	"清除未读数请求"
 //	@Success		200		{object}	web.TalkSessionClearUnreadNumResponse
 //	@Router			/api/v1/talk/session-clear-unread-num [post]
 //	@Security		Bearer

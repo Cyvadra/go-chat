@@ -24,12 +24,12 @@ type Apply struct {
 
 // Create 添加联系人申请接口
 //
-//	@Summary		Create Contact Apply
-//	@Description	Send a friend request to another user
-//	@Tags			ContactApply
+//	@Summary		申请添加好友
+//	@Description	向另一名用户发送好友请求
+//	@Tags			好友申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactApplyCreateRequest	true	"Create Apply request"
+//	@Param			request	body		web.ContactApplyCreateRequest	true	"申请添加好友请求"
 //	@Success		200		{object}	web.ContactApplyCreateResponse
 //	@Router			/api/v1/contact-apply/create [post]
 //	@Security		Bearer
@@ -52,12 +52,12 @@ func (a Apply) Create(ctx context.Context, in *web.ContactApplyCreateRequest) (*
 
 // Accept 同意联系人申请接口
 //
-//	@Summary		Accept Contact Apply
-//	@Description	Accept a friend request
-//	@Tags			ContactApply
+//	@Summary		同意好友申请
+//	@Description	接受好友请求
+//	@Tags			好友申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactApplyAcceptRequest	true	"Accept Apply request"
+//	@Param			request	body		web.ContactApplyAcceptRequest	true	"同意好友申请请求"
 //	@Success		200		{object}	web.ContactApplyAcceptResponse
 //	@Router			/api/v1/contact-apply/accept [post]
 //	@Security		Bearer
@@ -90,12 +90,12 @@ func (a Apply) Accept(ctx context.Context, in *web.ContactApplyAcceptRequest) (*
 
 // Decline 拒绝联系人申请接口
 //
-//	@Summary		Decline Contact Apply
-//	@Description	Decline a friend request
-//	@Tags			ContactApply
+//	@Summary		拒绝好友申请
+//	@Description	拒绝好友请求
+//	@Tags			好友申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactApplyDeclineRequest	true	"Decline Apply request"
+//	@Param			request	body		web.ContactApplyDeclineRequest	true	"拒绝好友申请请求"
 //	@Success		200		{object}	web.ContactApplyDeclineResponse
 //	@Router			/api/v1/contact-apply/decline [post]
 //	@Security		Bearer
@@ -115,12 +115,12 @@ func (a Apply) Decline(ctx context.Context, in *web.ContactApplyDeclineRequest) 
 
 // List 联系人申请列表接口
 //
-//	@Summary		Contact Apply List
-//	@Description	Get list of received friend requests
-//	@Tags			ContactApply
+//	@Summary		好友申请列表
+//	@Description	获取收到的好友请求列表
+//	@Tags			好友申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactApplyListRequest	true	"Apply List request"
+//	@Param			request	body		web.ContactApplyListRequest	true	"好友申请列表请求"
 //	@Success		200		{object}	web.ContactApplyListResponse
 //	@Router			/api/v1/contact-apply/list [post]
 //	@Security		Bearer
@@ -152,12 +152,12 @@ func (a Apply) List(ctx context.Context, req *web.ContactApplyListRequest) (*web
 
 // UnreadNum 获取申请未读数
 //
-//	@Summary		Contact Apply Unread
-//	@Description	Get number of unread friend requests
-//	@Tags			ContactApply
+//	@Summary		好友申请未读数
+//	@Description	获取未读的好友请求数量
+//	@Tags			好友申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactApplyUnreadNumRequest	true	"Unread request"
+//	@Param			request	body		web.ContactApplyUnreadNumRequest	true	"未读数请求"
 //	@Success		200		{object}	web.ContactApplyUnreadNumResponse
 //	@Router			/api/v1/contact-apply/unread-num [post]
 //	@Security		Bearer

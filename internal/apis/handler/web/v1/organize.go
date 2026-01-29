@@ -24,12 +24,12 @@ type Organize struct {
 
 // DepartmentList 获取组织部门列表接口
 //
-//	@Summary		Department List
-//	@Description	Get list of departments in the organization
-//	@Tags			Organize
+//	@Summary		部门列表
+//	@Description	获取组织机构中的部门列表
+//	@Tags			组织架构
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.OrganizeDepartmentListRequest	true	"Department List request"
+//	@Param			request	body		web.OrganizeDepartmentListRequest	true	"部门列表请求"
 //	@Success		200		{object}	web.OrganizeDepartmentListResponse
 //	@Router			/api/v1/organize/department-list [post]
 //	@Security		Bearer
@@ -95,12 +95,12 @@ func (o *Organize) DepartmentList(ctx context.Context, req *web.OrganizeDepartme
 
 // PersonnelList 获取组织人员列表接口
 //
-//	@Summary		Personnel List
-//	@Description	Get list of personnel in a department
-//	@Tags			Organize
+//	@Summary		人员列表
+//	@Description	获取部门中的人员列表
+//	@Tags			组织架构
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.OrganizePersonnelListRequest	true	"Personnel List request"
+//	@Param			request	body		web.OrganizePersonnelListRequest	true	"人员列表请求"
 //	@Success		200		{object}	web.OrganizePersonnelListResponse
 //	@Router			/api/v1/organize/personnel-list [post]
 //	@Security		Bearer

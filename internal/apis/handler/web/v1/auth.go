@@ -44,12 +44,12 @@ type Auth struct {
 
 // Login 登录
 //
-//	@Summary		Login
-//	@Description	Authenticate user with mobile and password
-//	@Tags			Auth
+//	@Summary		登录
+//	@Description	使用手机号和密码进行身份验证
+//	@Tags			认证
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.AuthLoginRequest	true	"Login request"
+//	@Param			request	body		web.AuthLoginRequest	true	"登录请求"
 //	@Success		200		{object}	web.AuthLoginResponse
 //	@Router			/api/v1/auth/login [post]
 func (a *Auth) Login(ctx context.Context, in *web.AuthLoginRequest) (*web.AuthLoginResponse, error) {
@@ -101,12 +101,12 @@ func (a *Auth) Login(ctx context.Context, in *web.AuthLoginRequest) (*web.AuthLo
 
 // Register 注册
 //
-//	@Summary		Register
-//	@Description	Create a new user account
-//	@Tags			Auth
+//	@Summary		注册
+//	@Description	创建新用户账户
+//	@Tags			认证
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.AuthRegisterRequest	true	"Register request"
+//	@Param			request	body		web.AuthRegisterRequest	true	"注册请求"
 //	@Success		200		{object}	web.AuthRegisterResponse
 //	@Router			/api/v1/auth/register [post]
 func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.AuthRegisterResponse, error) {
@@ -151,12 +151,12 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 
 // Forget 找回密码
 //
-//	@Summary		Forget Password
-//	@Description	Reset user password using SMS code
-//	@Tags			Auth
+//	@Summary		找回密码
+//	@Description	使用短信验证码重置用户密码
+//	@Tags			认证
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.AuthForgetRequest	true	"Forget request"
+//	@Param			request	body		web.AuthForgetRequest	true	"找回密码请求"
 //	@Success		200		{object}	web.AuthForgetResponse
 //	@Router			/api/v1/auth/forget [post]
 func (a *Auth) Forget(ctx context.Context, in *web.AuthForgetRequest) (*web.AuthForgetResponse, error) {
@@ -189,12 +189,12 @@ func (a *Auth) Forget(ctx context.Context, in *web.AuthForgetRequest) (*web.Auth
 
 // Oauth 获取 oauth2.0 跳转地址
 //
-//	@Summary		OAuth URL
-//	@Description	Get OAuth2.0 authorization URL
-//	@Tags			Auth
+//	@Summary		OAuth 授权链接
+//	@Description	获取 OAuth2.0 授权跳转地址
+//	@Tags			认证
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.AuthOauthRequest	true	"OAuth request"
+//	@Param			request	body		web.AuthOauthRequest	true	"OAuth 请求"
 //	@Success		200		{object}	web.AuthOauthResponse
 //	@Router			/api/v1/auth/oauth [post]
 func (a *Auth) Oauth(ctx context.Context, in *web.AuthOauthRequest) (*web.AuthOauthResponse, error) {
@@ -208,12 +208,12 @@ func (a *Auth) Oauth(ctx context.Context, in *web.AuthOauthRequest) (*web.AuthOa
 
 // OauthBind 绑定第三方登录接口
 //
-//	@Summary		OAuth Bind
-//	@Description	Bind third-party account to user
-//	@Tags			Auth
+//	@Summary		OAuth 绑定
+//	@Description	将第三方账户绑定到用户账户
+//	@Tags			认证
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.AuthOAuthBindRequest	true	"OAuth Bind request"
+//	@Param			request	body		web.AuthOAuthBindRequest	true	"OAuth 绑定请求"
 //	@Success		200		{object}	web.AuthOAuthBindResponse
 //	@Router			/api/v1/auth/oauth/bind [post]
 func (a *Auth) OauthBind(ctx context.Context, in *web.AuthOAuthBindRequest) (*web.AuthOAuthBindResponse, error) {
@@ -266,12 +266,12 @@ func (a *Auth) OauthBind(ctx context.Context, in *web.AuthOAuthBindRequest) (*we
 
 // OauthLogin 第三方登录接口
 //
-//	@Summary		OAuth Login
-//	@Description	Login using third-party account
-//	@Tags			Auth
+//	@Summary		OAuth 登录
+//	@Description	使用第三方账户登录
+//	@Tags			认证
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.AuthOauthLoginRequest	true	"OAuth Login request"
+//	@Param			request	body		web.AuthOauthLoginRequest	true	"OAuth 登录请求"
 //	@Success		200		{object}	web.AuthOauthLoginResponse
 //	@Router			/api/v1/auth/oauth/login [post]
 func (a *Auth) OauthLogin(ctx context.Context, in *web.AuthOauthLoginRequest) (*web.AuthOauthLoginResponse, error) {

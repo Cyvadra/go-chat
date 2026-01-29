@@ -1,11 +1,11 @@
-// Package apis provides HTTP API server implementation
+// Package apis 提供 HTTP API 服务实现
 //
 //	@title						go-chat API
 //	@version					1.0
-//	@description				go-chat is a real-time chat application with comprehensive API support
+//	@description				go-chat 是一款功能全面的实时聊天应用
 //	@termsOfService				http://swagger.io/terms/
 //
-//	@contact.name				API Support
+//	@contact.name				API 支持
 //	@contact.url				https://github.com/gzydong/go-chat
 //	@contact.email				support@go-chat.com
 //
@@ -17,7 +17,7 @@
 //	@securityDefinitions.apikey	Bearer
 //	@in							header
 //	@name						Authorization
-//	@description				Type "Bearer" followed by a space and JWT token.
+//	@description				输入 "Bearer "，然后输入空格和 JWT Token。
 package apis
 
 import (

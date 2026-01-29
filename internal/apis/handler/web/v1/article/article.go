@@ -33,12 +33,12 @@ type Article struct {
 
 // Edit 文章编辑接口
 //
-//	@Summary		Edit Article
-//	@Description	Create or update an article
-//	@Tags			Article
+//	@Summary		编辑笔记
+//	@Description	创建或更新笔记
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleEditRequest	true	"Edit Article request"
+//	@Param			request	body		web.ArticleEditRequest	true	"编辑笔记请求"
 //	@Success		200		{object}	web.ArticleEditResponse
 //	@Router			/api/v1/article/editor [post]
 //	@Security		Bearer
@@ -82,12 +82,12 @@ func (a *Article) Edit(ctx context.Context, in *web.ArticleEditRequest) (*web.Ar
 
 // Detail 获取文章详情接口
 //
-//	@Summary		Article Detail
-//	@Description	Get detailed information about an article
-//	@Tags			Article
+//	@Summary		笔记详情
+//	@Description	获取笔记的详细信息
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleDetailRequest	true	"Article Detail request"
+//	@Param			request	body		web.ArticleDetailRequest	true	"笔记详情请求"
 //	@Success		200		{object}	web.ArticleDetailResponse
 //	@Router			/api/v1/article/detail [post]
 //	@Security		Bearer
@@ -134,12 +134,12 @@ func (a *Article) Detail(ctx context.Context, in *web.ArticleDetailRequest) (*we
 
 // List 获取文章列表接口
 //
-//	@Summary		Article List
-//	@Description	Get list of articles with pagination and filters
-//	@Tags			Article
+//	@Summary		笔记列表
+//	@Description	获取带有分页和过滤条件的笔记列表
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleListRequest	true	"Article List request"
+//	@Param			request	body		web.ArticleListRequest	true	"笔记列表请求"
 //	@Success		200		{object}	web.ArticleListResponse
 //	@Router			/api/v1/article/list [post]
 //	@Security		Bearer
@@ -183,12 +183,12 @@ func (a *Article) List(ctx context.Context, in *web.ArticleListRequest) (*web.Ar
 
 // Delete 删除文章接口
 //
-//	@Summary		Delete Article
-//	@Description	Move an article to the recycle bin
-//	@Tags			Article
+//	@Summary		删除笔记
+//	@Description	将笔记移至回收站
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleDeleteRequest	true	"Delete Article request"
+//	@Param			request	body		web.ArticleDeleteRequest	true	"删除笔记请求"
 //	@Success		200		{object}	web.ArticleDeleteResponse
 //	@Router			/api/v1/article/delete [post]
 //	@Security		Bearer
@@ -204,12 +204,12 @@ func (a *Article) Delete(ctx context.Context, in *web.ArticleDeleteRequest) (*we
 
 // Recover 恢复文章接口
 //
-//	@Summary		Recover Article
-//	@Description	Restore an article from the recycle bin
-//	@Tags			Article
+//	@Summary		恢复笔记
+//	@Description	从回收站恢复笔记
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleRecoverRequest	true	"Recover Article request"
+//	@Param			request	body		web.ArticleRecoverRequest	true	"恢复笔记请求"
 //	@Success		200		{object}	web.ArticleRecoverResponse
 //	@Router			/api/v1/article/recover [post]
 //	@Security		Bearer
@@ -226,12 +226,12 @@ func (a *Article) Recover(ctx context.Context, in *web.ArticleRecoverRequest) (*
 
 // ForeverDelete 永久删除文章接口
 //
-//	@Summary		Forever Delete Article
-//	@Description	Permanently delete an article
-//	@Tags			Article
+//	@Summary		永久删除笔记
+//	@Description	永久删除一篇笔记
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleForeverDeleteRequest	true	"Forever Delete request"
+//	@Param			request	body		web.ArticleForeverDeleteRequest	true	"永久删除请求"
 //	@Success		200		{object}	web.ArticleForeverDeleteResponse
 //	@Router			/api/v1/article/forever-delete [post]
 //	@Security		Bearer
@@ -247,12 +247,12 @@ func (a *Article) ForeverDelete(ctx context.Context, in *web.ArticleForeverDelet
 
 // Move 移动文章分类接口
 //
-//	@Summary		Move Article
-//	@Description	Change the classification of an article
-//	@Tags			Article
+//	@Summary		移动笔记
+//	@Description	修改笔记的分类
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleMoveRequest	true	"Move Article request"
+//	@Param			request	body		web.ArticleMoveRequest	true	"移动笔记请求"
 //	@Success		200		{object}	web.ArticleMoveResponse
 //	@Router			/api/v1/article/move [post]
 //	@Security		Bearer
@@ -267,12 +267,12 @@ func (a *Article) Move(ctx context.Context, in *web.ArticleMoveRequest) (*web.Ar
 
 // Asterisk 收藏/取消收藏文章接口
 //
-//	@Summary		Set Asterisk
-//	@Description	Add or remove an article from favorites
-//	@Tags			Article
+//	@Summary		设置星标
+//	@Description	将笔记添加至或从收藏夹中移除
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleAsteriskRequest	true	"Asterisk request"
+//	@Param			request	body		web.ArticleAsteriskRequest	true	"星标请求"
 //	@Success		200		{object}	web.ArticleAsteriskResponse
 //	@Router			/api/v1/article/asterisk [post]
 //	@Security		Bearer
@@ -287,12 +287,12 @@ func (a *Article) Asterisk(ctx context.Context, in *web.ArticleAsteriskRequest) 
 
 // SetTags 设置文章标签接口
 //
-//	@Summary		Set Article Tags
-//	@Description	Assign tags to an article
-//	@Tags			Article
+//	@Summary		设置笔记标签
+//	@Description	为笔记分配标签
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleTagsRequest	true	"Set Tags request"
+//	@Param			request	body		web.ArticleTagsRequest	true	"设置标签请求"
 //	@Success		200		{object}	web.ArticleTagsResponse
 //	@Router			/api/v1/article/tags [post]
 //	@Security		Bearer
@@ -308,12 +308,12 @@ func (a *Article) SetTags(ctx context.Context, in *web.ArticleTagsRequest) (*web
 
 // RecoverList 获取回收站文章列表接口
 //
-//	@Summary		Recycle Bin List
-//	@Description	Get list of deleted articles in the recycle bin
-//	@Tags			Article
+//	@Summary		回收站列表
+//	@Description	获取回收站中已删除笔记的列表
+//	@Tags			笔记
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleRecoverListRequest	true	"Recycle Bin List request"
+//	@Param			request	body		web.ArticleRecoverListRequest	true	"回收站列表请求"
 //	@Success		200		{object}	web.ArticleRecoverListResponse
 //	@Router			/api/v1/article/recover-list [post]
 //	@Security		Bearer

@@ -28,14 +28,14 @@ type Upload struct {
 // Image 图片上传
 // Image 图片上传
 //
-//	@Summary		Upload Image
-//	@Description	Upload a media file (image)
-//	@Tags			Upload
+//	@Summary		上传图片
+//	@Description	上传媒体文件（图片）
+//	@Tags			上传
 //	@Accept			mpfd
 //	@Produce		json
-//	@Param			file	formData	file	true	"Media file"
-//	@Param			width	formData	int		false	"Width"
-//	@Param			height	formData	int		false	"Height"
+//	@Param			file	formData	file	true	"媒体文件"
+//	@Param			width	formData	int		false	"宽度"
+//	@Param			height	formData	int		false	"高度"
 //	@Success		200		{object}	web.UploadImageResponse
 //	@Router			/api/v1/upload/media-file [post]
 //	@Security		Bearer
@@ -71,12 +71,12 @@ func (u *Upload) Image(ctx *gin.Context) (*web.UploadImageResponse, error) {
 // InitiateMultipart 批量上传初始化
 // InitiateMultipart 批量上传初始化
 //
-//	@Summary		Initiate Multipart Upload
-//	@Description	Start a multipart file upload process
-//	@Tags			Upload
+//	@Summary		初始化分片上传
+//	@Description	启动分片文件上传流程
+//	@Tags			上传
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.UploadInitiateMultipartRequest	true	"Initiate request"
+//	@Param			request	body		web.UploadInitiateMultipartRequest	true	"初始化请求"
 //	@Success		200		{object}	web.UploadInitiateMultipartResponse
 //	@Router			/api/v1/upload/init-multipart [post]
 //	@Security		Bearer
@@ -107,15 +107,15 @@ func (u *Upload) InitiateMultipart(ctx *gin.Context) (*web.UploadInitiateMultipa
 // MultipartUpload 批量分片上传
 // MultipartUpload 批量分片上传
 //
-//	@Summary		Multipart Upload
-//	@Description	Upload a single chunk of a multipart file
-//	@Tags			Upload
+//	@Summary		分片上传
+//	@Description	上传分片文件的单个分片
+//	@Tags			上传
 //	@Accept			mpfd
 //	@Produce		json
-//	@Param			upload_id	formData	string	true	"Upload ID"
-//	@Param			split_index	formData	int		true	"Chunk Index"
-//	@Param			split_num	formData	int		true	"Total Chunks"
-//	@Param			file		formData	file	true	"Chunk file"
+//	@Param			upload_id	formData	string	true	"上传 ID"
+//	@Param			split_index	formData	int		true	"分片索引"
+//	@Param			split_num	formData	int		true	"总分片数"
+//	@Param			file		formData	file	true	"分片文件"
 //	@Success		200			{object}	web.UploadMultipartResponse
 //	@Router			/api/v1/upload/multipart [post]
 //	@Security		Bearer

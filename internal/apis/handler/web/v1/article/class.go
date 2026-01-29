@@ -21,12 +21,12 @@ type Class struct {
 
 // List 获取文章分类列表接口
 //
-//	@Summary		Article Class List
-//	@Description	Get list of article classifications for the user
-//	@Tags			ArticleClass
+//	@Summary		笔记分类列表
+//	@Description	获取当前用户的笔记分类列表
+//	@Tags			笔记分类
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleClassListRequest	true	"Class List request"
+//	@Param			request	body		web.ArticleClassListRequest	true	"分类列表请求"
 //	@Success		200		{object}	web.ArticleClassListResponse
 //	@Router			/api/v1/article/classify/list [post]
 //	@Security		Bearer
@@ -74,12 +74,12 @@ func (c Class) List(ctx context.Context, req *web.ArticleClassListRequest) (*web
 
 // Edit 文章分类编辑接口
 //
-//	@Summary		Edit Article Class
-//	@Description	Create or update an article classification
-//	@Tags			ArticleClass
+//	@Summary		编辑笔记分类
+//	@Description	创建或更新笔记分类
+//	@Tags			笔记分类
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleClassEditRequest	true	"Edit Class request"
+//	@Param			request	body		web.ArticleClassEditRequest	true	"编辑分类请求"
 //	@Success		200		{object}	web.ArticleClassEditResponse
 //	@Router			/api/v1/article/classify/edit [post]
 //	@Security		Bearer
@@ -123,12 +123,12 @@ func (c Class) Edit(ctx context.Context, in *web.ArticleClassEditRequest) (*web.
 
 // Delete 文章分类删除接口
 //
-//	@Summary		Delete Article Class
-//	@Description	Remove an article classification
-//	@Tags			ArticleClass
+//	@Summary		删除笔记分类
+//	@Description	移除笔记分类
+//	@Tags			笔记分类
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleClassDeleteRequest	true	"Delete Class request"
+//	@Param			request	body		web.ArticleClassDeleteRequest	true	"删除分类请求"
 //	@Success		200		{object}	web.ArticleClassDeleteResponse
 //	@Router			/api/v1/article/classify/delete [post]
 //	@Security		Bearer
@@ -159,12 +159,12 @@ func (c Class) Delete(ctx context.Context, in *web.ArticleClassDeleteRequest) (*
 
 // Sort 文章分类排序接口
 //
-//	@Summary		Sort Article Class
-//	@Description	Update the order of article classifications
-//	@Tags			ArticleClass
+//	@Summary		笔记分类排序
+//	@Description	更新笔记分类的排序顺序
+//	@Tags			笔记分类
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ArticleClassSortRequest	true	"Sort Class request"
+//	@Param			request	body		web.ArticleClassSortRequest	true	"排序分类请求"
 //	@Success		200		{object}	web.ArticleClassSortResponse
 //	@Router			/api/v1/article/classify/sort [post]
 //	@Security		Bearer

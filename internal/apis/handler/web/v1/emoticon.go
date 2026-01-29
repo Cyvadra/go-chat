@@ -30,14 +30,13 @@ type Emoticon struct {
 }
 
 // List 收藏列表
-// List 收藏列表
 //
-//	@Summary		Emoticon List
-//	@Description	Get list of user's custom emoticons
-//	@Tags			Emoticon
+//	@Summary		表情包列表
+//	@Description	获取用户自定义表情包列表
+//	@Tags			表情包
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.EmoticonListRequest	true	"List request"
+//	@Param			request	body		web.EmoticonListRequest	true	"列表请求"
 //	@Success		200		{object}	web.EmoticonListResponse
 //	@Router			/api/v1/emoticon/customize/list [post]
 //	@Security		Bearer
@@ -64,14 +63,13 @@ func (c *Emoticon) List(ctx context.Context, req *web.EmoticonListRequest) (*web
 }
 
 // Delete 删除收藏表情包
-// Delete 删除收藏表情包
 //
-//	@Summary		Delete Emoticon
-//	@Description	Remove a custom emoticon
-//	@Tags			Emoticon
+//	@Summary		删除表情包
+//	@Description	移除自定义表情包
+//	@Tags			表情包
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.EmoticonDeleteRequest	true	"Delete request"
+//	@Param			request	body		web.EmoticonDeleteRequest	true	"删除请求"
 //	@Success		200		{object}	web.EmoticonDeleteResponse
 //	@Router			/api/v1/emoticon/customize/delete [post]
 //	@Security		Bearer
@@ -81,14 +79,13 @@ func (c *Emoticon) Delete(ctx context.Context, in *web.EmoticonDeleteRequest) (*
 }
 
 // Create 创建自定义表情包
-// Create 创建自定义表情包
 //
-//	@Summary		Create Emoticon
-//	@Description	Add a new custom emoticon
-//	@Tags			Emoticon
+//	@Summary		创建表情包
+//	@Description	添加新的自定义表情包
+//	@Tags			表情包
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.EmoticonCreateRequest	true	"Create request"
+//	@Param			request	body		web.EmoticonCreateRequest	true	"创建请求"
 //	@Success		200		{object}	web.EmoticonCreateResponse
 //	@Router			/api/v1/emoticon/customize/create [post]
 //	@Security		Bearer
@@ -112,14 +109,13 @@ func (c *Emoticon) Create(ctx context.Context, in *web.EmoticonCreateRequest) (*
 }
 
 // Upload 上传自定义表情包
-// Upload 上传自定义表情包
 //
-//	@Summary		Upload Emoticon
-//	@Description	Upload a file to create a new custom emoticon
-//	@Tags			Emoticon
+//	@Summary		上传表情包
+//	@Description	上传文件以创建新的自定义表情包
+//	@Tags			表情包
 //	@Accept			mpfd
 //	@Produce		json
-//	@Param			file	formData	file	true	"Emoticon file"
+//	@Param			file	formData	file	true	"表情包文件"
 //	@Success		200		{object}	web.EmoticonUploadResponse
 //	@Router			/api/v1/emoticon/customize/upload [post]
 //	@Security		Bearer

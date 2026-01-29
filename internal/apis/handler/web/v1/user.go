@@ -30,12 +30,12 @@ type User struct {
 
 // Detail 获取登录用户详情接口
 //
-//	@Summary		User Detail
-//	@Description	Get current logged in user details
-//	@Tags			User
+//	@Summary		用户详情
+//	@Description	获取当前登录用户的详细信息
+//	@Tags			用户
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.UserDetailRequest	true	"User Detail request"
+//	@Param			request	body		web.UserDetailRequest	true	"用户详情请求"
 //	@Success		200		{object}	web.UserDetailResponse
 //	@Router			/api/v1/user/detail [post]
 //	@Security		Bearer
@@ -60,12 +60,12 @@ func (u *User) Detail(ctx context.Context, _ *web.UserDetailRequest) (*web.UserD
 
 // Setting 获取用户配置信息接口
 //
-//	@Summary		User Setting
-//	@Description	Get user configuration and profile settings
-//	@Tags			User
+//	@Summary		用户设置
+//	@Description	获取用户配置和个人资料设置
+//	@Tags			用户
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.UserSettingRequest	true	"User Setting request"
+//	@Param			request	body		web.UserSettingRequest	true	"用户设置请求"
 //	@Success		200		{object}	web.UserSettingResponse
 //	@Router			/api/v1/user/setting [post]
 //	@Security		Bearer
@@ -102,12 +102,12 @@ func (u *User) Setting(ctx context.Context, req *web.UserSettingRequest) (*web.U
 
 // DetailUpdate 更新用户信息接口
 //
-//	@Summary		Update User Detail
-//	@Description	Update user profile information like nickname, avatar, gender, etc.
-//	@Tags			User
+//	@Summary		更新用户详情
+//	@Description	更新用户个人资料信息，如昵称、头像、性别等
+//	@Tags			用户
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.UserDetailUpdateRequest	true	"Update Detail request"
+//	@Param			request	body		web.UserDetailUpdateRequest	true	"更新详情请求"
 //	@Success		200		{object}	web.UserDetailUpdateResponse
 //	@Router			/api/v1/user/detail-update [post]
 //	@Security		Bearer
@@ -140,12 +140,12 @@ func (u *User) DetailUpdate(ctx context.Context, req *web.UserDetailUpdateReques
 
 // PasswordUpdate 更新用户密码接口
 //
-//	@Summary		Update Password
-//	@Description	Change user login password
-//	@Tags			User
+//	@Summary		更新密码
+//	@Description	修改用户登录密码
+//	@Tags			用户
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.UserPasswordUpdateRequest	true	"Update Password request"
+//	@Param			request	body		web.UserPasswordUpdateRequest	true	"更新密码请求"
 //	@Success		200		{object}	web.UserPasswordUpdateResponse
 //	@Router			/api/v1/user/password-update [post]
 //	@Security		Bearer
@@ -177,12 +177,12 @@ func (u *User) PasswordUpdate(ctx context.Context, in *web.UserPasswordUpdateReq
 
 // MobileUpdate 更新用户手机号接口
 //
-//	@Summary		Update Mobile
-//	@Description	Change user registered mobile number
-//	@Tags			User
+//	@Summary		更新手机号
+//	@Description	修改用户绑定的手机号码
+//	@Tags			用户
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.UserMobileUpdateRequest	true	"Update Mobile request"
+//	@Param			request	body		web.UserMobileUpdateRequest	true	"更新手机号请求"
 //	@Success		200		{object}	web.UserMobileUpdateResponse
 //	@Router			/api/v1/user/mobile-update [post]
 //	@Security		Bearer
@@ -226,12 +226,12 @@ func (u *User) MobileUpdate(ctx context.Context, in *web.UserMobileUpdateRequest
 
 // EmailUpdate 更新用户邮箱接口
 //
-//	@Summary		Update Email
-//	@Description	Change user registered email address
-//	@Tags			User
+//	@Summary		更新邮箱
+//	@Description	修改用户绑定的邮箱地址
+//	@Tags			用户
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.UserEmailUpdateRequest	true	"Update Email request"
+//	@Param			request	body		web.UserEmailUpdateRequest	true	"更新邮箱请求"
 //	@Success		200		{object}	web.UserEmailUpdateResponse
 //	@Router			/api/v1/user/email-update [post]
 //	@Security		Bearer

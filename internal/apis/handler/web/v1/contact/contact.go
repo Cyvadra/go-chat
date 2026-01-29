@@ -32,12 +32,12 @@ type Contact struct {
 
 // List 联系人列表接口
 //
-//	@Summary		Contact List
-//	@Description	Get list of user contacts
-//	@Tags			Contact
+//	@Summary		联系人列表
+//	@Description	获取用户联系人列表
+//	@Tags			联系人
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactListRequest	true	"Contact List request"
+//	@Param			request	body		web.ContactListRequest	true	"联系人列表请求"
 //	@Success		200		{object}	web.ContactListResponse
 //	@Router			/api/v1/contact/list [post]
 //	@Security		Bearer
@@ -65,12 +65,12 @@ func (c *Contact) List(ctx context.Context, _ *web.ContactListRequest) (*web.Con
 
 // Delete 联系人删除接口
 //
-//	@Summary		Delete Contact
-//	@Description	Remove a user from contacts
-//	@Tags			Contact
+//	@Summary		删除联系人
+//	@Description	从联系人中移除用户
+//	@Tags			联系人
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactDeleteRequest	true	"Delete Contact request"
+//	@Param			request	body		web.ContactDeleteRequest	true	"删除联系人请求"
 //	@Success		200		{object}	web.ContactDeleteResponse
 //	@Router			/api/v1/contact/delete [post]
 //	@Security		Bearer
@@ -95,12 +95,12 @@ func (c *Contact) Delete(ctx context.Context, in *web.ContactDeleteRequest) (*we
 
 // EditRemark 联系人备注修改接口
 //
-//	@Summary		Edit Remark
-//	@Description	Change the remark name for a contact
-//	@Tags			Contact
+//	@Summary		修改备注
+//	@Description	修改联系人的备注名称
+//	@Tags			联系人
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactEditRemarkRequest	true	"Edit Remark request"
+//	@Param			request	body		web.ContactEditRemarkRequest	true	"修改备注请求"
 //	@Success		200		{object}	web.ContactEditRemarkResponse
 //	@Router			/api/v1/contact/edit-remark [post]
 //	@Security		Bearer
@@ -114,12 +114,12 @@ func (c *Contact) EditRemark(ctx context.Context, in *web.ContactEditRemarkReque
 
 // Detail 联系人详情接口
 //
-//	@Summary		Contact Detail
-//	@Description	Get detailed information about a contact
-//	@Tags			Contact
+//	@Summary		联系人详情
+//	@Description	获取联系人的详细信息
+//	@Tags			联系人
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactDetailRequest	true	"Contact Detail request"
+//	@Param			request	body		web.ContactDetailRequest	true	"联系人详情请求"
 //	@Success		200		{object}	web.ContactDetailResponse
 //	@Router			/api/v1/contact/detail [post]
 //	@Security		Bearer
@@ -186,12 +186,12 @@ func (c *Contact) Detail(ctx context.Context, in *web.ContactDetailRequest) (*we
 
 // Search 联系人搜索接口
 //
-//	@Summary		Search Contact
-//	@Description	Search for users to add as contacts
-//	@Tags			Contact
+//	@Summary		搜索联系人
+//	@Description	搜索用户以添加为联系人
+//	@Tags			联系人
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactSearchRequest	true	"Search Contact request"
+//	@Param			request	body		web.ContactSearchRequest	true	"搜索联系人请求"
 //	@Success		200		{object}	web.ContactSearchResponse
 //	@Router			/api/v1/contact/search [post]
 //	@Security		Bearer
@@ -217,12 +217,12 @@ func (c *Contact) Search(ctx context.Context, in *web.ContactSearchRequest) (*we
 
 // ChangeGroup 修改联系人分组接口
 //
-//	@Summary		Change Contact Group
-//	@Description	Move a contact to a different group
-//	@Tags			Contact
+//	@Summary		修改联系人分组
+//	@Description	将联系人移至不同的分组
+//	@Tags			联系人
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactChangeGroupRequest	true	"Change Group request"
+//	@Param			request	body		web.ContactChangeGroupRequest	true	"修改分组请求"
 //	@Success		200		{object}	web.ContactChangeGroupResponse
 //	@Router			/api/v1/contact/change-group [post]
 //	@Security		Bearer
@@ -237,12 +237,12 @@ func (c *Contact) ChangeGroup(ctx context.Context, in *web.ContactChangeGroupReq
 
 // OnlineStatus 获取联系人在线状态接口
 //
-//	@Summary		Contact Online Status
-//	@Description	Check if contacts are currently online
-//	@Tags			Contact
+//	@Summary		联系人在线状态
+//	@Description	检查联系人当前是否在线
+//	@Tags			联系人
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.ContactOnlineStatusRequest	true	"Online Status request"
+//	@Param			request	body		web.ContactOnlineStatusRequest	true	"在线状态请求"
 //	@Success		200		{object}	web.ContactOnlineStatusResponse
 //	@Router			/api/v1/contact/online-status [post]
 //	@Security		Bearer

@@ -43,12 +43,12 @@ type Group struct {
 
 // List 群列表接口
 //
-//	@Summary		Group List
-//	@Description	Get list of groups the user is a member of
-//	@Tags			Group
+//	@Summary		群列表
+//	@Description	获取用户加入的群聊列表
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupListRequest	true	"Group List request"
+//	@Param			request	body		web.GroupListRequest	true	"群列表请求"
 //	@Success		200		{object}	web.GroupListResponse
 //	@Router			/api/v1/group/list [post]
 //	@Security		Bearer
@@ -80,12 +80,12 @@ func (g Group) List(ctx context.Context, in *web.GroupListRequest) (*web.GroupLi
 
 // Create 创建群聊接口
 //
-//	@Summary		Create Group
-//	@Description	Create a new group chat
-//	@Tags			Group
+//	@Summary		创建群聊
+//	@Description	创建一个新的群聊
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupCreateRequest	true	"Create Group request"
+//	@Param			request	body		web.GroupCreateRequest	true	"创建群聊请求"
 //	@Success		200		{object}	web.GroupCreateResponse
 //	@Router			/api/v1/group/create [post]
 //	@Security		Bearer
@@ -120,12 +120,12 @@ func (g Group) Create(ctx context.Context, in *web.GroupCreateRequest) (*web.Gro
 
 // Detail 群聊详情接口
 //
-//	@Summary		Group Detail
-//	@Description	Get detailed information about a group
-//	@Tags			Group
+//	@Summary		群详情
+//	@Description	获取群聊的详细信息
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupDetailRequest	true	"Group Detail request"
+//	@Param			request	body		web.GroupDetailRequest	true	"群详情请求"
 //	@Success		200		{object}	web.GroupDetailResponse
 //	@Router			/api/v1/group/detail [post]
 //	@Security		Bearer
@@ -183,12 +183,12 @@ func (g Group) Detail(ctx context.Context, in *web.GroupDetailRequest) (*web.Gro
 
 // MemberList 群成员列表接口
 //
-//	@Summary		Group Member List
-//	@Description	Get list of members in a group
-//	@Tags			Group
+//	@Summary		群成员列表
+//	@Description	获取群聊中的成员列表
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupMemberListRequest	true	"Member List request"
+//	@Param			request	body		web.GroupMemberListRequest	true	"成员列表请求"
 //	@Success		200		{object}	web.GroupMemberListResponse
 //	@Router			/api/v1/group/member-list [post]
 //	@Security		Bearer
@@ -232,12 +232,12 @@ func (g Group) MemberList(ctx context.Context, in *web.GroupMemberListRequest) (
 
 // Dismiss 解散群聊接口
 //
-//	@Summary		Dismiss Group
-//	@Description	Dissolve a group chat (master only)
-//	@Tags			Group
+//	@Summary		解散群聊
+//	@Description	解散群聊（仅限群主）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupDismissRequest	true	"Dismiss Group request"
+//	@Param			request	body		web.GroupDismissRequest	true	"解散群聊请求"
 //	@Success		200		{object}	web.GroupDismissResponse
 //	@Router			/api/v1/group/dismiss [post]
 //	@Security		Bearer
@@ -261,12 +261,12 @@ func (g Group) Dismiss(ctx context.Context, in *web.GroupDismissRequest) (*web.G
 
 // Invite 邀请加入群聊接口
 //
-//	@Summary		Invite to Group
-//	@Description	Invite friends to join a group chat
-//	@Tags			Group
+//	@Summary		邀请入群
+//	@Description	邀请好友加入群聊
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupInviteRequest	true	"Invite request"
+//	@Param			request	body		web.GroupInviteRequest	true	"邀请请求"
 //	@Success		200		{object}	web.GroupInviteResponse
 //	@Router			/api/v1/group/invite [post]
 //	@Security		Bearer
@@ -328,12 +328,12 @@ func (g Group) Invite(ctx context.Context, in *web.GroupInviteRequest) (*web.Gro
 
 // GetInviteFriends 获取可邀请好友列表接口
 //
-//	@Summary		Get Friends for Invite
-//	@Description	Get list of friends who can be invited to a group
-//	@Tags			Group
+//	@Summary		获取可邀请好友
+//	@Description	获取可以被邀请加入群组的好友列表
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GetInviteFriendsRequest	true	"Get Friends request"
+//	@Param			request	body		web.GetInviteFriendsRequest	true	"获取好友请求"
 //	@Success		200		{object}	web.GetInviteFriendsResponse
 //	@Router			/api/v1/group/get-invite-friends [post]
 //	@Security		Bearer
@@ -388,12 +388,12 @@ func (g Group) GetInviteFriends(ctx context.Context, in *web.GetInviteFriendsReq
 
 // Secede 退出群聊接口
 //
-//	@Summary		Secede Group
-//	@Description	Leave a group chat
-//	@Tags			Group
+//	@Summary		退出群聊
+//	@Description	退出群聊
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupSecedeRequest	true	"Secede Group request"
+//	@Param			request	body		web.GroupSecedeRequest	true	"退出群聊请求"
 //	@Success		200		{object}	web.GroupSecedeResponse
 //	@Router			/api/v1/group/secede [post]
 //	@Security		Bearer
@@ -411,12 +411,12 @@ func (g Group) Secede(ctx context.Context, in *web.GroupSecedeRequest) (*web.Gro
 
 // Setting 设置群聊接口
 //
-//	@Summary		Group Setting
-//	@Description	Update group settings
-//	@Tags			Group
+//	@Summary		群设置
+//	@Description	更新群聊设置
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupSettingRequest	true	"Group Setting request"
+//	@Param			request	body		web.GroupSettingRequest	true	"群设置请求"
 //	@Success		200		{object}	web.GroupSettingResponse
 //	@Router			/api/v1/group/setting [post]
 //	@Security		Bearer
@@ -427,12 +427,12 @@ func (g Group) Setting(ctx context.Context, req *web.GroupSettingRequest) (*web.
 
 // RemarkUpdate 群聊名片更新接口
 //
-//	@Summary		Update Group Remark
-//	@Description	Update user's remark (card) in a group
-//	@Tags			Group
+//	@Summary		更新群名片
+//	@Description	更新用户在群聊中的名片（备注）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupRemarkUpdateRequest	true	"Remark Update request"
+//	@Param			request	body		web.GroupRemarkUpdateRequest	true	"更新名片请求"
 //	@Success		200		{object}	web.GroupRemarkUpdateResponse
 //	@Router			/api/v1/group/remark-update [post]
 //	@Security		Bearer
@@ -451,12 +451,12 @@ func (g Group) RemarkUpdate(ctx context.Context, in *web.GroupRemarkUpdateReques
 
 // RemoveMember 移出群成员接口
 //
-//	@Summary		Remove Group Member
-//	@Description	Remove users from a group (leader only)
-//	@Tags			Group
+//	@Summary		移除群成员
+//	@Description	从群聊中移除用户（仅限管理员）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupRemoveMemberRequest	true	"Remove Member request"
+//	@Param			request	body		web.GroupRemoveMemberRequest	true	"移除成员请求"
 //	@Success		200		{object}	web.GroupRemoveMemberResponse
 //	@Router			/api/v1/group/remove-member [post]
 //	@Security		Bearer
@@ -490,12 +490,12 @@ func (g Group) RemoveMember(ctx context.Context, in *web.GroupRemoveMemberReques
 
 // OvertList 公开群聊列表接口
 //
-//	@Summary		Overt Group List
-//	@Description	Get list of public groups
-//	@Tags			Group
+//	@Summary		公开群列表
+//	@Description	获取公开群聊列表
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupOvertListRequest	true	"Overt List request"
+//	@Param			request	body		web.GroupOvertListRequest	true	"公开列表请求"
 //	@Success		200		{object}	web.GroupOvertListResponse
 //	@Router			/api/v1/group/overt-list [post]
 //	@Security		Bearer
@@ -558,12 +558,12 @@ func (g Group) OvertList(ctx context.Context, in *web.GroupOvertListRequest) (*w
 
 // Handover 群主更换接口
 //
-//	@Summary		Handover Group
-//	@Description	Transfer group ownership to another member (master only)
-//	@Tags			Group
+//	@Summary		转让群主
+//	@Description	将群主权限转让给另一名成员（仅限群主）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupHandoverRequest	true	"Handover request"
+//	@Param			request	body		web.GroupHandoverRequest	true	"转让请求"
 //	@Success		200		{object}	web.GroupHandoverResponse
 //	@Router			/api/v1/group/handover [post]
 //	@Security		Bearer
@@ -608,12 +608,12 @@ func (g Group) Handover(ctx context.Context, in *web.GroupHandoverRequest) (*web
 
 // AssignAdmin 分配管理员接口
 //
-//	@Summary		Assign Admin
-//	@Description	Assign or remove admin role for a group member (master only)
-//	@Tags			Group
+//	@Summary		分配管理员
+//	@Description	为群成员分配或移除管理员角色（仅限群主）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupAssignAdminRequest	true	"Assign Admin request"
+//	@Param			request	body		web.GroupAssignAdminRequest	true	"分配管理员请求"
 //	@Success		200		{object}	web.GroupAssignAdminResponse
 //	@Router			/api/v1/group/assign-admin [post]
 //	@Security		Bearer
@@ -635,12 +635,12 @@ func (g Group) AssignAdmin(ctx context.Context, in *web.GroupAssignAdminRequest)
 
 // NoSpeak 群成员禁言接口
 //
-//	@Summary		Group Member Mute
-//	@Description	Mute or unmute a specific group member (leader only)
-//	@Tags			Group
+//	@Summary		成员禁言
+//	@Description	对特定群成员进行禁言或取消禁言（仅限管理员）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupNoSpeakRequest	true	"Mute Member request"
+//	@Param			request	body		web.GroupNoSpeakRequest	true	"成员禁言请求"
 //	@Success		200		{object}	web.GroupNoSpeakResponse
 //	@Router			/api/v1/group/no-speak [post]
 //	@Security		Bearer
@@ -693,12 +693,12 @@ func (g Group) NoSpeak(ctx context.Context, in *web.GroupNoSpeakRequest) (*web.G
 
 // Mute 群禁言接口
 //
-//	@Summary		Group Mute
-//	@Description	Mute or unmute the entire group (leader only)
-//	@Tags			Group
+//	@Summary		全员禁言
+//	@Description	对整个群聊进行禁言或取消禁言（仅限管理员）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupMuteRequest	true	"Group Mute request"
+//	@Param			request	body		web.GroupMuteRequest	true	"全员禁言请求"
 //	@Success		200		{object}	web.GroupMuteResponse
 //	@Router			/api/v1/group/mute [post]
 //	@Security		Bearer
@@ -766,12 +766,12 @@ func (g Group) Mute(ctx context.Context, in *web.GroupMuteRequest) (*web.GroupMu
 
 // Overt 群公开修改接口
 //
-//	@Summary		Update Group Visibility
-//	@Description	Change group between public and private (master only)
-//	@Tags			Group
+//	@Summary		更新群可见性
+//	@Description	在公开和私密之间更改群聊状态（仅限群主）
+//	@Tags			群组
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupOvertRequest	true	"Update Visibility request"
+//	@Param			request	body		web.GroupOvertRequest	true	"更新可见性请求"
 //	@Success		200		{object}	web.GroupOvertResponse
 //	@Router			/api/v1/group/overt [post]
 //	@Security		Bearer

@@ -35,12 +35,12 @@ type Apply struct {
 
 // Create 创建群组申请接口
 //
-//	@Summary		Create Group Apply
-//	@Description	Request to join a group chat
-//	@Tags			GroupApply
+//	@Summary		申请入群
+//	@Description	申请加入群聊
+//	@Tags			群申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupApplyCreateRequest	true	"Create Apply request"
+//	@Param			request	body		web.GroupApplyCreateRequest	true	"入群申请请求"
 //	@Success		200		{object}	web.GroupApplyCreateResponse
 //	@Router			/api/v1/group-apply/create [post]
 //	@Security		Bearer
@@ -98,12 +98,12 @@ func (a Apply) Create(ctx context.Context, in *web.GroupApplyCreateRequest) (*we
 
 // Delete 删除群组申请接口
 //
-//	@Summary		Delete Group Apply
-//	@Description	Delete a join request (not implemented)
-//	@Tags			GroupApply
+//	@Summary		删除入群申请
+//	@Description	删除加入请求（未实现）
+//	@Tags			群申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupApplyDeleteRequest	true	"Delete Apply request"
+//	@Param			request	body		web.GroupApplyDeleteRequest	true	"删除申请请求"
 //	@Success		200		{object}	web.GroupApplyDeleteResponse
 //	@Router			/api/v1/group-apply/delete [post]
 //	@Security		Bearer
@@ -113,12 +113,12 @@ func (a Apply) Delete(ctx context.Context, req *web.GroupApplyDeleteRequest) (*w
 
 // Agree 同意群组申请接口
 //
-//	@Summary		Agree Group Apply
-//	@Description	Accept a user's request to join a group (leader only)
-//	@Tags			GroupApply
+//	@Summary		同意入群申请
+//	@Description	通过用户的入群申请（仅限管理员）
+//	@Tags			群申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupApplyAgreeRequest	true	"Agree Apply request"
+//	@Param			request	body		web.GroupApplyAgreeRequest	true	"同意申请请求"
 //	@Success		200		{object}	web.GroupApplyAgreeResponse
 //	@Router			/api/v1/group-apply/agree [post]
 //	@Security		Bearer
@@ -169,12 +169,12 @@ func (a Apply) Agree(ctx context.Context, in *web.GroupApplyAgreeRequest) (*web.
 
 // Decline 拒绝群组申请接口
 //
-//	@Summary		Decline Group Apply
-//	@Description	Reject a user's request to join a group (leader only)
-//	@Tags			GroupApply
+//	@Summary		拒绝入群申请
+//	@Description	拒绝用户的入群申请（仅限管理员）
+//	@Tags			群申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupApplyDeclineRequest	true	"Decline Apply request"
+//	@Param			request	body		web.GroupApplyDeclineRequest	true	"拒绝申请请求"
 //	@Success		200		{object}	web.GroupApplyDeclineResponse
 //	@Router			/api/v1/group-apply/decline [post]
 //	@Security		Bearer
@@ -214,12 +214,12 @@ func (a Apply) Decline(ctx context.Context, in *web.GroupApplyDeclineRequest) (*
 
 // List 群组申请列表接口
 //
-//	@Summary		Group Apply List
-//	@Description	Get list of join requests for a specific group (leader only)
-//	@Tags			GroupApply
+//	@Summary		群申请列表
+//	@Description	获取特定群组的加入请求列表（仅限管理员）
+//	@Tags			群申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupApplyListRequest	true	"Apply List request"
+//	@Param			request	body		web.GroupApplyListRequest	true	"申请列表请求"
 //	@Success		200		{object}	web.GroupApplyListResponse
 //	@Router			/api/v1/group-apply/list [post]
 //	@Security		Bearer
@@ -253,12 +253,12 @@ func (a Apply) List(ctx context.Context, in *web.GroupApplyListRequest) (*web.Gr
 
 // All 所有群组申请列表接口
 //
-//	@Summary		All Group Applies
-//	@Description	Get all pending join requests for groups managed by the user
-//	@Tags			GroupApply
+//	@Summary		所有群申请
+//	@Description	获取用户管理的所有群组的待处理加入请求
+//	@Tags			群申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupApplyAllRequest	true	"All Applies request"
+//	@Param			request	body		web.GroupApplyAllRequest	true	"所有申请请求"
 //	@Success		200		{object}	web.GroupApplyAllResponse
 //	@Router			/api/v1/group-apply/all [post]
 //	@Security		Bearer
@@ -328,12 +328,12 @@ func (a Apply) All(ctx context.Context, req *web.GroupApplyAllRequest) (*web.Gro
 
 // UnreadNum 获取群组申请未read数
 //
-//	@Summary		Group Apply Unread
-//	@Description	Get number of unread group join requests
-//	@Tags			GroupApply
+//	@Summary		群申请未读数
+//	@Description	获取未读的群组加入请求数量
+//	@Tags			群申请
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		web.GroupApplyUnreadNumRequest	true	"Unread request"
+//	@Param			request	body		web.GroupApplyUnreadNumRequest	true	"未读数请求"
 //	@Success		200		{object}	web.GroupApplyUnreadNumResponse
 //	@Router			/api/v1/group-apply/unread-num [post]
 //	@Security		Bearer
