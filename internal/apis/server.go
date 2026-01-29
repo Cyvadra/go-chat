@@ -12,7 +12,6 @@
 //	@license.name				MIT
 //	@license.url				https://opensource.org/licenses/MIT
 //
-//	@host						localhost:9501
 //	@BasePath					/
 //
 //	@securityDefinitions.apikey	Bearer
