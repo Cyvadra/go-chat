@@ -6,10 +6,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	web2 "github.com/gzydong/go-chat/api/pb/web/v1"
+	_ "github.com/gzydong/go-chat/docs" // Import generated docs
 	"github.com/gzydong/go-chat/internal/apis/handler/web"
 	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/gzydong/go-chat/internal/pkg/jwtutil"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // RegisterWebRoute 注册 Web 路由
@@ -38,6 +41,9 @@ func RegisterWebRoute(secret string, router *gin.Engine, handler *web.Handler, s
 	api := router.Group("/").Use(authorize)
 
 	resp := &Interceptor{}
+
+	// Swagger documentation route
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	web2.RegisterAuthHandler(router, resp, handler.V1.Auth)
 	web2.RegisterCommonHandler(router, resp, handler.V1.Common)

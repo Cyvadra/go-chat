@@ -6,6 +6,7 @@ install:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
+	go install github.com/swaggo/swag/cmd/swag@latest
 
 .PHONY: conf
 conf:
@@ -64,6 +65,20 @@ proto-openapi:
 		fi; \
 		echo "Generated OpenAPI spec for directory: $$dir";\
 	done
+
+SWAG_BIN := $(shell go env GOPATH)/bin/swag
+
+.PHONY: swagger-install # 安装 Swag 工具
+swagger-install:
+	go install github.com/swaggo/swag/cmd/swag@latest
+
+.PHONY: swagger-gen # 生成 Swagger 文档
+swagger-gen:
+	$(SWAG_BIN) init -g internal/apis/server.go -o docs --parseDependency --parseInternal
+
+.PHONY: swagger-fmt # 格式化 Swagger 注释
+swagger-fmt:
+	$(SWAG_BIN) fmt -g internal/apis/server.go
 
 
 ## 自定义命令

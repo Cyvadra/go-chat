@@ -28,6 +28,17 @@ type User struct {
 	Rsa          rsautil.IRsa
 }
 
+// Detail 获取登录用户详情接口
+//
+//	@Summary		User Detail
+//	@Description	Get current logged in user details
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.UserDetailRequest	true	"User Detail request"
+//	@Success		200		{object}	web.UserDetailResponse
+//	@Router			/api/v1/user/detail [post]
+//	@Security		Bearer
 func (u *User) Detail(ctx context.Context, _ *web.UserDetailRequest) (*web.UserDetailResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -47,6 +58,17 @@ func (u *User) Detail(ctx context.Context, _ *web.UserDetailRequest) (*web.UserD
 	}, nil
 }
 
+// Setting 获取用户配置信息接口
+//
+//	@Summary		User Setting
+//	@Description	Get user configuration and profile settings
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.UserSettingRequest	true	"User Setting request"
+//	@Success		200		{object}	web.UserSettingResponse
+//	@Router			/api/v1/user/setting [post]
+//	@Security		Bearer
 func (u *User) Setting(ctx context.Context, req *web.UserSettingRequest) (*web.UserSettingResponse, error) {
 	session, err := middleware.FormContext[entity.WebClaims](ctx)
 	if err != nil {
@@ -78,6 +100,17 @@ func (u *User) Setting(ctx context.Context, req *web.UserSettingRequest) (*web.U
 	}, nil
 }
 
+// DetailUpdate 更新用户信息接口
+//
+//	@Summary		Update User Detail
+//	@Description	Update user profile information like nickname, avatar, gender, etc.
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.UserDetailUpdateRequest	true	"Update Detail request"
+//	@Success		200		{object}	web.UserDetailUpdateResponse
+//	@Router			/api/v1/user/detail-update [post]
+//	@Security		Bearer
 func (u *User) DetailUpdate(ctx context.Context, req *web.UserDetailUpdateRequest) (*web.UserDetailUpdateResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -105,6 +138,17 @@ func (u *User) DetailUpdate(ctx context.Context, req *web.UserDetailUpdateReques
 	return &web.UserDetailUpdateResponse{}, nil
 }
 
+// PasswordUpdate 更新用户密码接口
+//
+//	@Summary		Update Password
+//	@Description	Change user login password
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.UserPasswordUpdateRequest	true	"Update Password request"
+//	@Success		200		{object}	web.UserPasswordUpdateResponse
+//	@Router			/api/v1/user/password-update [post]
+//	@Security		Bearer
 func (u *User) PasswordUpdate(ctx context.Context, in *web.UserPasswordUpdateRequest) (*web.UserPasswordUpdateResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -131,6 +175,17 @@ func (u *User) PasswordUpdate(ctx context.Context, in *web.UserPasswordUpdateReq
 	return nil, nil
 }
 
+// MobileUpdate 更新用户手机号接口
+//
+//	@Summary		Update Mobile
+//	@Description	Change user registered mobile number
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.UserMobileUpdateRequest	true	"Update Mobile request"
+//	@Success		200		{object}	web.UserMobileUpdateResponse
+//	@Router			/api/v1/user/mobile-update [post]
+//	@Security		Bearer
 func (u *User) MobileUpdate(ctx context.Context, in *web.UserMobileUpdateRequest) (*web.UserMobileUpdateResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 	uid := session.UserId
@@ -169,6 +224,17 @@ func (u *User) MobileUpdate(ctx context.Context, in *web.UserMobileUpdateRequest
 	return nil, nil
 }
 
+// EmailUpdate 更新用户邮箱接口
+//
+//	@Summary		Update Email
+//	@Description	Change user registered email address
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.UserEmailUpdateRequest	true	"Update Email request"
+//	@Success		200		{object}	web.UserEmailUpdateResponse
+//	@Router			/api/v1/user/email-update [post]
+//	@Security		Bearer
 func (u *User) EmailUpdate(ctx context.Context, req *web.UserEmailUpdateRequest) (*web.UserEmailUpdateResponse, error) {
 	//TODO implement me
 	panic("implement me")

@@ -26,6 +26,19 @@ type Upload struct {
 }
 
 // Image 图片上传
+// Image 图片上传
+//
+//	@Summary		Upload Image
+//	@Description	Upload a media file (image)
+//	@Tags			Upload
+//	@Accept			mpfd
+//	@Produce		json
+//	@Param			file	formData	file	true	"Media file"
+//	@Param			width	formData	int		false	"Width"
+//	@Param			height	formData	int		false	"Height"
+//	@Success		200		{object}	web.UploadImageResponse
+//	@Router			/api/v1/upload/media-file [post]
+//	@Security		Bearer
 func (u *Upload) Image(ctx *gin.Context) (*web.UploadImageResponse, error) {
 	file, err := ctx.FormFile("file")
 	if err != nil {
@@ -56,6 +69,17 @@ func (u *Upload) Image(ctx *gin.Context) (*web.UploadImageResponse, error) {
 }
 
 // InitiateMultipart 批量上传初始化
+// InitiateMultipart 批量上传初始化
+//
+//	@Summary		Initiate Multipart Upload
+//	@Description	Start a multipart file upload process
+//	@Tags			Upload
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.UploadInitiateMultipartRequest	true	"Initiate request"
+//	@Success		200		{object}	web.UploadInitiateMultipartResponse
+//	@Router			/api/v1/upload/init-multipart [post]
+//	@Security		Bearer
 func (u *Upload) InitiateMultipart(ctx *gin.Context) (*web.UploadInitiateMultipartResponse, error) {
 	in := &web.UploadInitiateMultipartRequest{}
 	if err := ctx.ShouldBindJSON(in); err != nil {
@@ -81,6 +105,20 @@ func (u *Upload) InitiateMultipart(ctx *gin.Context) (*web.UploadInitiateMultipa
 }
 
 // MultipartUpload 批量分片上传
+// MultipartUpload 批量分片上传
+//
+//	@Summary		Multipart Upload
+//	@Description	Upload a single chunk of a multipart file
+//	@Tags			Upload
+//	@Accept			mpfd
+//	@Produce		json
+//	@Param			upload_id	formData	string	true	"Upload ID"
+//	@Param			split_index	formData	int		true	"Chunk Index"
+//	@Param			split_num	formData	int		true	"Total Chunks"
+//	@Param			file		formData	file	true	"Chunk file"
+//	@Success		200			{object}	web.UploadMultipartResponse
+//	@Router			/api/v1/upload/multipart [post]
+//	@Security		Bearer
 func (u *Upload) MultipartUpload(ctx *gin.Context) (*web.UploadMultipartResponse, error) {
 	in := &web.UploadMultipartRequest{
 		UploadId: ctx.PostForm("upload_id"),

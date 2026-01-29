@@ -29,6 +29,18 @@ type Annex struct {
 	Filesystem          filesystem.IFilesystem
 }
 
+// Upload 文章附件上传接口
+//
+//	@Summary		Upload Article Annex
+//	@Description	Upload a file attachment for an article
+//	@Tags			ArticleAnnex
+//	@Accept			mpfd
+//	@Produce		json
+//	@Param			article_id	formData	int		true	"Article ID"
+//	@Param			annex		formData	file	true	"Annex file"
+//	@Success		200			{object}	web.ArticleAnnexUploadResponse
+//	@Router			/api/v1/article-annex/upload [post]
+//	@Security		Bearer
 func (a *Annex) Upload(ctx *gin.Context, _ *web.ArticleAnnexUploadRequest) (*web.ArticleAnnexUploadResponse, error) {
 	in := &web.ArticleAnnexUploadRequest{}
 
@@ -93,6 +105,17 @@ func (a *Annex) Upload(ctx *gin.Context, _ *web.ArticleAnnexUploadRequest) (*web
 	}, nil
 }
 
+// Delete 文章附件删除接口
+//
+//	@Summary		Delete Article Annex
+//	@Description	Move an article attachment to the recycle bin
+//	@Tags			ArticleAnnex
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleAnnexDeleteRequest	true	"Delete Annex request"
+//	@Success		200		{object}	web.ArticleAnnexDeleteResponse
+//	@Router			/api/v1/article-annex/delete [post]
+//	@Security		Bearer
 func (a *Annex) Delete(ctx context.Context, in *web.ArticleAnnexDeleteRequest) (*web.ArticleAnnexDeleteResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -104,6 +127,17 @@ func (a *Annex) Delete(ctx context.Context, in *web.ArticleAnnexDeleteRequest) (
 	return &web.ArticleAnnexDeleteResponse{}, nil
 }
 
+// Recover 文章附件恢复删除接口
+//
+//	@Summary		Recover Article Annex
+//	@Description	Restore an article attachment from the recycle bin
+//	@Tags			ArticleAnnex
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleAnnexRecoverRequest	true	"Recover Annex request"
+//	@Success		200		{object}	web.ArticleAnnexRecoverResponse
+//	@Router			/api/v1/article-annex/recover [post]
+//	@Security		Bearer
 func (a *Annex) Recover(ctx context.Context, req *web.ArticleAnnexRecoverRequest) (*web.ArticleAnnexRecoverResponse, error) {
 	err := a.ArticleAnnexService.UpdateStatus(ctx, middleware.FormContextAuthId[entity.WebClaims](ctx), int(req.AnnexId), 1)
 	if err != nil {
@@ -113,6 +147,17 @@ func (a *Annex) Recover(ctx context.Context, req *web.ArticleAnnexRecoverRequest
 	return &web.ArticleAnnexRecoverResponse{}, nil
 }
 
+// ForeverDelete 文章附件永久删除接口
+//
+//	@Summary		Forever Delete Article Annex
+//	@Description	Permanently delete an article attachment
+//	@Tags			ArticleAnnex
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleAnnexForeverDeleteRequest	true	"Forever Delete request"
+//	@Success		200		{object}	web.ArticleAnnexForeverDeleteResponse
+//	@Router			/api/v1/article-annex/forever-delete [post]
+//	@Security		Bearer
 func (a *Annex) ForeverDelete(ctx context.Context, req *web.ArticleAnnexForeverDeleteRequest) (*web.ArticleAnnexForeverDeleteResponse, error) {
 	if err := a.ArticleAnnexService.ForeverDelete(ctx, middleware.FormContextAuthId[entity.WebClaims](ctx), int(req.AnnexId)); err != nil {
 		return nil, err
@@ -121,6 +166,18 @@ func (a *Annex) ForeverDelete(ctx context.Context, req *web.ArticleAnnexForeverD
 	return &web.ArticleAnnexForeverDeleteResponse{}, nil
 }
 
+// Download 文章附件下载接口
+//
+//	@Summary		Download Article Annex
+//	@Description	Download an article attachment
+//	@Tags			ArticleAnnex
+//	@Accept			json
+//	@Produce		octet-stream
+//	@Param			annex_id	query		int	true	"Annex ID"
+//	@Param			request		body		web.ArticleAnnexDownloadRequest	false	"Download request"
+//	@Success		200			{file}		binary
+//	@Router			/api/v1/article-annex/download [get]
+//	@Security		Bearer
 func (a *Annex) Download(ctx *gin.Context, _ *web.ArticleAnnexDownloadRequest) (*web.ArticleAnnexDownloadResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx.Request.Context())
 
@@ -160,6 +217,17 @@ func (a *Annex) Download(ctx *gin.Context, _ *web.ArticleAnnexDownloadRequest) (
 	return &web.ArticleAnnexDownloadResponse{}, nil
 }
 
+// RecoverList 文章附件回收站列表接口
+//
+//	@Summary		Article Annex Recycle Bin List
+//	@Description	Get list of deleted article attachments in the recycle bin
+//	@Tags			ArticleAnnex
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleAnnexRecoverListRequest	true	"Recycle Bin List request"
+//	@Success		200		{object}	web.ArticleAnnexRecoverListResponse
+//	@Router			/api/v1/article-annex/recover-list [post]
+//	@Security		Bearer
 func (a *Annex) RecoverList(ctx context.Context, req *web.ArticleAnnexRecoverListRequest) (*web.ArticleAnnexRecoverListResponse, error) {
 	items, err := a.ArticleAnnexRepo.RecoverList(ctx, middleware.FormContextAuthId[entity.WebClaims](ctx))
 	if err != nil {

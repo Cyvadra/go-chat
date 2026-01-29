@@ -33,6 +33,17 @@ type Apply struct {
 	PushMessage        *logic.PushMessage
 }
 
+// Create 创建群组申请接口
+//
+//	@Summary		Create Group Apply
+//	@Description	Request to join a group chat
+//	@Tags			GroupApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupApplyCreateRequest	true	"Create Apply request"
+//	@Success		200		{object}	web.GroupApplyCreateResponse
+//	@Router			/api/v1/group-apply/create [post]
+//	@Security		Bearer
 func (a Apply) Create(ctx context.Context, in *web.GroupApplyCreateRequest) (*web.GroupApplyCreateResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -85,10 +96,32 @@ func (a Apply) Create(ctx context.Context, in *web.GroupApplyCreateRequest) (*we
 	return &web.GroupApplyCreateResponse{}, err
 }
 
+// Delete 删除群组申请接口
+//
+//	@Summary		Delete Group Apply
+//	@Description	Delete a join request (not implemented)
+//	@Tags			GroupApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupApplyDeleteRequest	true	"Delete Apply request"
+//	@Success		200		{object}	web.GroupApplyDeleteResponse
+//	@Router			/api/v1/group-apply/delete [post]
+//	@Security		Bearer
 func (a Apply) Delete(ctx context.Context, req *web.GroupApplyDeleteRequest) (*web.GroupApplyDeleteResponse, error) {
 	return nil, nil
 }
 
+// Agree 同意群组申请接口
+//
+//	@Summary		Agree Group Apply
+//	@Description	Accept a user's request to join a group (leader only)
+//	@Tags			GroupApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupApplyAgreeRequest	true	"Agree Apply request"
+//	@Success		200		{object}	web.GroupApplyAgreeResponse
+//	@Router			/api/v1/group-apply/agree [post]
+//	@Security		Bearer
 func (a Apply) Agree(ctx context.Context, in *web.GroupApplyAgreeRequest) (*web.GroupApplyAgreeResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -134,6 +167,17 @@ func (a Apply) Agree(ctx context.Context, in *web.GroupApplyAgreeRequest) (*web.
 	return &web.GroupApplyAgreeResponse{}, nil
 }
 
+// Decline 拒绝群组申请接口
+//
+//	@Summary		Decline Group Apply
+//	@Description	Reject a user's request to join a group (leader only)
+//	@Tags			GroupApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupApplyDeclineRequest	true	"Decline Apply request"
+//	@Success		200		{object}	web.GroupApplyDeclineResponse
+//	@Router			/api/v1/group-apply/decline [post]
+//	@Security		Bearer
 func (a Apply) Decline(ctx context.Context, in *web.GroupApplyDeclineRequest) (*web.GroupApplyDeclineResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -168,6 +212,17 @@ func (a Apply) Decline(ctx context.Context, in *web.GroupApplyDeclineRequest) (*
 	return &web.GroupApplyDeclineResponse{}, nil
 }
 
+// List 群组申请列表接口
+//
+//	@Summary		Group Apply List
+//	@Description	Get list of join requests for a specific group (leader only)
+//	@Tags			GroupApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupApplyListRequest	true	"Apply List request"
+//	@Success		200		{object}	web.GroupApplyListResponse
+//	@Router			/api/v1/group-apply/list [post]
+//	@Security		Bearer
 func (a Apply) List(ctx context.Context, in *web.GroupApplyListRequest) (*web.GroupApplyListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -196,6 +251,17 @@ func (a Apply) List(ctx context.Context, in *web.GroupApplyListRequest) (*web.Gr
 	return &web.GroupApplyListResponse{Items: items}, nil
 }
 
+// All 所有群组申请列表接口
+//
+//	@Summary		All Group Applies
+//	@Description	Get all pending join requests for groups managed by the user
+//	@Tags			GroupApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupApplyAllRequest	true	"All Applies request"
+//	@Success		200		{object}	web.GroupApplyAllResponse
+//	@Router			/api/v1/group-apply/all [post]
+//	@Security		Bearer
 func (a Apply) All(ctx context.Context, req *web.GroupApplyAllRequest) (*web.GroupApplyAllResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -260,6 +326,17 @@ func (a Apply) All(ctx context.Context, req *web.GroupApplyAllRequest) (*web.Gro
 	return resp, nil
 }
 
+// UnreadNum 获取群组申请未read数
+//
+//	@Summary		Group Apply Unread
+//	@Description	Get number of unread group join requests
+//	@Tags			GroupApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupApplyUnreadNumRequest	true	"Unread request"
+//	@Success		200		{object}	web.GroupApplyUnreadNumResponse
+//	@Router			/api/v1/group-apply/unread-num [post]
+//	@Security		Bearer
 func (a Apply) UnreadNum(ctx context.Context, req *web.GroupApplyUnreadNumRequest) (*web.GroupApplyUnreadNumResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 

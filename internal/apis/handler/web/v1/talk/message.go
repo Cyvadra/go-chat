@@ -34,6 +34,17 @@ type Message struct {
 	GroupMemberService   service.IGroupMemberService
 }
 
+// Records 获取会话消息记录
+//
+//	@Summary		Get Message Records
+//	@Description	Get recent message history for a session
+//	@Tags			Message
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.MessageRecordsRequest	true	"Records request"
+//	@Success		200		{object}	web.MessageRecordsResponse
+//	@Router			/api/v1/message/records [post]
+//	@Security		Bearer
 func (m *Message) Records(ctx context.Context, in *web.MessageRecordsRequest) (*web.MessageRecordsResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -101,6 +112,17 @@ func (m *Message) Records(ctx context.Context, in *web.MessageRecordsRequest) (*
 	}, nil
 }
 
+// HistoryRecords 获取会话历史消息记录
+//
+//	@Summary		Get History Records
+//	@Description	Search and filter message history for a session
+//	@Tags			Message
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.MessageHistoryRecordsRequest	true	"History Records request"
+//	@Success		200		{object}	web.MessageHistoryRecordsResponse
+//	@Router			/api/v1/message/history-records [post]
+//	@Security		Bearer
 func (m *Message) HistoryRecords(ctx context.Context, in *web.MessageHistoryRecordsRequest) (*web.MessageHistoryRecordsResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -170,6 +192,17 @@ func (m *Message) HistoryRecords(ctx context.Context, in *web.MessageHistoryReco
 	}, nil
 }
 
+// ForwardRecords 转发消息记录
+//
+//	@Summary		Forward Records
+//	@Description	Get list of messages to be forwarded
+//	@Tags			Message
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.MessageForwardRecordsRequest	true	"Forward Records request"
+//	@Success		200		{object}	web.MessageRecordsClearResponse
+//	@Router			/api/v1/message/forward-records [post]
+//	@Security		Bearer
 func (m *Message) ForwardRecords(ctx context.Context, in *web.MessageForwardRecordsRequest) (*web.MessageRecordsClearResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -196,6 +229,17 @@ func (m *Message) ForwardRecords(ctx context.Context, in *web.MessageForwardReco
 	}, nil
 }
 
+// Revoke 撤回消息接口
+//
+//	@Summary		Revoke Message
+//	@Description	Recall a previously sent message
+//	@Tags			Message
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.MessageRevokeRequest	true	"Revoke request"
+//	@Success		200		{object}	web.MessageRevokeResponse
+//	@Router			/api/v1/message/revoke [post]
+//	@Security		Bearer
 func (m *Message) Revoke(ctx context.Context, in *web.MessageRevokeRequest) (*web.MessageRevokeResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -210,6 +254,17 @@ func (m *Message) Revoke(ctx context.Context, in *web.MessageRevokeRequest) (*we
 	return &web.MessageRevokeResponse{}, nil
 }
 
+// Delete 删除消息记录
+//
+//	@Summary		Delete Message
+//	@Description	Permanently remove a message from history
+//	@Tags			Message
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.MessageDeleteRequest	true	"Delete request"
+//	@Success		200		{object}	web.MessageDeleteResponse
+//	@Router			/api/v1/message/delete [post]
+//	@Security		Bearer
 func (m *Message) Delete(ctx context.Context, in *web.MessageDeleteRequest) (*web.MessageDeleteResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -231,6 +286,18 @@ type DownloadChatFileRequest struct {
 }
 
 // Download 聊天文件下载
+// Download 聊天文件下载
+//
+//	@Summary		Download Chat File
+//	@Description	Download a file shared in a chat session
+//	@Tags			Message
+//	@Accept			json
+//	@Produce		octet-stream
+//	@Param			talk_mode	query		int		true	"Talk Mode (1:Private, 2:Group)"
+//	@Param			msg_id		query		string	true	"Message ID"
+//	@Success		200			{file}		binary
+//	@Router			/api/v1/talk/file-download [get]
+//	@Security		Bearer
 func (m *Message) Download(ctx *gin.Context) error {
 	params := &DownloadChatFileRequest{}
 	if err := ctx.ShouldBind(params); err != nil {

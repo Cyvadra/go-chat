@@ -26,6 +26,17 @@ type Vote struct {
 }
 
 // Create 创建投票
+// Create 创建投票
+//
+//	@Summary		Create Group Vote
+//	@Description	Start a new vote in a group chat
+//	@Tags			GroupVote
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupVoteCreateRequest	true	"Create Vote request"
+//	@Success		200		{object}	web.GroupVoteCreateResponse
+//	@Router			/api/v1/group-vote/create [post]
+//	@Security		Bearer
 func (v *Vote) Create(ctx context.Context, in *web.GroupVoteCreateRequest) (*web.GroupVoteCreateResponse, error) {
 
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
@@ -65,6 +76,17 @@ func (v *Vote) Create(ctx context.Context, in *web.GroupVoteCreateRequest) (*web
 }
 
 // Submit 提交投票
+// Submit 提交投票
+//
+//	@Summary		Submit Group Vote
+//	@Description	Cast a vote in a group chat
+//	@Tags			GroupVote
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupVoteSubmitRequest	true	"Submit Vote request"
+//	@Success		200		{object}	web.GroupVoteSubmitResponse
+//	@Router			/api/v1/group-vote/submit [post]
+//	@Security		Bearer
 func (v *Vote) Submit(ctx context.Context, in *web.GroupVoteSubmitRequest) (*web.GroupVoteSubmitResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	err := v.GroupVoteService.Submit(ctx, &service.GroupVoteSubmitOpt{
@@ -81,6 +103,17 @@ func (v *Vote) Submit(ctx context.Context, in *web.GroupVoteSubmitRequest) (*web
 }
 
 // Detail 投票详情
+// Detail 投票详情
+//
+//	@Summary		Group Vote Detail
+//	@Description	Get detailed information and results of a group vote
+//	@Tags			GroupVote
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupVoteDetailRequest	true	"Vote Detail request"
+//	@Success		200		{object}	web.GroupVoteDetailResponse
+//	@Router			/api/v1/group-vote/detail [post]
+//	@Security		Bearer
 func (v *Vote) Detail(ctx context.Context, in *web.GroupVoteDetailRequest) (*web.GroupVoteDetailResponse, error) {
 	voteInfo, err := v.GroupVoteRepo.FindById(ctx, int(in.VoteId))
 	if err != nil {

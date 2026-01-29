@@ -13,3 +13,4 @@ rsa_1024_pub.pem
 custom.mk
 config.local.yaml
 deploy/
+docs/

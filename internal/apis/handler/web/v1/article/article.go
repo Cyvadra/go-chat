@@ -31,6 +31,17 @@ type Article struct {
 	Filesystem          filesystem.IFilesystem
 }
 
+// Edit 文章编辑接口
+//
+//	@Summary		Edit Article
+//	@Description	Create or update an article
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleEditRequest	true	"Edit Article request"
+//	@Success		200		{object}	web.ArticleEditResponse
+//	@Router			/api/v1/article/editor [post]
+//	@Security		Bearer
 func (a *Article) Edit(ctx context.Context, in *web.ArticleEditRequest) (*web.ArticleEditResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -69,6 +80,17 @@ func (a *Article) Edit(ctx context.Context, in *web.ArticleEditRequest) (*web.Ar
 	}, nil
 }
 
+// Detail 获取文章详情接口
+//
+//	@Summary		Article Detail
+//	@Description	Get detailed information about an article
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleDetailRequest	true	"Article Detail request"
+//	@Success		200		{object}	web.ArticleDetailResponse
+//	@Router			/api/v1/article/detail [post]
+//	@Security		Bearer
 func (a *Article) Detail(ctx context.Context, in *web.ArticleDetailRequest) (*web.ArticleDetailResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -110,6 +132,17 @@ func (a *Article) Detail(ctx context.Context, in *web.ArticleDetailRequest) (*we
 	}, nil
 }
 
+// List 获取文章列表接口
+//
+//	@Summary		Article List
+//	@Description	Get list of articles with pagination and filters
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleListRequest	true	"Article List request"
+//	@Success		200		{object}	web.ArticleListResponse
+//	@Router			/api/v1/article/list [post]
+//	@Security		Bearer
 func (a *Article) List(ctx context.Context, in *web.ArticleListRequest) (*web.ArticleListResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -148,6 +181,17 @@ func (a *Article) List(ctx context.Context, in *web.ArticleListRequest) (*web.Ar
 	}, nil
 }
 
+// Delete 删除文章接口
+//
+//	@Summary		Delete Article
+//	@Description	Move an article to the recycle bin
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleDeleteRequest	true	"Delete Article request"
+//	@Success		200		{object}	web.ArticleDeleteResponse
+//	@Router			/api/v1/article/delete [post]
+//	@Security		Bearer
 func (a *Article) Delete(ctx context.Context, in *web.ArticleDeleteRequest) (*web.ArticleDeleteResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	err := a.ArticleService.UpdateStatus(ctx, uid, int(in.ArticleId), 2)
@@ -158,6 +202,17 @@ func (a *Article) Delete(ctx context.Context, in *web.ArticleDeleteRequest) (*we
 	return &web.ArticleDeleteResponse{}, nil
 }
 
+// Recover 恢复文章接口
+//
+//	@Summary		Recover Article
+//	@Description	Restore an article from the recycle bin
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleRecoverRequest	true	"Recover Article request"
+//	@Success		200		{object}	web.ArticleRecoverResponse
+//	@Router			/api/v1/article/recover [post]
+//	@Security		Bearer
 func (a *Article) Recover(ctx context.Context, in *web.ArticleRecoverRequest) (*web.ArticleRecoverResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -169,6 +224,17 @@ func (a *Article) Recover(ctx context.Context, in *web.ArticleRecoverRequest) (*
 	return &web.ArticleRecoverResponse{}, nil
 }
 
+// ForeverDelete 永久删除文章接口
+//
+//	@Summary		Forever Delete Article
+//	@Description	Permanently delete an article
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleForeverDeleteRequest	true	"Forever Delete request"
+//	@Success		200		{object}	web.ArticleForeverDeleteResponse
+//	@Router			/api/v1/article/forever-delete [post]
+//	@Security		Bearer
 func (a *Article) ForeverDelete(ctx context.Context, in *web.ArticleForeverDeleteRequest) (*web.ArticleForeverDeleteResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -179,6 +245,17 @@ func (a *Article) ForeverDelete(ctx context.Context, in *web.ArticleForeverDelet
 	return &web.ArticleForeverDeleteResponse{}, nil
 }
 
+// Move 移动文章分类接口
+//
+//	@Summary		Move Article
+//	@Description	Change the classification of an article
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleMoveRequest	true	"Move Article request"
+//	@Success		200		{object}	web.ArticleMoveResponse
+//	@Router			/api/v1/article/move [post]
+//	@Security		Bearer
 func (a *Article) Move(ctx context.Context, in *web.ArticleMoveRequest) (*web.ArticleMoveResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if err := a.ArticleService.Move(ctx, uid, int(in.ArticleId), int(in.ClassifyId)); err != nil {
@@ -188,6 +265,17 @@ func (a *Article) Move(ctx context.Context, in *web.ArticleMoveRequest) (*web.Ar
 	return &web.ArticleMoveResponse{}, nil
 }
 
+// Asterisk 收藏/取消收藏文章接口
+//
+//	@Summary		Set Asterisk
+//	@Description	Add or remove an article from favorites
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleAsteriskRequest	true	"Asterisk request"
+//	@Success		200		{object}	web.ArticleAsteriskResponse
+//	@Router			/api/v1/article/asterisk [post]
+//	@Security		Bearer
 func (a *Article) Asterisk(ctx context.Context, in *web.ArticleAsteriskRequest) (*web.ArticleAsteriskResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if err := a.ArticleService.Asterisk(ctx, uid, int(in.ArticleId), int(in.Action)); err != nil {
@@ -197,6 +285,17 @@ func (a *Article) Asterisk(ctx context.Context, in *web.ArticleAsteriskRequest) 
 	return &web.ArticleAsteriskResponse{}, nil
 }
 
+// SetTags 设置文章标签接口
+//
+//	@Summary		Set Article Tags
+//	@Description	Assign tags to an article
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleTagsRequest	true	"Set Tags request"
+//	@Success		200		{object}	web.ArticleTagsResponse
+//	@Router			/api/v1/article/tags [post]
+//	@Security		Bearer
 func (a *Article) SetTags(ctx context.Context, in *web.ArticleTagsRequest) (*web.ArticleTagsResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -207,6 +306,17 @@ func (a *Article) SetTags(ctx context.Context, in *web.ArticleTagsRequest) (*web
 	return &web.ArticleTagsResponse{}, nil
 }
 
+// RecoverList 获取回收站文章列表接口
+//
+//	@Summary		Recycle Bin List
+//	@Description	Get list of deleted articles in the recycle bin
+//	@Tags			Article
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleRecoverListRequest	true	"Recycle Bin List request"
+//	@Success		200		{object}	web.ArticleRecoverListResponse
+//	@Router			/api/v1/article/recover-list [post]
+//	@Security		Bearer
 func (a *Article) RecoverList(ctx context.Context, _ *web.ArticleRecoverListRequest) (*web.ArticleRecoverListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 

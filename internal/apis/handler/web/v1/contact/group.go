@@ -21,6 +21,17 @@ type Group struct {
 	ContactService      service.IContactService
 }
 
+// List 联系人分组列表接口
+//
+//	@Summary		Contact Group List
+//	@Description	Get list of contact groups
+//	@Tags			ContactGroup
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ContactGroupListRequest	true	"Group List request"
+//	@Success		200		{object}	web.ContactGroupListResponse
+//	@Router			/api/v1/contact-group/list [post]
+//	@Security		Bearer
 func (g *Group) List(ctx context.Context, in *web.ContactGroupListRequest) (*web.ContactGroupListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -53,6 +64,17 @@ func (g *Group) List(ctx context.Context, in *web.ContactGroupListRequest) (*web
 	return &web.ContactGroupListResponse{Items: items}, nil
 }
 
+// Save 保存联系人分组接口
+//
+//	@Summary		Save Contact Group
+//	@Description	Create or update a contact group
+//	@Tags			ContactGroup
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ContactGroupSaveRequest	true	"Save Group request"
+//	@Success		200		{object}	web.ContactGroupSaveResponse
+//	@Router			/api/v1/contact-group/save [post]
+//	@Security		Bearer
 func (g *Group) Save(ctx context.Context, in *web.ContactGroupSaveRequest) (*web.ContactGroupSaveResponse, error) {
 
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)

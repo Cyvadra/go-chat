@@ -22,6 +22,17 @@ type Apply struct {
 	MessageService      message.IService
 }
 
+// Create 添加联系人申请接口
+//
+//	@Summary		Create Contact Apply
+//	@Description	Send a friend request to another user
+//	@Tags			ContactApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ContactApplyCreateRequest	true	"Create Apply request"
+//	@Success		200		{object}	web.ContactApplyCreateResponse
+//	@Router			/api/v1/contact-apply/create [post]
+//	@Security		Bearer
 func (a Apply) Create(ctx context.Context, in *web.ContactApplyCreateRequest) (*web.ContactApplyCreateResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if a.ContactRepo.IsFriend(ctx, uid, int(in.UserId), false) {
@@ -39,6 +50,17 @@ func (a Apply) Create(ctx context.Context, in *web.ContactApplyCreateRequest) (*
 	return &web.ContactApplyCreateResponse{}, nil
 }
 
+// Accept 同意联系人申请接口
+//
+//	@Summary		Accept Contact Apply
+//	@Description	Accept a friend request
+//	@Tags			ContactApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ContactApplyAcceptRequest	true	"Accept Apply request"
+//	@Success		200		{object}	web.ContactApplyAcceptResponse
+//	@Router			/api/v1/contact-apply/accept [post]
+//	@Security		Bearer
 func (a Apply) Accept(ctx context.Context, in *web.ContactApplyAcceptRequest) (*web.ContactApplyAcceptResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	applyInfo, err := a.ContactApplyService.Accept(ctx, &service.ContactApplyAcceptOpt{
@@ -66,6 +88,17 @@ func (a Apply) Accept(ctx context.Context, in *web.ContactApplyAcceptRequest) (*
 	return &web.ContactApplyAcceptResponse{}, nil
 }
 
+// Decline 拒绝联系人申请接口
+//
+//	@Summary		Decline Contact Apply
+//	@Description	Decline a friend request
+//	@Tags			ContactApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ContactApplyDeclineRequest	true	"Decline Apply request"
+//	@Success		200		{object}	web.ContactApplyDeclineResponse
+//	@Router			/api/v1/contact-apply/decline [post]
+//	@Security		Bearer
 func (a Apply) Decline(ctx context.Context, in *web.ContactApplyDeclineRequest) (*web.ContactApplyDeclineResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -80,6 +113,17 @@ func (a Apply) Decline(ctx context.Context, in *web.ContactApplyDeclineRequest) 
 	return &web.ContactApplyDeclineResponse{}, nil
 }
 
+// List 联系人申请列表接口
+//
+//	@Summary		Contact Apply List
+//	@Description	Get list of received friend requests
+//	@Tags			ContactApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ContactApplyListRequest	true	"Apply List request"
+//	@Success		200		{object}	web.ContactApplyListResponse
+//	@Router			/api/v1/contact-apply/list [post]
+//	@Security		Bearer
 func (a Apply) List(ctx context.Context, req *web.ContactApplyListRequest) (*web.ContactApplyListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -106,6 +150,17 @@ func (a Apply) List(ctx context.Context, req *web.ContactApplyListRequest) (*web
 	return &web.ContactApplyListResponse{Items: items}, nil
 }
 
+// UnreadNum 获取申请未读数
+//
+//	@Summary		Contact Apply Unread
+//	@Description	Get number of unread friend requests
+//	@Tags			ContactApply
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ContactApplyUnreadNumRequest	true	"Unread request"
+//	@Success		200		{object}	web.ContactApplyUnreadNumResponse
+//	@Router			/api/v1/contact-apply/unread-num [post]
+//	@Security		Bearer
 func (a Apply) UnreadNum(ctx context.Context, req *web.ContactApplyUnreadNumRequest) (*web.ContactApplyUnreadNumResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	return &web.ContactApplyUnreadNumResponse{Num: int32(a.ContactApplyService.GetApplyUnreadNum(ctx, uid))}, nil

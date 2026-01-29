@@ -19,6 +19,17 @@ type Class struct {
 	ArticleClassService service.IArticleClassService
 }
 
+// List 获取文章分类列表接口
+//
+//	@Summary		Article Class List
+//	@Description	Get list of article classifications for the user
+//	@Tags			ArticleClass
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleClassListRequest	true	"Class List request"
+//	@Success		200		{object}	web.ArticleClassListResponse
+//	@Router			/api/v1/article/classify/list [post]
+//	@Security		Bearer
 func (c Class) List(ctx context.Context, req *web.ArticleClassListRequest) (*web.ArticleClassListResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 	uid := session.GetAuthID()
@@ -61,6 +72,17 @@ func (c Class) List(ctx context.Context, req *web.ArticleClassListRequest) (*web
 	}, nil
 }
 
+// Edit 文章分类编辑接口
+//
+//	@Summary		Edit Article Class
+//	@Description	Create or update an article classification
+//	@Tags			ArticleClass
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleClassEditRequest	true	"Edit Class request"
+//	@Success		200		{object}	web.ArticleClassEditResponse
+//	@Router			/api/v1/article/classify/edit [post]
+//	@Security		Bearer
 func (c Class) Edit(ctx context.Context, in *web.ArticleClassEditRequest) (*web.ArticleClassEditResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 	uid := session.GetAuthID()
@@ -99,6 +121,17 @@ func (c Class) Edit(ctx context.Context, in *web.ArticleClassEditRequest) (*web.
 	}, nil
 }
 
+// Delete 文章分类删除接口
+//
+//	@Summary		Delete Article Class
+//	@Description	Remove an article classification
+//	@Tags			ArticleClass
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleClassDeleteRequest	true	"Delete Class request"
+//	@Success		200		{object}	web.ArticleClassDeleteResponse
+//	@Router			/api/v1/article/classify/delete [post]
+//	@Security		Bearer
 func (c Class) Delete(ctx context.Context, in *web.ArticleClassDeleteRequest) (*web.ArticleClassDeleteResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 	uid := session.GetAuthID()
@@ -124,6 +157,17 @@ func (c Class) Delete(ctx context.Context, in *web.ArticleClassDeleteRequest) (*
 	return nil, nil
 }
 
+// Sort 文章分类排序接口
+//
+//	@Summary		Sort Article Class
+//	@Description	Update the order of article classifications
+//	@Tags			ArticleClass
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleClassSortRequest	true	"Sort Class request"
+//	@Success		200		{object}	web.ArticleClassSortResponse
+//	@Router			/api/v1/article/classify/sort [post]
+//	@Security		Bearer
 func (c Class) Sort(ctx context.Context, in *web.ArticleClassSortRequest) (*web.ArticleClassSortResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 	uid := session.UserId

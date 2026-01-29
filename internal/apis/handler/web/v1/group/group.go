@@ -41,6 +41,17 @@ type Group struct {
 	Message            message.IService
 }
 
+// List 群列表接口
+//
+//	@Summary		Group List
+//	@Description	Get list of groups the user is a member of
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupListRequest	true	"Group List request"
+//	@Success		200		{object}	web.GroupListResponse
+//	@Router			/api/v1/group/list [post]
+//	@Security		Bearer
 func (g Group) List(ctx context.Context, in *web.GroupListRequest) (*web.GroupListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -67,6 +78,17 @@ func (g Group) List(ctx context.Context, in *web.GroupListRequest) (*web.GroupLi
 	return resp, nil
 }
 
+// Create 创建群聊接口
+//
+//	@Summary		Create Group
+//	@Description	Create a new group chat
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupCreateRequest	true	"Create Group request"
+//	@Success		200		{object}	web.GroupCreateResponse
+//	@Router			/api/v1/group/create [post]
+//	@Security		Bearer
 func (g Group) Create(ctx context.Context, in *web.GroupCreateRequest) (*web.GroupCreateResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -96,6 +118,17 @@ func (g Group) Create(ctx context.Context, in *web.GroupCreateRequest) (*web.Gro
 	return &web.GroupCreateResponse{GroupId: int32(gid)}, nil
 }
 
+// Detail 群聊详情接口
+//
+//	@Summary		Group Detail
+//	@Description	Get detailed information about a group
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupDetailRequest	true	"Group Detail request"
+//	@Success		200		{object}	web.GroupDetailResponse
+//	@Router			/api/v1/group/detail [post]
+//	@Security		Bearer
 func (g Group) Detail(ctx context.Context, in *web.GroupDetailRequest) (*web.GroupDetailResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -148,6 +181,17 @@ func (g Group) Detail(ctx context.Context, in *web.GroupDetailRequest) (*web.Gro
 	return resp, nil
 }
 
+// MemberList 群成员列表接口
+//
+//	@Summary		Group Member List
+//	@Description	Get list of members in a group
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupMemberListRequest	true	"Member List request"
+//	@Success		200		{object}	web.GroupMemberListResponse
+//	@Router			/api/v1/group/member-list [post]
+//	@Security		Bearer
 func (g Group) MemberList(ctx context.Context, in *web.GroupMemberListRequest) (*web.GroupMemberListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	group, err := g.GroupRepo.FindById(ctx, int(in.GroupId))
@@ -186,6 +230,17 @@ func (g Group) MemberList(ctx context.Context, in *web.GroupMemberListRequest) (
 	return &web.GroupMemberListResponse{Items: items}, nil
 }
 
+// Dismiss 解散群聊接口
+//
+//	@Summary		Dismiss Group
+//	@Description	Dissolve a group chat (master only)
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupDismissRequest	true	"Dismiss Group request"
+//	@Success		200		{object}	web.GroupDismissResponse
+//	@Router			/api/v1/group/dismiss [post]
+//	@Security		Bearer
 func (g Group) Dismiss(ctx context.Context, in *web.GroupDismissRequest) (*web.GroupDismissResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if !g.GroupMemberRepo.IsMaster(ctx, int(in.GroupId), uid) {
@@ -204,6 +259,17 @@ func (g Group) Dismiss(ctx context.Context, in *web.GroupDismissRequest) (*web.G
 	return &web.GroupDismissResponse{}, nil
 }
 
+// Invite 邀请加入群聊接口
+//
+//	@Summary		Invite to Group
+//	@Description	Invite friends to join a group chat
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupInviteRequest	true	"Invite request"
+//	@Success		200		{object}	web.GroupInviteResponse
+//	@Router			/api/v1/group/invite [post]
+//	@Security		Bearer
 func (g Group) Invite(ctx context.Context, in *web.GroupInviteRequest) (*web.GroupInviteResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -260,6 +326,17 @@ func (g Group) Invite(ctx context.Context, in *web.GroupInviteRequest) (*web.Gro
 	return &web.GroupInviteResponse{}, nil
 }
 
+// GetInviteFriends 获取可邀请好友列表接口
+//
+//	@Summary		Get Friends for Invite
+//	@Description	Get list of friends who can be invited to a group
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GetInviteFriendsRequest	true	"Get Friends request"
+//	@Success		200		{object}	web.GetInviteFriendsResponse
+//	@Router			/api/v1/group/get-invite-friends [post]
+//	@Security		Bearer
 func (g Group) GetInviteFriends(ctx context.Context, in *web.GetInviteFriendsRequest) (*web.GetInviteFriendsResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -309,6 +386,17 @@ func (g Group) GetInviteFriends(ctx context.Context, in *web.GetInviteFriendsReq
 	}, nil
 }
 
+// Secede 退出群聊接口
+//
+//	@Summary		Secede Group
+//	@Description	Leave a group chat
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupSecedeRequest	true	"Secede Group request"
+//	@Success		200		{object}	web.GroupSecedeResponse
+//	@Router			/api/v1/group/secede [post]
+//	@Security		Bearer
 func (g Group) Secede(ctx context.Context, in *web.GroupSecedeRequest) (*web.GroupSecedeResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -321,11 +409,33 @@ func (g Group) Secede(ctx context.Context, in *web.GroupSecedeRequest) (*web.Gro
 	return &web.GroupSecedeResponse{}, nil
 }
 
+// Setting 设置群聊接口
+//
+//	@Summary		Group Setting
+//	@Description	Update group settings
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupSettingRequest	true	"Group Setting request"
+//	@Success		200		{object}	web.GroupSettingResponse
+//	@Router			/api/v1/group/setting [post]
+//	@Security		Bearer
 func (g Group) Setting(ctx context.Context, req *web.GroupSettingRequest) (*web.GroupSettingResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// RemarkUpdate 群聊名片更新接口
+//
+//	@Summary		Update Group Remark
+//	@Description	Update user's remark (card) in a group
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupRemarkUpdateRequest	true	"Remark Update request"
+//	@Success		200		{object}	web.GroupRemarkUpdateResponse
+//	@Router			/api/v1/group/remark-update [post]
+//	@Security		Bearer
 func (g Group) RemarkUpdate(ctx context.Context, in *web.GroupRemarkUpdateRequest) (*web.GroupRemarkUpdateResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -339,6 +449,17 @@ func (g Group) RemarkUpdate(ctx context.Context, in *web.GroupRemarkUpdateReques
 	return &web.GroupRemarkUpdateResponse{}, nil
 }
 
+// RemoveMember 移出群成员接口
+//
+//	@Summary		Remove Group Member
+//	@Description	Remove users from a group (leader only)
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupRemoveMemberRequest	true	"Remove Member request"
+//	@Success		200		{object}	web.GroupRemoveMemberResponse
+//	@Router			/api/v1/group/remove-member [post]
+//	@Security		Bearer
 func (g Group) RemoveMember(ctx context.Context, in *web.GroupRemoveMemberRequest) (*web.GroupRemoveMemberResponse, error) {
 	uids := make([]int, 0)
 	for _, id := range sliceutil.Unique(in.UserIds) {
@@ -367,6 +488,17 @@ func (g Group) RemoveMember(ctx context.Context, in *web.GroupRemoveMemberReques
 	return &web.GroupRemoveMemberResponse{}, nil
 }
 
+// OvertList 公开群聊列表接口
+//
+//	@Summary		Overt Group List
+//	@Description	Get list of public groups
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupOvertListRequest	true	"Overt List request"
+//	@Success		200		{object}	web.GroupOvertListResponse
+//	@Router			/api/v1/group/overt-list [post]
+//	@Security		Bearer
 func (g Group) OvertList(ctx context.Context, in *web.GroupOvertListRequest) (*web.GroupOvertListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -424,6 +556,17 @@ func (g Group) OvertList(ctx context.Context, in *web.GroupOvertListRequest) (*w
 	return resp, nil
 }
 
+// Handover 群主更换接口
+//
+//	@Summary		Handover Group
+//	@Description	Transfer group ownership to another member (master only)
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupHandoverRequest	true	"Handover request"
+//	@Success		200		{object}	web.GroupHandoverResponse
+//	@Router			/api/v1/group/handover [post]
+//	@Security		Bearer
 func (g Group) Handover(ctx context.Context, in *web.GroupHandoverRequest) (*web.GroupHandoverResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if !g.GroupMemberRepo.IsMaster(ctx, int(in.GroupId), uid) {
@@ -463,6 +606,17 @@ func (g Group) Handover(ctx context.Context, in *web.GroupHandoverRequest) (*web
 	return &web.GroupHandoverResponse{}, nil
 }
 
+// AssignAdmin 分配管理员接口
+//
+//	@Summary		Assign Admin
+//	@Description	Assign or remove admin role for a group member (master only)
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupAssignAdminRequest	true	"Assign Admin request"
+//	@Success		200		{object}	web.GroupAssignAdminResponse
+//	@Router			/api/v1/group/assign-admin [post]
+//	@Security		Bearer
 func (g Group) AssignAdmin(ctx context.Context, in *web.GroupAssignAdminRequest) (*web.GroupAssignAdminResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if !g.GroupMemberRepo.IsMaster(ctx, int(in.GroupId), uid) {
@@ -479,6 +633,17 @@ func (g Group) AssignAdmin(ctx context.Context, in *web.GroupAssignAdminRequest)
 	return &web.GroupAssignAdminResponse{}, nil
 }
 
+// NoSpeak 群成员禁言接口
+//
+//	@Summary		Group Member Mute
+//	@Description	Mute or unmute a specific group member (leader only)
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupNoSpeakRequest	true	"Mute Member request"
+//	@Success		200		{object}	web.GroupNoSpeakResponse
+//	@Router			/api/v1/group/no-speak [post]
+//	@Security		Bearer
 func (g Group) NoSpeak(ctx context.Context, in *web.GroupNoSpeakRequest) (*web.GroupNoSpeakResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if !g.GroupMemberRepo.IsLeader(ctx, int(in.GroupId), uid) {
@@ -526,6 +691,17 @@ func (g Group) NoSpeak(ctx context.Context, in *web.GroupNoSpeakRequest) (*web.G
 	return &web.GroupNoSpeakResponse{}, nil
 }
 
+// Mute 群禁言接口
+//
+//	@Summary		Group Mute
+//	@Description	Mute or unmute the entire group (leader only)
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupMuteRequest	true	"Group Mute request"
+//	@Success		200		{object}	web.GroupMuteResponse
+//	@Router			/api/v1/group/mute [post]
+//	@Security		Bearer
 func (g Group) Mute(ctx context.Context, in *web.GroupMuteRequest) (*web.GroupMuteResponse, error) {
 
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
@@ -588,6 +764,17 @@ func (g Group) Mute(ctx context.Context, in *web.GroupMuteRequest) (*web.GroupMu
 	return &web.GroupMuteResponse{}, nil
 }
 
+// Overt 群公开修改接口
+//
+//	@Summary		Update Group Visibility
+//	@Description	Change group between public and private (master only)
+//	@Tags			Group
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupOvertRequest	true	"Update Visibility request"
+//	@Success		200		{object}	web.GroupOvertResponse
+//	@Router			/api/v1/group/overt [post]
+//	@Security		Bearer
 func (g Group) Overt(ctx context.Context, in *web.GroupOvertRequest) (*web.GroupOvertResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 

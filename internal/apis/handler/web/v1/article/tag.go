@@ -11,6 +11,16 @@ type Tag struct {
 }
 
 // List 标签列表
+// List 标签列表
+//
+//	@Summary		Article Tag List
+//	@Description	Get list of article tags for the user
+//	@Tags			ArticleTag
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	web.ArticleTagListResponse
+//	@Router			/api/v1/article/tag/list [get]
+//	@Security		Bearer
 func (c *Tag) List(ctx *core.Context) error {
 
 	list, err := c.ArticleTagService.List(ctx.GetContext(), ctx.AuthId())
@@ -31,6 +41,17 @@ func (c *Tag) List(ctx *core.Context) error {
 }
 
 // Edit 添加或修改标签
+// Edit 添加或修改标签
+//
+//	@Summary		Edit Article Tag
+//	@Description	Create or update an article tag
+//	@Tags			ArticleTag
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleTagEditRequest	true	"Edit Tag request"
+//	@Success		200		{object}	web.ArticleTagEditResponse
+//	@Router			/api/v1/article/tag/edit [post]
+//	@Security		Bearer
 func (c *Tag) Edit(ctx *core.Context) error {
 
 	var (
@@ -60,6 +81,17 @@ func (c *Tag) Edit(ctx *core.Context) error {
 }
 
 // Delete 删除标签
+// Delete 删除标签
+//
+//	@Summary		Delete Article Tag
+//	@Description	Remove an article tag
+//	@Tags			ArticleTag
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.ArticleTagDeleteRequest	true	"Delete Tag request"
+//	@Success		200		{object}	web.ArticleTagDeleteResponse
+//	@Router			/api/v1/article/tag/delete [post]
+//	@Security		Bearer
 func (c *Tag) Delete(ctx *core.Context) error {
 
 	in := &web.ArticleTagDeleteRequest{}

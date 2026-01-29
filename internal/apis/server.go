@@ -1,3 +1,24 @@
+// Package apis provides HTTP API server implementation
+//
+//	@title						go-chat API
+//	@version					1.0
+//	@description				go-chat is a real-time chat application with comprehensive API support
+//	@termsOfService				http://swagger.io/terms/
+//
+//	@contact.name				API Support
+//	@contact.url				https://github.com/gzydong/go-chat
+//	@contact.email				support@go-chat.com
+//
+//	@license.name				MIT
+//	@license.url				https://opensource.org/licenses/MIT
+//
+//	@host						localhost:9501
+//	@BasePath					/
+//
+//	@securityDefinitions.apikey	Bearer
+//	@in							header
+//	@name						Authorization
+//	@description				Type "Bearer" followed by a space and JWT token.
 package apis
 
 import (

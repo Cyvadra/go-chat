@@ -30,6 +30,17 @@ type Emoticon struct {
 }
 
 // List 收藏列表
+// List 收藏列表
+//
+//	@Summary		Emoticon List
+//	@Description	Get list of user's custom emoticons
+//	@Tags			Emoticon
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.EmoticonListRequest	true	"List request"
+//	@Success		200		{object}	web.EmoticonListResponse
+//	@Router			/api/v1/emoticon/customize/list [post]
+//	@Security		Bearer
 func (c *Emoticon) List(ctx context.Context, req *web.EmoticonListRequest) (*web.EmoticonListResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -53,12 +64,34 @@ func (c *Emoticon) List(ctx context.Context, req *web.EmoticonListRequest) (*web
 }
 
 // Delete 删除收藏表情包
+// Delete 删除收藏表情包
+//
+//	@Summary		Delete Emoticon
+//	@Description	Remove a custom emoticon
+//	@Tags			Emoticon
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.EmoticonDeleteRequest	true	"Delete request"
+//	@Success		200		{object}	web.EmoticonDeleteResponse
+//	@Router			/api/v1/emoticon/customize/delete [post]
+//	@Security		Bearer
 func (c *Emoticon) Delete(ctx context.Context, in *web.EmoticonDeleteRequest) (*web.EmoticonDeleteResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 	return nil, c.EmoticonService.DeleteCollect(session.GetAuthID(), []int{int(in.GetEmoticonId())})
 }
 
 // Create 创建自定义表情包
+// Create 创建自定义表情包
+//
+//	@Summary		Create Emoticon
+//	@Description	Add a new custom emoticon
+//	@Tags			Emoticon
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.EmoticonCreateRequest	true	"Create request"
+//	@Success		200		{object}	web.EmoticonCreateResponse
+//	@Router			/api/v1/emoticon/customize/create [post]
+//	@Security		Bearer
 func (c *Emoticon) Create(ctx context.Context, in *web.EmoticonCreateRequest) (*web.EmoticonCreateResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -79,6 +112,17 @@ func (c *Emoticon) Create(ctx context.Context, in *web.EmoticonCreateRequest) (*
 }
 
 // Upload 上传自定义表情包
+// Upload 上传自定义表情包
+//
+//	@Summary		Upload Emoticon
+//	@Description	Upload a file to create a new custom emoticon
+//	@Tags			Emoticon
+//	@Accept			mpfd
+//	@Produce		json
+//	@Param			file	formData	file	true	"Emoticon file"
+//	@Success		200		{object}	web.EmoticonUploadResponse
+//	@Router			/api/v1/emoticon/customize/upload [post]
+//	@Security		Bearer
 func (c *Emoticon) Upload(ginContext *gin.Context, _ *web.EmoticonUploadRequest) (*web.EmoticonUploadResponse, error) {
 	ctx := ginContext.Request.Context()
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)

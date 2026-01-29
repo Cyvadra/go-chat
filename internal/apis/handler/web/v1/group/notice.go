@@ -28,6 +28,17 @@ type Notice struct {
 }
 
 // Edit 添加或编辑群公告
+// Edit 编辑群组公告接口
+//
+//	@Summary		Edit Group Notice
+//	@Description	Create or update a group announcement
+//	@Tags			GroupNotice
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.GroupNoticeEditRequest	true	"Edit Notice request"
+//	@Success		200		{object}	web.GroupNoticeEditResponse
+//	@Router			/api/v1/group-notice/edit [post]
+//	@Security		Bearer
 func (c *Notice) Edit(ctx context.Context, in *web.GroupNoticeEditRequest) (*web.GroupNoticeEditResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 

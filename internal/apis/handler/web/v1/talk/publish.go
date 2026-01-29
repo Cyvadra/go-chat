@@ -30,6 +30,17 @@ type BaseMessageRequest struct {
 }
 
 // Send 发送消息接口
+// Send 发送消息接口
+//
+//	@Summary		Send Message
+//	@Description	Send various types of messages (text, image, file, etc.)
+//	@Tags			Message
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		talk.BaseMessageRequest	true	"Send Message request"
+//	@Success		200		{object}	map[string]string
+//	@Router			/api/v1/message/send [post]
+//	@Security		Bearer
 func (c *Publish) Send(ctx *gin.Context) (any, error) {
 	in := &BaseMessageRequest{}
 	if err := ctx.ShouldBindBodyWith(in, binding.JSON); err != nil {

@@ -22,6 +22,17 @@ type Organize struct {
 	OrganizeRepo   *repo.Organize
 }
 
+// DepartmentList 获取组织部门列表接口
+//
+//	@Summary		Department List
+//	@Description	Get list of departments in the organization
+//	@Tags			Organize
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.OrganizeDepartmentListRequest	true	"Department List request"
+//	@Success		200		{object}	web.OrganizeDepartmentListResponse
+//	@Router			/api/v1/organize/department-list [post]
+//	@Security		Bearer
 func (o *Organize) DepartmentList(ctx context.Context, req *web.OrganizeDepartmentListRequest) (*web.OrganizeDepartmentListResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
@@ -82,6 +93,17 @@ func (o *Organize) DepartmentList(ctx context.Context, req *web.OrganizeDepartme
 	return &web.OrganizeDepartmentListResponse{Items: items}, nil
 }
 
+// PersonnelList 获取组织人员列表接口
+//
+//	@Summary		Personnel List
+//	@Description	Get list of personnel in a department
+//	@Tags			Organize
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.OrganizePersonnelListRequest	true	"Personnel List request"
+//	@Success		200		{object}	web.OrganizePersonnelListResponse
+//	@Router			/api/v1/organize/personnel-list [post]
+//	@Security		Bearer
 func (o *Organize) PersonnelList(ctx context.Context, req *web.OrganizePersonnelListRequest) (*web.OrganizePersonnelListResponse, error) {
 	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 	uid := session.GetAuthID()

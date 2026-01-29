@@ -30,6 +30,17 @@ type Session struct {
 	AuthService        service.IAuthService
 }
 
+// SessionCreate 会话创建接口
+//
+//	@Summary		Create Talk Session
+//	@Description	Create a new chat session with a user or group
+//	@Tags			TalkSession
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.TalkSessionCreateRequest	true	"Create Session request"
+//	@Success		200		{object}	web.TalkSessionCreateResponse
+//	@Router			/api/v1/talk/session-create [post]
+//	@Security		Bearer
 func (s *Session) SessionCreate(ctx context.Context, in *web.TalkSessionCreateRequest) (*web.TalkSessionCreateResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -113,6 +124,17 @@ func (s *Session) SessionCreate(ctx context.Context, in *web.TalkSessionCreateRe
 	}, nil
 }
 
+// SessionDelete 会话删除接口
+//
+//	@Summary		Delete Talk Session
+//	@Description	Remove a chat session from the list
+//	@Tags			TalkSession
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.TalkSessionDeleteRequest	true	"Delete Session request"
+//	@Success		200		{object}	web.TalkSessionDeleteResponse
+//	@Router			/api/v1/talk/session-delete [post]
+//	@Security		Bearer
 func (s *Session) SessionDelete(ctx context.Context, in *web.TalkSessionDeleteRequest) (*web.TalkSessionDeleteResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -123,6 +145,17 @@ func (s *Session) SessionDelete(ctx context.Context, in *web.TalkSessionDeleteRe
 	return &web.TalkSessionDeleteResponse{}, nil
 }
 
+// SessionTop 会话置顶接口
+//
+//	@Summary		Top Talk Session
+//	@Description	Pin or unpin a chat session to the top
+//	@Tags			TalkSession
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.TalkSessionTopRequest	true	"Top Session request"
+//	@Success		200		{object}	web.TalkSessionTopResponse
+//	@Router			/api/v1/talk/session-top [post]
+//	@Security		Bearer
 func (s *Session) SessionTop(ctx context.Context, in *web.TalkSessionTopRequest) (*web.TalkSessionTopResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if err := s.TalkSessionService.Top(ctx, &service.TalkSessionTopOpt{
@@ -137,6 +170,17 @@ func (s *Session) SessionTop(ctx context.Context, in *web.TalkSessionTopRequest)
 	return &web.TalkSessionTopResponse{}, nil
 }
 
+// SessionDisturb 会话免打扰接口
+//
+//	@Summary		Disturb Talk Session
+//	@Description	Enable or disable do-not-disturb for a chat session
+//	@Tags			TalkSession
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.TalkSessionDisturbRequest	true	"Disturb Session request"
+//	@Success		200		{object}	web.TalkSessionDisturbResponse
+//	@Router			/api/v1/talk/session-disturb [post]
+//	@Security		Bearer
 func (s *Session) SessionDisturb(ctx context.Context, in *web.TalkSessionDisturbRequest) (*web.TalkSessionDisturbResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	if err := s.TalkSessionService.Disturb(ctx, &service.TalkSessionDisturbOpt{
@@ -151,6 +195,17 @@ func (s *Session) SessionDisturb(ctx context.Context, in *web.TalkSessionDisturb
 	return &web.TalkSessionDisturbResponse{}, nil
 }
 
+// SessionList 会话列表接口
+//
+//	@Summary		Talk Session List
+//	@Description	Get list of all chat sessions for the user
+//	@Tags			TalkSession
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.TalkSessionListRequest	true	"Session List request"
+//	@Success		200		{object}	web.TalkSessionListResponse
+//	@Router			/api/v1/talk/session-list [post]
+//	@Security		Bearer
 func (s *Session) SessionList(ctx context.Context, req *web.TalkSessionListRequest) (*web.TalkSessionListResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
@@ -205,6 +260,17 @@ func (s *Session) SessionList(ctx context.Context, req *web.TalkSessionListReque
 	return &web.TalkSessionListResponse{Items: items}, nil
 }
 
+// SessionClearUnreadNum 会话未读数清除接口
+//
+//	@Summary		Clear Session Unread
+//	@Description	Mark all messages in a session as read
+//	@Tags			TalkSession
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.TalkSessionClearUnreadNumRequest	true	"Clear Unread request"
+//	@Success		200		{object}	web.TalkSessionClearUnreadNumResponse
+//	@Router			/api/v1/talk/session-clear-unread-num [post]
+//	@Security		Bearer
 func (s *Session) SessionClearUnreadNum(ctx context.Context, in *web.TalkSessionClearUnreadNumRequest) (*web.TalkSessionClearUnreadNumResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 	s.UnreadStorage.Reset(ctx, uid, int(in.TalkMode), int(in.ToFromId))
