@@ -26,6 +26,20 @@ test:
 run:
 	@go run ./cmd/lumenim $(filter-out run,$(MAKECMDGOALS))
 
+.PHONY: dev-http dev-comet dev-queue dev-crontab
+dev-http:
+	@go run ./cmd/lumenim http
+dev-comet:
+	@go run ./cmd/lumenim comet
+dev-queue:
+	@go run ./cmd/lumenim queue
+dev-crontab:
+	@go run ./cmd/lumenim crontab
+
+.PHONY: dev
+dev:
+	@$(MAKE) -j 4 dev-http dev-comet dev-queue dev-crontab
+
 .PHONY: build
 build:
 	go build -o ./bin/lumenim ./cmd/lumenim
