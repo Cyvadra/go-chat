@@ -88,7 +88,7 @@ swagger-install:
 
 .PHONY: swagger-gen # 生成 Swagger 文档
 swagger-gen:
-	$(SWAG_BIN) init -g internal/apis/server.go -o docs --parseDependency --parseInternal --exclude internal/apis/handler/web/v1/article
+	$(SWAG_BIN) init -g internal/apis/server.go -o docs --parseDependency --parseInternal --useStructName --exclude internal/apis/handler/web/v1/article
 
 .PHONY: swagger-fmt # 格式化 Swagger 注释
 swagger-fmt:
