@@ -109,6 +109,21 @@ filesystem:
     bucket_private: "im-private"
     endpoint: "im-cdn.xxx.com"
     ssl: false
+  aws:
+    secret_id: "xxxxxx"
+    secret_key: "xxxxx"
+    bucket_public: "im-static"
+    bucket_private: "im-private"
+    region: "ap-northeast-1"
+    endpoint: "" # Optional, leave empty for standard AWS S3
+    ssl: true
+  cos:
+    secret_id: "xxxxxx"
+    secret_key: "xxxxx"
+    bucket_public: "im-static-125xxxxx"
+    bucket_private: "im-private-125xxxxx"
+    region: "ap-guangzhou"
+    ssl: true
 
 # 邮件配置
 email:

@@ -10,5 +10,13 @@ func NewFilesystem(conf *config.Config) filesystem.IFilesystem {
 		return filesystem.NewMinioFilesystem(conf.Filesystem.Minio)
 	}
 
+	if conf.Filesystem.Default == filesystem.AwsDriver {
+		return filesystem.NewAwsFilesystem(conf.Filesystem.Aws)
+	}
+
+	if conf.Filesystem.Default == filesystem.CosDriver {
+		return filesystem.NewCosFilesystem(conf.Filesystem.Cos)
+	}
+
 	return filesystem.NewLocalFilesystem(conf.Filesystem.Local)
 }

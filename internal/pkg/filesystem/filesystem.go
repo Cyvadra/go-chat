@@ -8,6 +8,8 @@ import (
 const (
 	MinioDriver = "minio"
 	LocalDriver = "local"
+	AwsDriver   = "aws"
+	CosDriver   = "cos"
 )
 
 type IFilesystem interface {
@@ -90,4 +92,25 @@ type MinioSystemConfig struct {
 	BucketPublic  string `json:"bucket_public" yaml:"bucket_public"`
 	BucketPrivate string `json:"bucket_private" yaml:"bucket_private"`
 	Endpoint      string `json:"endpoint" yaml:"endpoint"`
+}
+
+// AwsSystemConfig Aws S3 配置信息
+type AwsSystemConfig struct {
+	SSL           bool   `json:"ssl" yaml:"ssl"`
+	Region        string `json:"region" yaml:"region"`
+	SecretId      string `json:"secret_id" yaml:"secret_id"`
+	SecretKey     string `json:"secret_key" yaml:"secret_key"`
+	BucketPublic  string `json:"bucket_public" yaml:"bucket_public"`
+	BucketPrivate string `json:"bucket_private" yaml:"bucket_private"`
+	Endpoint      string `json:"endpoint" yaml:"endpoint"`
+}
+
+// CosSystemConfig 腾讯云 COS 配置信息
+type CosSystemConfig struct {
+	SSL           bool   `json:"ssl" yaml:"ssl"`
+	SecretId      string `json:"secret_id" yaml:"secret_id"`
+	SecretKey     string `json:"secret_key" yaml:"secret_key"`
+	BucketPublic  string `json:"bucket_public" yaml:"bucket_public"`
+	BucketPrivate string `json:"bucket_private" yaml:"bucket_private"`
+	Region        string `json:"region" yaml:"region"`
 }
