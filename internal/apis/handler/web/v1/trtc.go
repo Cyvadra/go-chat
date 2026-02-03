@@ -40,6 +40,10 @@ func (h *Trtc) GetSignature(ctx *gin.Context) (any, error) {
 		return nil, errorx.New(401, "未登录")
 	}
 
+	if h.Config == nil || h.Config.Trtc == nil {
+		return nil, errorx.New(500, "TRTC 配置未设置")
+	}
+
 	sdkAppId := h.Config.Trtc.SdkAppId
 	secretKey := h.Config.Trtc.SecretKey
 

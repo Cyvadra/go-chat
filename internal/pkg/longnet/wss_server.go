@@ -48,7 +48,6 @@ func (s *WssServer) Start(ctx context.Context) error {
 
 		conn, err := adapter.NewWsAdapter(w, r)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
 			log.Printf("[%s] websocket connect error: %s", r.RemoteAddr, err.Error())
 			return
 		}
