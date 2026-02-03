@@ -5,7 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gzydong/go-chat/config"
+	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/pkg/core/errorx"
+	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/tencentyun/tls-sig-api-v2-golang/tencentyun"
 )
 
@@ -28,7 +30,12 @@ type TrtcSignatureResponse struct {
 //	@Success		200		{object}	TrtcSignatureResponse
 //	@Router			/api/v1/trtc/user-sig [get]
 func (h *Trtc) GetSignature(ctx *gin.Context) (any, error) {
-	userId := ctx.GetInt("user_id")
+	session, err := middleware.FormContext[entity.WebClaims](ctx.Request.Context())
+	if err != nil {
+		return nil, errorx.New(401, "未登录")
+	}
+
+	userId := session.UserId
 	if userId == 0 {
 		return nil, errorx.New(401, "未登录")
 	}
@@ -37,7 +44,7 @@ func (h *Trtc) GetSignature(ctx *gin.Context) (any, error) {
 	secretKey := h.Config.Trtc.SecretKey
 
 	// Convert userId to string as TRTC expects string user ID
-	sig, err := tencentyun.GenUserSig(sdkAppId, secretKey, strconv.Itoa(userId), 86400*7)
+	sig, err := tencentyun.GenUserSig(sdkAppId, secretKey, strconv.Itoa(int(userId)), 86400*7)
 	if err != nil {
 		return nil, errorx.New(500, "生成签名失败")
 	}

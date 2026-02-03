@@ -8,7 +8,18 @@ const (
 	SubEventContactApply      = "sub.im.contact.apply"    // 好友申请消息通知
 	SubEventGroupJoin         = "sub.im.group.join"       // 邀请加入群聊通知
 	SubEventGroupApply        = "sub.im.group.apply"      // 入群申请通知
+	SubEventImCallInvite      = "sub.im.call.invite"      // 通话邀请通知
+	SubEventImCallAccept      = "sub.im.call.accept"      // 接受通话通知
+	SubEventImCallReject      = "sub.im.call.reject"      // 拒绝通话通知
+	SubEventImCallHangup      = "sub.im.call.hangup"      // 挂断通话通知
 )
+
+type SubEventImCallPayload struct {
+	FromId int    `json:"from_id"`
+	ToId   int    `json:"to_id"`
+	RoomId int    `json:"room_id"`
+	Type   string `json:"type,omitempty"`
+}
 
 type SubscribeMessage struct {
 	Event   string `json:"event"`   // 事件

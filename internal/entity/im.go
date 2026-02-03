@@ -83,3 +83,11 @@ type ImMessageRevokePayload struct {
 	MsgId    string `json:"msg_id"`
 	Remark   string `json:"remark"`
 }
+
+// ImCallPayload 通话事件
+type ImCallPayload struct {
+	FromId int    `json:"from_id"`
+	ToId   int    `json:"to_id"`
+	RoomId int    `json:"room_id"`
+	Type   string `json:"type,omitempty"`
+}

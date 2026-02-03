@@ -48,6 +48,29 @@ func (h *Handler) OnMessage(smg longnet.ISessionManager, c longnet.ISession, mes
 				ToFromId: int(gjson.GetBytes(message, "payload.to_from_id").Int()),
 			}),
 		})
+
+	case "im.call.invite", "im.call.accept", "im.call.reject", "im.call.hangup":
+		subEvent := ""
+		switch event {
+		case "im.call.invite":
+			subEvent = entity.SubEventImCallInvite
+		case "im.call.accept":
+			subEvent = entity.SubEventImCallAccept
+		case "im.call.reject":
+			subEvent = entity.SubEventImCallReject
+		case "im.call.hangup":
+			subEvent = entity.SubEventImCallHangup
+		}
+
+		_ = h.PushMessage.Push(context.Background(), entity.ImTopicChat, &entity.SubscribeMessage{
+			Event: subEvent,
+			Payload: jsonutil.Encode(entity.SubEventImCallPayload{
+				FromId: int(c.UserId()),
+				ToId:   int(gjson.GetBytes(message, "payload.to_id").Int()),
+				RoomId: int(gjson.GetBytes(message, "payload.room_id").Int()),
+				Type:   gjson.GetBytes(message, "payload.type").String(),
+			}),
+		})
 	}
 }
 

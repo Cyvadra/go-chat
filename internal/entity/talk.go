@@ -13,6 +13,10 @@ const (
 	PushEventContactApply      = "im.contact.apply"    // 好友申请消息推送
 	PushEventContactStatus     = "im.contact.status"   // 用户在线状态推送
 	PushEventGroupApply        = "im.group.apply"      // 用户在线状态推送
+	PushEventImCallInvite      = "im.call.invite"      // 通话邀请
+	PushEventImCallAccept      = "im.call.accept"      // 接受通话
+	PushEventImCallReject      = "im.call.reject"      // 拒绝通话
+	PushEventImCallHangup      = "im.call.hangup"      // 挂断通话
 )
 
 // IM消息类型

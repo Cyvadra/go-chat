@@ -36,6 +36,20 @@ func (h *Handler) init() {
 	handlers[entity.SubEventContactApply] = h.onConsumeContactApply
 	handlers[entity.SubEventGroupJoin] = h.onConsumeGroupJoin
 	handlers[entity.SubEventGroupApply] = h.onConsumeGroupApply
+
+	// Call Signaling
+	handlers[entity.SubEventImCallInvite] = func(ctx context.Context, data []byte) {
+		h.onConsumeTalkCall(ctx, data, entity.SubEventImCallInvite)
+	}
+	handlers[entity.SubEventImCallAccept] = func(ctx context.Context, data []byte) {
+		h.onConsumeTalkCall(ctx, data, entity.SubEventImCallAccept)
+	}
+	handlers[entity.SubEventImCallReject] = func(ctx context.Context, data []byte) {
+		h.onConsumeTalkCall(ctx, data, entity.SubEventImCallReject)
+	}
+	handlers[entity.SubEventImCallHangup] = func(ctx context.Context, data []byte) {
+		h.onConsumeTalkCall(ctx, data, entity.SubEventImCallHangup)
+	}
 }
 
 func (h *Handler) SetServ(serv longnet.IServer) {
