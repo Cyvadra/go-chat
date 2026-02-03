@@ -15,6 +15,10 @@ type Trtc struct {
 	Config *config.Config
 }
 
+func NewTrtc(config *config.Config) *Trtc {
+	return &Trtc{Config: config}
+}
+
 type TrtcSignatureResponse struct {
 	SdkAppId int    `json:"sdk_app_id"`
 	UserSig  string `json:"user_sig"`
@@ -40,7 +44,7 @@ func (h *Trtc) GetSignature(ctx *gin.Context) (any, error) {
 		return nil, errorx.New(401, "未登录")
 	}
 
-	if h.Config == nil || h.Config.Trtc == nil {
+	if h == nil || h.Config == nil || h.Config.Trtc == nil {
 		return nil, errorx.New(500, "TRTC 配置未设置")
 	}
 

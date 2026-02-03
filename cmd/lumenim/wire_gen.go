@@ -220,6 +220,7 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 		Filesystem:         iFilesystem,
 		SplitUploadService: fileSplitUploadService,
 	}
+	trtc := v1.NewTrtc(c)
 	groupNotice := repo.NewGroupNotice(db)
 	contactService := &service.ContactService{
 		Source:      source,
@@ -375,6 +376,7 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 		TalkMessage:  talkMessage,
 		Emoticon:     v1Emoticon,
 		Upload:       upload,
+		Trtc:         trtc,
 		Group:        groupGroup,
 		GroupNotice:  notice,
 		GroupApply:   apply,
