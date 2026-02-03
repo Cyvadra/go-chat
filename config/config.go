@@ -20,12 +20,18 @@ type Config struct {
 	Server     *Server     `json:"server" yaml:"server"`
 	Nsq        *Nsq        `json:"nsq" yaml:"nsq"`
 	OAuth      *OAuth      `json:"oauth" yaml:"oauth"`
+	Trtc       *Trtc       `json:"trtc" yaml:"trtc"`
 }
 
 type Server struct {
 	HttpAddr      string `json:"http_addr" yaml:"http_addr"`
 	WebsocketAddr string `json:"websocket_addr" yaml:"websocket_addr"`
 	TcpAddr       string `json:"tcp_addr" yaml:"tcp_addr"`
+}
+
+type Trtc struct {
+	SdkAppId  int    `json:"sdk_app_id" yaml:"sdk_app_id"`
+	SecretKey string `json:"secret_key" yaml:"secret_key"`
 }
 
 func New(filename string) *Config {

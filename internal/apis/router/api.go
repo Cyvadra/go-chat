@@ -103,4 +103,8 @@ func registerCustomApiRouter(resp *Interceptor, api gin.IRoutes, handler *web.Ha
 	api.POST("/api/v1/message/send", HandlerFunc(resp, func(c *gin.Context) (any, error) {
 		return handler.V1.Message.Send(c)
 	}))
+
+	api.GET("/api/v1/trtc/user-sig", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		return handler.V1.Trtc.GetSignature(c)
+	}))
 }

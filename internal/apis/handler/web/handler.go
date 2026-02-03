@@ -18,6 +18,7 @@ type V1 struct {
 	TalkMessage  *talk.Message
 	Emoticon     *v1.Emoticon
 	Upload       *v1.Upload
+	Trtc         *v1.Trtc
 	Group        *group.Group
 	GroupNotice  *group.Notice
 	GroupApply   *group.Apply

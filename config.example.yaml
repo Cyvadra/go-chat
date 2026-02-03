@@ -142,3 +142,8 @@ oauth:
     client_id: "cc6f015ebcaxxxa1b"
     client_secret: "33402xbbeafeb20cfc1bb"
     redirect_uri: "http://localhost:5173/oauth/callback/gitee"
+
+# TRTC Config
+trtc:
+  sdk_app_id: 1400000000
+  secret_key: "your_secret_key_here"
