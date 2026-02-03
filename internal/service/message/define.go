@@ -163,3 +163,13 @@ type CreateMixedMessageItem struct {
 	Type    int    `json:"type"`    // 消息类型
 	Content string `json:"content"` // 消息内容
 }
+
+type CreateRTCCallMessage struct {
+	MsgId    string `json:"msg_id"`     // 消息id
+	TalkMode int    `json:"talk_mode"`  // 发送模式，1-单聊，2-群聊
+	FromId   int    `json:"from_id"`    // 发送者
+	ToFromId int    `json:"to_from_id"` // 接受者(好友ID或者群组ID)
+	Type     int    `json:"type"`       // 通话类型 1:语音 2:视频
+	Status   int    `json:"status"`     // 通话状态 1:已取消 2:未接听 3:已拒绝 4:已接通/已结束
+	Duration int    `json:"duration"`   // 通话时长
+}

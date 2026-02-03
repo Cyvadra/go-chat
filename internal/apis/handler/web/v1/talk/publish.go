@@ -436,6 +436,40 @@ func (c *Publish) onMixedMessage(ctx *gin.Context) error {
 	return nil
 }
 
+type onSendRTCCallMessage struct {
+	BaseMessageRequest
+	Body struct {
+		Type     int `json:"type" binding:"required"`   // 1:语音 2:视频
+		Status   int `json:"status" binding:"required"` // 1:已取消 2:未接听 3:已拒绝 4:已接通/已结束
+		Duration int `json:"duration"`                  // 通话时长
+	} `json:"body" binding:"required"`
+}
+
+// 音视频通话消息
+func (c *Publish) onSendRTCCall(ctx *gin.Context) error {
+	in := &onSendRTCCallMessage{}
+	if err := ctx.ShouldBindBodyWith(in, binding.JSON); err != nil {
+		return errorx.New(400, err.Error())
+	}
+
+	uid := middleware.FormContextAuthId[entity.WebClaims](ctx.Request.Context())
+	err := c.MessageService.CreateRTCCallMessage(ctx.Request.Context(), message.CreateRTCCallMessage{
+		MsgId:    in.MsgId,
+		TalkMode: in.TalkMode,
+		FromId:   uid,
+		ToFromId: in.ToFromId,
+		Type:     in.Body.Type,
+		Status:   in.Body.Status,
+		Duration: in.Body.Duration,
+	})
+
+	if err != nil {
+		return ctx.Error(err)
+	}
+
+	return nil
+}
+
 func (c *Publish) transfer(ctx *gin.Context, typeValue string) error {
 	if mapping == nil {
 		mapping = make(map[string]func(ctx *gin.Context) error)
@@ -450,6 +484,7 @@ func (c *Publish) transfer(ctx *gin.Context, typeValue string) error {
 		mapping["card"] = c.onSendCard
 		mapping["forward"] = c.onSendForward
 		mapping["mixed"] = c.onMixedMessage
+		mapping["rtc"] = c.onSendRTCCall
 	}
 
 	if call, ok := mapping[typeValue]; ok {

@@ -208,3 +208,10 @@ type TalkRecordExtraGroupShare struct {
 	Avatar    string `json:"avatar"`     // 群头像
 	Total     int    `json:"total"`      // 群成员数
 }
+
+// TalkRecordExtraRTC 音视频通话消息
+type TalkRecordExtraRTC struct {
+	Type     int `json:"type"`     // 通话类型 1:语音 2:视频
+	Status   int `json:"status"`   // 通话状态 1:已取消 2:未接听 3:已拒绝 4:已接通/已结束
+	Duration int `json:"duration"` // 通话时长
+}

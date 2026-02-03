@@ -69,6 +69,8 @@ type IMessage interface {
 	CreateBusinessCardMessage(ctx context.Context, option CreateBusinessCardMessage) error
 	// CreateMixedMessage 图文消息
 	CreateMixedMessage(ctx context.Context, option CreateMixedMessage) error
+	// CreateRTCCallMessage 音视频通话消息
+	CreateRTCCallMessage(ctx context.Context, option CreateRTCCallMessage) error
 }
 
 type IService interface {
@@ -443,6 +445,21 @@ func (s *Service) CreateMixedMessage(ctx context.Context, option CreateMixedMess
 		MsgType:  entity.ChatMsgTypeMixed,
 		Extra: jsonutil.Encode(model.TalkRecordExtraMixed{
 			Items: items,
+		}),
+	})
+}
+
+func (s *Service) CreateRTCCallMessage(ctx context.Context, option CreateRTCCallMessage) error {
+	return s.CreateMessage(ctx, CreateMessageOption{
+		MsgId:    option.MsgId,
+		TalkMode: option.TalkMode,
+		FromId:   option.FromId,
+		ToFromId: option.ToFromId,
+		MsgType:  entity.ChatMsgTypeRTCCall,
+		Extra: jsonutil.Encode(model.TalkRecordExtraRTC{
+			Type:     option.Type,
+			Status:   option.Status,
+			Duration: option.Duration,
 		}),
 	})
 }
