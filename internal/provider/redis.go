@@ -11,10 +11,11 @@ import (
 func NewRedisClient(conf *config.Config) *redis.Client {
 
 	client := redis.NewClient(&redis.Options{
-		Addr:        conf.Redis.Host,
-		Password:    conf.Redis.Auth,
-		DB:          conf.Redis.Database,
-		ReadTimeout: 0,
+		Addr:             conf.Redis.Host,
+		Password:         conf.Redis.Auth,
+		DB:               conf.Redis.Database,
+		ReadTimeout:      0,
+		DisableIndentity: true,
 	})
 
 	if _, err := client.Ping(context.TODO()).Result(); err != nil {
