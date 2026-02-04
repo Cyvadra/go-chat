@@ -35,7 +35,7 @@ func main() {
 	baseMobile := 18800000000
 	var credentials []UserCredentials
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2000; i++ {
 		mobile := fmt.Sprintf("%d", baseMobile+i)
 		nickname := fmt.Sprintf("User%d", i)
 
