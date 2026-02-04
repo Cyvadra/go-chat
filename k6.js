@@ -2,6 +2,7 @@ import ws from 'k6/ws';
 import { check, sleep } from 'k6';
 import { Counter, Rate, Trend } from 'k6/metrics';
 import { randomString } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
+import { SharedArray } from 'k6/data';
 
 // 自定义指标
 const wsConnections = new Counter('ws_connections');                // 连接计数
@@ -46,21 +47,44 @@ function getRandomMessage(size) {
     return randomString(size);
 }
 
+// Load users from JSON file if it exists
+let users = [];
+try {
+    users = new SharedArray('users', function () {
+        return JSON.parse(open('./users.json'));
+    });
+} catch (e) {
+    console.warn("users.json not found, using random IDs");
+}
+
 // 主测试函数
-export default function() {
-    const userId = getRandomUserId();
-    const url = `ws://localhost:9501/wss?uid=${userId}`;
+export default function () {
+    let url;
+    let userId;
+
+    if (users.length > 0) {
+        // Use a user from the list based on VU index
+        const userIndex = (__VU - 1) % users.length;
+        const user = users[userIndex];
+        userId = user.user_id;
+        // Server expects token for authentication
+        url = `ws://localhost:9501/wss?token=${user.token}`;
+    } else {
+        userId = getRandomUserId();
+        // Fallback to old behavior (will likely fail if auth is enabled)
+        url = `ws://localhost:9501/wss?uid=${userId}`;
+    }
 
     // 记录开始时间
     const startTime = new Date().getTime();
 
     // 连接WebSocket
-    const res = ws.connect(url, null, function(socket) {
+    const res = ws.connect(url, null, function (socket) {
         wsConnections.add(1);
         wsConnectionSuccessRate.add(true);
 
         // 连接成功事件
-        socket.on('open', function() {
+        socket.on('open', function () {
             console.log(`连接成功: 用户 ${userId}`);
 
             // 上行数据测试 - 发送多条不同大小的消息
@@ -120,7 +144,7 @@ export default function() {
             }
 
             // 设置一个定时器，在适当的时间后关闭连接
-            setTimeout(function() {
+            setTimeout(function () {
                 try {
                     socket.close();
                 } catch (e) {
@@ -130,7 +154,7 @@ export default function() {
         });
 
         // 接收消息事件
-        socket.on('message', function(data) {
+        socket.on('message', function (data) {
             wsMessagesReceived.add(1);
 
             try {
@@ -166,13 +190,13 @@ export default function() {
         });
 
         // 错误事件
-        socket.on('error', function(e) {
+        socket.on('error', function (e) {
             console.error(`WebSocket错误: ${e}`);
             wsConnectionErrors.add(1);
         });
 
         // 关闭事件
-        socket.on('close', function() {
+        socket.on('close', function () {
             const duration = new Date().getTime() - startTime;
             wsConnectionDuration.add(duration);
             console.log(`连接关闭: 用户 ${userId}, 持续时间: ${duration}ms`);
