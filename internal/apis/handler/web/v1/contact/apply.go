@@ -40,9 +40,10 @@ func (a Apply) Create(ctx context.Context, in *web.ContactApplyCreateRequest) (*
 	}
 
 	if err := a.ContactApplyService.Create(ctx, &service.ContactApplyCreateOpt{
-		UserId:   uid,
-		Remarks:  in.Remark,
-		FriendId: int(in.UserId),
+		UserId:      uid,
+		Remarks:     in.Remark,
+		FriendId:    int(in.UserId),
+		ApplyReason: in.ApplyReason,
 	}); err != nil {
 		return nil, err
 	}
@@ -135,13 +136,14 @@ func (a Apply) List(ctx context.Context, req *web.ContactApplyListRequest) (*web
 	items := make([]*web.ContactApplyListResponse_Item, 0, len(list))
 	for _, item := range list {
 		items = append(items, &web.ContactApplyListResponse_Item{
-			Id:        int32(item.Id),
-			UserId:    int32(item.UserId),
-			FriendId:  int32(item.FriendId),
-			Remark:    item.Remark,
-			Nickname:  item.Nickname,
-			Avatar:    item.Avatar,
-			CreatedAt: timeutil.FormatDatetime(item.CreatedAt),
+			Id:          int32(item.Id),
+			UserId:      int32(item.UserId),
+			FriendId:    int32(item.FriendId),
+			Remark:      item.Remark,
+			Nickname:    item.Nickname,
+			Avatar:      item.Avatar,
+			CreatedAt:   timeutil.FormatDatetime(item.CreatedAt),
+			ApplyReason: item.ApplyReason,
 		})
 	}
 

@@ -53,7 +53,8 @@ service ContactApply {
 // 添加联系人申请接口请求参数
 message ContactApplyCreateRequest{
   int32 user_id = 1[(buf.validate.field).int32.gte = 1];
-  string remark = 2 [(buf.validate.field).string.min_len = 1];
+  string remark = 2; // Removed strict validation to make it optional effectively, or keep it but add the new field
+  string apply_reason = 3;
 }
 
 // 添加联系人申请接口响应参数
@@ -90,6 +91,7 @@ message ContactApplyListResponse{
     string nickname = 5 [(google.api.field_behavior) = REQUIRED];
     string avatar = 6 [(google.api.field_behavior) = REQUIRED];
     string created_at = 7 [(google.api.field_behavior) = REQUIRED];
+    string apply_reason = 8 [(google.api.field_behavior) = REQUIRED];
   }
 
   repeated Item items = 1 [(google.api.field_behavior) = REQUIRED];

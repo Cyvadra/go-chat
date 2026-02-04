@@ -7,13 +7,14 @@
 package web
 
 import (
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -28,6 +29,7 @@ type ContactApplyCreateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int32                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Remark        string                 `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"`
+	ApplyReason   string                 `protobuf:"bytes,3,opt,name=apply_reason,json=applyReason,proto3" json:"apply_reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,6 +74,13 @@ func (x *ContactApplyCreateRequest) GetUserId() int32 {
 func (x *ContactApplyCreateRequest) GetRemark() string {
 	if x != nil {
 		return x.Remark
+	}
+	return ""
+}
+
+func (x *ContactApplyCreateRequest) GetApplyReason() string {
+	if x != nil {
+		return x.ApplyReason
 	}
 	return ""
 }
@@ -464,6 +473,7 @@ type ContactApplyListResponse_Item struct {
 	Nickname      string                 `protobuf:"bytes,5,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	Avatar        string                 `protobuf:"bytes,6,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	CreatedAt     string                 `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	ApplyReason   string                 `protobuf:"bytes,8,opt,name=apply_reason,json=applyReason,proto3" json:"apply_reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -543,6 +553,13 @@ func (x *ContactApplyListResponse_Item) GetAvatar() string {
 func (x *ContactApplyListResponse_Item) GetCreatedAt() string {
 	if x != nil {
 		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *ContactApplyListResponse_Item) GetApplyReason() string {
+	if x != nil {
+		return x.ApplyReason
 	}
 	return ""
 }

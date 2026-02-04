@@ -33,17 +33,19 @@ type ContactApplyService struct {
 }
 
 type ContactApplyCreateOpt struct {
-	UserId   int
-	Remarks  string
-	FriendId int
+	UserId      int
+	Remarks     string
+	FriendId    int
+	ApplyReason string
 }
 
 func (s *ContactApplyService) Create(ctx context.Context, opt *ContactApplyCreateOpt) error {
 
 	apply := &model.ContactApply{
-		UserId:   opt.UserId,
-		FriendId: opt.FriendId,
-		Remark:   opt.Remarks,
+		UserId:      opt.UserId,
+		FriendId:    opt.FriendId,
+		Remark:      opt.Remarks,
+		ApplyReason: opt.ApplyReason,
 	}
 
 	if err := s.Source.Db().WithContext(ctx).Create(apply).Error; err != nil {
@@ -153,6 +155,7 @@ func (s *ContactApplyService) List(ctx context.Context, uid int) ([]*model.Apply
 	fields := []string{
 		"contact_apply.id",
 		"contact_apply.remark",
+		"contact_apply.apply_reason",
 		"users.nickname",
 		"users.avatar",
 		"users.mobile",
