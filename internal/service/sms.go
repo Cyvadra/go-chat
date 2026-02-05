@@ -41,8 +41,26 @@ func (s *SmsService) Send(ctx context.Context, channel string, mobile string) (s
 		return "", err
 	}
 
-	// TODO ... 请求第三方短信接口
-	fmt.Println("正在发送短信验证码：", code)
+	// Send SMS via third-party service
+	// Integration options:
+	// 1. Aliyun SMS: https://www.aliyun.com/product/sms
+	// 2. Tencent Cloud SMS: https://cloud.tencent.com/product/sms
+	// 3. Twilio: https://www.twilio.com/sms
+	// 
+	// Example implementation with Aliyun SMS:
+	// client, err := dysmsapi.NewClientWithAccessKey("cn-hangzhou", "<accessKeyId>", "<accessKeySecret>")
+	// request := dysmsapi.CreateSendSmsRequest()
+	// request.PhoneNumbers = mobile
+	// request.SignName = "YourSignName"
+	// request.TemplateCode = "SMS_123456789"
+	// request.TemplateParam = fmt.Sprintf(`{"code":"%s"}`, code)
+	// response, err := client.SendSms(request)
+	// if err != nil || response.Code != "OK" {
+	//     return "", fmt.Errorf("SMS send failed: %v", err)
+	// }
+	
+	// For development/testing: log the code instead of sending
+	fmt.Printf("SMS verification code for %s (channel: %s): %s\n", mobile, channel, code)
 
 	return code, nil
 }

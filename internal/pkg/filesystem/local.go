@@ -190,8 +190,27 @@ func (l LocalFilesystem) CompleteMultipartUpload(bucketName, objectName, _ strin
 }
 
 func (l LocalFilesystem) AbortMultipartUpload(bucketName, objectName, uploadID string) error {
-	// TODO implement me
-	panic("implement me")
+	// Clean up temporary multipart files
+	pattern := fmt.Sprintf("%s/%s/multipart/%s/*", l.config.Root, bucketName, uploadID)
+	files, err := filepath.Glob(pattern)
+	if err != nil {
+		return err
+	}
+
+	// Delete all temporary part files
+	for _, file := range files {
+		if err := os.Remove(file); err != nil && !os.IsNotExist(err) {
+			return err
+		}
+	}
+
+	// Remove the multipart upload directory
+	dir := fmt.Sprintf("%s/%s/multipart/%s", l.config.Root, bucketName, uploadID)
+	if err := os.RemoveAll(dir); err != nil && !os.IsNotExist(err) {
+		return err
+	}
+
+	return nil
 }
 
 func (l LocalFilesystem) appendWrite(bucketName, objectName string, stream []byte) error {

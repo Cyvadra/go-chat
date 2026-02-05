@@ -94,6 +94,14 @@ func (s *Service) toSplitForward(ctx context.Context, req ForwardMessageOpt) err
 
 			if err != nil {
 				logger.Errorf("split forward message failed :%s", err.Error())
+			} else {
+				// Update unread count for all group members except the sender
+				members := s.GroupMemberRepo.GetMembers(ctx, req.ToUserId)
+				for _, member := range members {
+					if member.UserId != req.UserId {
+						s.UnreadStorage.Incr(ctx, member.UserId, entity.ChatGroupMode, req.ToUserId)
+					}
+				}
 			}
 		}
 	} else {
@@ -149,12 +157,15 @@ func (s *Service) toSplitForward(ctx context.Context, req ForwardMessageOpt) err
 			})
 
 			_ = s.PushMessage.MultiPush(ctx, entity.ImTopicChat, list)
+			
+			// Update unread count for the recipient
+			for _, item := range items {
+				s.UnreadStorage.Incr(ctx, item.ToFromId, entity.ChatPrivateMode, item.FromId)
+			}
 		} else {
 			logger.Errorf("split forward message failed :%s", err.Error())
 		}
 	}
-
-	// TODO 待完善需要更新用户未读数
 
 	return nil
 }

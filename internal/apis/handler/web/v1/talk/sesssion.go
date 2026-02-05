@@ -44,7 +44,9 @@ type Session struct {
 func (s *Session) SessionCreate(ctx context.Context, in *web.TalkSessionCreateRequest) (*web.TalkSessionCreateResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
 
-	agent := "" // TODO aa
+	// Agent identifier for session tracking (currently not used, reserved for future client type tracking)
+	agent := ""
+	
 	// 判断对方是否是自己
 	if in.TalkMode == entity.ChatPrivateMode && int(in.ToFromId) == uid {
 		return nil, entity.ErrPermissionDenied

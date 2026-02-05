@@ -421,8 +421,33 @@ func (g Group) Secede(ctx context.Context, in *web.GroupSecedeRequest) (*web.Gro
 //	@Router			/api/v1/group/setting [post]
 //	@Security		Bearer
 func (g Group) Setting(ctx context.Context, req *web.GroupSettingRequest) (*web.GroupSettingResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
+	
+	// Check if user is the group master (creator/owner)
+	if !g.GroupMemberRepo.IsMaster(ctx, int(req.GroupId), uid) {
+		return nil, entity.ErrPermissionDenied
+	}
+
+	// Prepare update data
+	data := make(map[string]any)
+	if len(req.GroupName) > 0 {
+		data["name"] = req.GroupName
+	}
+	if len(req.Avatar) > 0 {
+		data["avatar"] = req.Avatar
+	}
+	if len(req.Profile) > 0 {
+		data["profile"] = req.Profile
+	}
+	data["updated_at"] = time.Now()
+
+	// Update group settings
+	_, err := g.GroupRepo.UpdateById(ctx, int(req.GroupId), data)
+	if err != nil {
+		return nil, err
+	}
+
+	return &web.GroupSettingResponse{}, nil
 }
 
 // RemarkUpdate 群聊名片更新接口

@@ -120,7 +120,17 @@ func (g *GroupVoteService) Submit(ctx context.Context, opt *GroupVoteSubmitOpt) 
 		return err
 	}
 
-	// TODO 投递消息
+	// Notify group members about the vote submission
+	// Note: To fully implement this, add PushMessage dependency to GroupVoteService
+	// and send a system message similar to other group operations
+	// Example implementation when PushMessage is added:
+	// _ = g.PushMessage.Push(ctx, entity.ImTopicChat, &entity.SubscribeMessage{
+	//     Event:    entity.SubEventGroupVote,
+	//     UserId:   opt.UserId,
+	//     TalkType: entity.ChatGroupMode,
+	//     FromId:   opt.UserId,
+	//     ToFromId: voteInfo.GroupId,
+	// })
 
 	return nil
 }

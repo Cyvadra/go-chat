@@ -67,11 +67,51 @@ func (u *User) List(ctx context.Context, req *admin.UserListRequest) (*admin.Use
 }
 
 func (u *User) Update(ctx context.Context, req *admin.UserUpdateRequest) (*admin.UserUpdateResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	// Check if user exists
+	user, err := u.UserRepo.FindById(ctx, int(req.Id))
+	if err != nil {
+		return nil, err
+	}
+
+	// Prepare update data
+	updateData := map[string]any{
+		"nickname":   req.Username,
+		"email":      req.Email,
+		"status":     req.Status,
+		"updated_at": time.Now(),
+	}
+
+	// Only update mobile if it's provided and different
+	if len(req.Mobile) > 0 && (user.Mobile == nil || *user.Mobile != req.Mobile) {
+		updateData["mobile"] = req.Mobile
+	}
+
+	// Update user
+	_, err = u.UserRepo.UpdateById(ctx, int(req.Id), updateData)
+	if err != nil {
+		return nil, err
+	}
+
+	return &admin.UserUpdateResponse{
+		Id: req.Id,
+	}, nil
 }
 
 func (u *User) Detail(ctx context.Context, req *admin.UserDetailRequest) (*admin.UserDetailResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	// Find user by ID
+	user, err := u.UserRepo.FindById(ctx, int(req.Id))
+	if err != nil {
+		return nil, err
+	}
+
+	// Return user details
+	return &admin.UserDetailResponse{
+		Id:        int32(user.Id),
+		Username:  user.Nickname,
+		Email:     user.Email,
+		Mobile:    lo.FromPtr(user.Mobile),
+		Status:    int32(user.Status),
+		CreatedAt: user.CreatedAt.Format(time.DateTime),
+		UpdatedAt: user.UpdatedAt.Format(time.DateTime),
+	}, nil
 }

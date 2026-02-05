@@ -48,6 +48,7 @@ func (u *User) Detail(ctx context.Context, _ *web.UserDetailRequest) (*web.UserD
 	}
 
 	return &web.UserDetailResponse{
+		Id:       int32(user.Id),
 		Mobile:   lo.FromPtr(user.Mobile),
 		Nickname: user.Nickname,
 		Avatar:   user.Avatar,
@@ -236,6 +237,45 @@ func (u *User) MobileUpdate(ctx context.Context, in *web.UserMobileUpdateRequest
 //	@Router			/api/v1/user/email-update [post]
 //	@Security		Bearer
 func (u *User) EmailUpdate(ctx context.Context, req *web.UserEmailUpdateRequest) (*web.UserEmailUpdateResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	uid := session.UserId
+
+	user, _ := u.UsersRepo.FindById(ctx, uid)
+	if user.Email == req.Email {
+		return nil, errorx.New(400, "邮箱与原邮箱一致无需修改")
+	}
+
+	password, err := u.Rsa.Decrypt(req.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	if !encrypt.VerifyPassword(user.Password, string(password)) {
+		return nil, entity.ErrAccountOrPasswordError
+	}
+
+	if uid == 2054 || uid == 2055 {
+		return nil, entity.ErrPermissionDenied
+	}
+
+	// Verify email code (similar to SMS code verification)
+	// For now, we'll use SMS service's channel system for email verification
+	// In production, you would create a separate EmailService
+	if !u.SmsService.Verify(ctx, "email_verify", req.Email, req.Code) {
+		return nil, errorx.New(400, "邮箱验证码错误")
+	}
+
+	_, err = u.UsersRepo.UpdateById(ctx, user.Id, map[string]any{
+		"email": req.Email,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Delete verification code after successful update
+	u.SmsService.Delete(ctx, "email_verify", req.Email)
+
+	_ = u.UsersRepo.ClearTableCache(ctx, user.Id)
+	return &web.UserEmailUpdateResponse{}, nil
 }
