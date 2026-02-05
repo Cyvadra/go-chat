@@ -26,6 +26,16 @@ type Totp struct {
 	SysAdminTotpRepo *repo.SysAdminTotp
 }
 
+// Status 获取TOTP状态
+// @Summary 获取TOTP状态
+// @Description 获取当前管理员是否开启了双因子认证
+// @Tags 管理员后台-TOTP
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.TotpStatusRequest true "状态请求"
+// @Success 200 {object} admin.TotpStatusResponse
+// @Router /backend/totp/status [post]
 func (t *Totp) Status(ctx context.Context, in *admin.TotpStatusRequest) (*admin.TotpStatusResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 
@@ -41,6 +51,16 @@ func (t *Totp) Status(ctx context.Context, in *admin.TotpStatusRequest) (*admin.
 	return &admin.TotpStatusResponse{Enable: info.IsEnabled}, nil
 }
 
+// Close 关闭TOTP
+// @Summary 关闭TOTP
+// @Description 关闭当前管理员的双因子认证
+// @Tags 管理员后台-TOTP
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.TotpCloseRequest true "关闭请求"
+// @Success 200 {object} admin.TotpCloseResponse
+// @Router /backend/totp/close [post]
 func (t *Totp) Close(ctx context.Context, in *admin.TotpCloseRequest) (*admin.TotpCloseResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 
@@ -63,6 +83,16 @@ func (t *Totp) Close(ctx context.Context, in *admin.TotpCloseRequest) (*admin.To
 	return &admin.TotpCloseResponse{}, nil
 }
 
+// Init 初始化TOTP
+// @Summary 初始化TOTP
+// @Description 初始化双因子认证，获取密钥和二维码
+// @Tags 管理员后台-TOTP
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.TotpInitRequest true "初始化请求"
+// @Success 200 {object} admin.TotpInitResponse
+// @Router /backend/totp/init [post]
 func (t *Totp) Init(ctx context.Context, in *admin.TotpInitRequest) (*admin.TotpInitResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 
@@ -95,6 +125,16 @@ func (t *Totp) Init(ctx context.Context, in *admin.TotpInitRequest) (*admin.Totp
 	}, nil
 }
 
+// Qrcode 获取TOTP二维码
+// @Summary 获取TOTP二维码
+// @Description 获取已开启双因子认证的管理员的二维码
+// @Tags 管理员后台-TOTP
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.TotpQrcodeRequest true "二维码请求"
+// @Success 200 {object} admin.TotpQrcodeResponse
+// @Router /backend/totp/qrcode [post]
 func (t *Totp) Qrcode(ctx context.Context, in *admin.TotpQrcodeRequest) (*admin.TotpQrcodeResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 
@@ -119,6 +159,16 @@ func (t *Totp) Qrcode(ctx context.Context, in *admin.TotpQrcodeRequest) (*admin.
 	}, nil
 }
 
+// Submit 提交TOTP验证
+// @Summary 提交TOTP验证
+// @Description 提交并验证双因子认证代码，完成开启流程
+// @Tags 管理员后台-TOTP
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.TotpSubmitRequest true "提交请求"
+// @Success 200 {object} admin.TotpSubmitResponse
+// @Router /backend/totp/submit [post]
 func (t *Totp) Submit(ctx context.Context, in *admin.TotpSubmitRequest) (*admin.TotpSubmitResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 

@@ -34,6 +34,16 @@ type Auth struct {
 	Rsa             rsautil.IRsa
 }
 
+// Menus 获取管理员菜单
+// @Summary 获取管理员菜单
+// @Description 获取当前管理员的授权菜单树
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AuthMenusRequest true "菜单请求"
+// @Success 200 {object} admin.AuthMenusResponse
+// @Router /backend/auth/menus [post]
 func (c *Auth) Menus(ctx context.Context, req *admin.AuthMenusRequest) (*admin.AuthMenusResponse, error) {
 	//uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 
@@ -52,6 +62,15 @@ func (c *Auth) Menus(ctx context.Context, req *admin.AuthMenusRequest) (*admin.A
 }
 
 // Login 登录接口
+// Login 管理员登录
+// @Summary 管理员登录
+// @Description 管理员登录接口，支持图形验证码
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Param request body admin.AuthLoginRequest true "登录请求"
+// @Success 200 {object} admin.AuthLoginResponse
+// @Router /backend/auth/login [post]
 func (c *Auth) Login(ctx context.Context, in *admin.AuthLoginRequest) (*admin.AuthLoginResponse, error) {
 	if !c.ICaptcha.Verify(in.CaptchaVoucher, in.Captcha, true) {
 		return nil, errorx.New(400, "验证码填写不正确")
@@ -106,6 +125,15 @@ func (c *Auth) Login(ctx context.Context, in *admin.AuthLoginRequest) (*admin.Au
 }
 
 // Captcha 图形验证码
+// Captcha 图形验证码
+// @Summary 图形验证码
+// @Description 获取登录所需的图形验证码
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Param request body admin.AuthCaptchaRequest true "验证码请求"
+// @Success 200 {object} admin.AuthCaptchaResponse
+// @Router /backend/auth/captcha [post]
 func (c *Auth) Captcha(ctx context.Context, in *admin.AuthCaptchaRequest) (*admin.AuthCaptchaResponse, error) {
 	voucher, captcha, _, err := c.ICaptcha.Generate()
 	if err != nil {
@@ -119,11 +147,31 @@ func (c *Auth) Captcha(ctx context.Context, in *admin.AuthCaptchaRequest) (*admi
 }
 
 // Logout 退出登录接口
+// Logout 退出登录
+// @Summary 退出登录
+// @Description 管理员退出登录接口
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AuthLogoutRequest true "退出登录请求"
+// @Success 200 {object} admin.AuthLogoutResponse
+// @Router /backend/auth/logout [post]
 func (c *Auth) Logout(ctx context.Context, in *admin.AuthLogoutRequest) (*admin.AuthLogoutResponse, error) {
 	return &admin.AuthLogoutResponse{}, nil
 }
 
 // Detail 获取管理员详情接口
+// Detail 管理员详情
+// @Summary 管理员详情
+// @Description 获取当前登录管理员的详细信息
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AuthDetailRequest true "详情请求"
+// @Success 200 {object} admin.AuthDetailResponse
+// @Router /backend/auth/detail [post]
 func (c *Auth) Detail(ctx context.Context, in *admin.AuthDetailRequest) (*admin.AuthDetailResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 
@@ -142,6 +190,16 @@ func (c *Auth) Detail(ctx context.Context, in *admin.AuthDetailRequest) (*admin.
 }
 
 // UpdatePassword 更新密码接口
+// UpdatePassword 更新密码
+// @Summary 更新密码
+// @Description 更新当前管理员的登录密码
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AuthUpdatePasswordRequest true "更新密码请求"
+// @Success 200 {object} admin.AuthUpdatePasswordResponse
+// @Router /backend/auth/update-password [post]
 func (c *Auth) UpdatePassword(ctx context.Context, in *admin.AuthUpdatePasswordRequest) (*admin.AuthUpdatePasswordResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 	adminInfo, err := c.AdminRepo.FindById(ctx, uid)
@@ -178,6 +236,16 @@ func (c *Auth) UpdatePassword(ctx context.Context, in *admin.AuthUpdatePasswordR
 }
 
 // UpdateDetail 更新详情接口
+// UpdateDetail 更新详情
+// @Summary 更新详情
+// @Description 更新当前管理员的基本信息
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AuthUpdateDetailRequest true "更新详情请求"
+// @Success 200 {object} admin.AuthUpdateDetailResponse
+// @Router /backend/auth/update-detail [post]
 func (c *Auth) UpdateDetail(ctx context.Context, in *admin.AuthUpdateDetailRequest) (*admin.AuthUpdateDetailResponse, error) {
 	uid := middleware.FormContextAuthId[entity.AdminClaims](ctx)
 
@@ -194,6 +262,16 @@ func (c *Auth) UpdateDetail(ctx context.Context, in *admin.AuthUpdateDetailReque
 }
 
 // Refresh 刷新Token接口
+// Refresh 刷新Token
+// @Summary 刷新Token
+// @Description 刷新管理员的访问令牌
+// @Tags 管理员后台-认证
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AuthRefreshRequest true "刷新Token请求"
+// @Success 200 {object} admin.AuthRefreshResponse
+// @Router /backend/auth/refresh [post]
 func (c *Auth) Refresh(ctx context.Context, in *admin.AuthRefreshRequest) (*admin.AuthRefreshResponse, error) {
 	// Note: Need to implement token refresh logic
 	return nil, errorx.New(500, "需要实现Token刷新逻辑")

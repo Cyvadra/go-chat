@@ -18,6 +18,8 @@
 //	@in							header
 //	@name						Authorization
 //	@description				输入 "Bearer "，然后输入空格和 JWT Token。
+//
+//	@x-extension-websocket		{"url": "/wss/default.io", "description": "WebSocket 实时消息推送服务"}
 package apis
 
 import (
@@ -35,6 +37,14 @@ import (
 	"github.com/urfave/cli/v2"
 	"golang.org/x/sync/errgroup"
 )
+
+// WebSocketDoc WebSocket 接口文档说明
+// @Summary WebSocket 实时消息
+// @Description WebSocket 实时消息推送服务，用于接收实时聊天消息、通知等。连接地址：/wss/default.io
+// @Tags WebSocket
+// @Success 101 {string} string "Switching Protocols"
+// @Router /wss/default.io [get]
+func WebSocketDoc() {}
 
 func NewServer(ctx *cli.Context, app *Provider) error {
 	if !app.Config.Debug() {

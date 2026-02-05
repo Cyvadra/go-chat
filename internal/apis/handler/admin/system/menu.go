@@ -21,6 +21,16 @@ type Menu struct {
 
 var tree = MenuTree{}
 
+// List 菜单列表
+// @Summary 菜单列表
+// @Description 获取后台管理系统的所有菜单树
+// @Tags 管理员后台-菜单
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.MenuListRequest true "列表请求"
+// @Success 200 {object} admin.MenuListResponse
+// @Router /backend/menu/list [post]
 func (m *Menu) List(ctx context.Context, req *admin.MenuListRequest) (*admin.MenuListResponse, error) {
 	items, err := m.SysMenuRepo.FindAll(ctx, func(db *gorm.DB) {
 		db.Order("id asc")
@@ -35,6 +45,16 @@ func (m *Menu) List(ctx context.Context, req *admin.MenuListRequest) (*admin.Men
 	}, nil
 }
 
+// Create 创建菜单
+// @Summary 创建菜单
+// @Description 创建一个新的后台管理菜单
+// @Tags 管理员后台-菜单
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.MenuCreateRequest true "创建请求"
+// @Success 200 {object} admin.MenuCreateResponse
+// @Router /backend/menu/create [post]
 func (m *Menu) Create(ctx context.Context, in *admin.MenuCreateRequest) (*admin.MenuCreateResponse, error) {
 	if in.ParentId > 0 {
 		info, err := m.SysMenuRepo.FindById(ctx, in.ParentId)
@@ -72,6 +92,16 @@ func (m *Menu) Create(ctx context.Context, in *admin.MenuCreateRequest) (*admin.
 	return &admin.MenuCreateResponse{Id: data.Id}, nil
 }
 
+// Update 更新菜单
+// @Summary 更新菜单
+// @Description 更新现有后台管理菜单的信息
+// @Tags 管理员后台-菜单
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.MenuUpdateRequest true "更新请求"
+// @Success 200 {object} admin.MenuUpdateResponse
+// @Router /backend/menu/update [post]
 func (m *Menu) Update(ctx context.Context, in *admin.MenuUpdateRequest) (*admin.MenuUpdateResponse, error) {
 	_, err := m.SysMenuRepo.UpdateByWhere(ctx, map[string]any{
 		"parent_id":  in.ParentId,
@@ -91,6 +121,16 @@ func (m *Menu) Update(ctx context.Context, in *admin.MenuUpdateRequest) (*admin.
 	return &admin.MenuUpdateResponse{Id: in.Id}, nil
 }
 
+// Delete 删除菜单
+// @Summary 删除菜单
+// @Description 删除指定的后台管理菜单
+// @Tags 管理员后台-菜单
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.MenuDeleteRequest true "删除请求"
+// @Success 200 {object} admin.MenuDeleteResponse
+// @Router /backend/menu/delete [post]
 func (m *Menu) Delete(ctx context.Context, in *admin.MenuDeleteRequest) (*admin.MenuDeleteResponse, error) {
 	info, err := m.SysMenuRepo.FindById(ctx, in.Id)
 	if err != nil {

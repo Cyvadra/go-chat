@@ -19,6 +19,16 @@ type Admin struct {
 	AdminRepo *repo.Admin
 }
 
+// Create 创建管理员
+// @Summary 创建管理员
+// @Description 创建一个新的管理员账号
+// @Tags 管理员后台-管理
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AdminCreateRequest true "创建请求"
+// @Success 200 {object} admin.AdminCreateResponse
+// @Router /backend/admin/create [post]
 func (a *Admin) Create(ctx context.Context, in *admin.AdminCreateRequest) (*admin.AdminCreateResponse, error) {
 	data := &model.Admin{
 		Username:    in.Username,
@@ -37,6 +47,16 @@ func (a *Admin) Create(ctx context.Context, in *admin.AdminCreateRequest) (*admi
 	return &admin.AdminCreateResponse{Id: int32(data.Id)}, nil
 }
 
+// List 管理员列表
+// @Summary 管理员列表
+// @Description 获取管理员账号列表，支持分页和查询
+// @Tags 管理员后台-管理
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AdminListRequest true "列表请求"
+// @Success 200 {object} admin.AdminListResponse
+// @Router /backend/admin/list [post]
 func (a *Admin) List(ctx context.Context, in *admin.AdminListRequest) (*admin.AdminListResponse, error) {
 	total, conditions, err := a.AdminRepo.Pagination(ctx, int(in.Page), int(in.PageSize), func(tx *gorm.DB) *gorm.DB {
 		if in.Username != "" {
@@ -82,6 +102,16 @@ func (a *Admin) List(ctx context.Context, in *admin.AdminListRequest) (*admin.Ad
 	}, nil
 }
 
+// UpdateStatus 更新管理员状态
+// @Summary 更新管理员状态
+// @Description 启用或禁用管理员账号
+// @Tags 管理员后台-管理
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AdminUpdateStatusRequest true "更新状态请求"
+// @Success 200 {object} admin.AdminUpdateStatusResponse
+// @Router /backend/admin/update-status [post]
 func (a *Admin) UpdateStatus(ctx context.Context, in *admin.AdminUpdateStatusRequest) (*admin.AdminUpdateStatusResponse, error) {
 	_, err := a.AdminRepo.UpdateById(ctx, in.GetId(), map[string]any{
 		"status": in.Status,
@@ -94,6 +124,16 @@ func (a *Admin) UpdateStatus(ctx context.Context, in *admin.AdminUpdateStatusReq
 	return &admin.AdminUpdateStatusResponse{Id: in.Id}, nil
 }
 
+// ResetPassword 重置管理员密码
+// @Summary 重置管理员密码
+// @Description 重置指定管理员的登录密码
+// @Tags 管理员后台-管理
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param request body admin.AdminResetPasswordRequest true "重置密码请求"
+// @Success 200 {object} admin.AdminResetPasswordResponse
+// @Router /backend/admin/reset-password [post]
 func (a *Admin) ResetPassword(ctx context.Context, in *admin.AdminResetPasswordRequest) (*admin.AdminResetPasswordResponse, error) {
 	_, err := a.AdminRepo.UpdateById(ctx, in.GetId(), map[string]any{
 		"password": encrypt.HashPassword(in.Password),
