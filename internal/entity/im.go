@@ -86,8 +86,10 @@ type ImMessageRevokePayload struct {
 
 // ImCallPayload 通话事件
 type ImCallPayload struct {
-	FromId int    `json:"from_id"`
-	ToId   int    `json:"to_id"`
-	RoomId int    `json:"room_id"`
-	Type   string `json:"type,omitempty"`
+	FromUserId     int    `json:"from_user_id"`     // Match frontend expectation
+	ToUserId       int    `json:"to_user_id"`       // Match frontend expectation
+	RoomId         int    `json:"room_id"`          // Match frontend expectation
+	CallType       int    `json:"call_type"`        // Match frontend expectation (1: voice, 2: video)
+	FromUserName   string `json:"from_user_name"`   // Match frontend expectation
+	FromUserAvatar string `json:"from_user_avatar"` // Match frontend expectation
 }

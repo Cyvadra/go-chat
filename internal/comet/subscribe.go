@@ -52,6 +52,8 @@ func (m *Subscribe) handle(data *redis.Message) {
 		return
 	}
 
+	slog.Info("[Subscribe] Received message from Redis", "event", in.Event, "channel", data.Channel)
+
 	defer func() {
 		if err := recover(); err != nil {
 			slog.Error("message subscribe call err", "panic", utils.PanicTrace(err))

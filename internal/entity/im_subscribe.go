@@ -15,10 +15,12 @@ const (
 )
 
 type SubEventImCallPayload struct {
-	FromId int    `json:"from_id"`
-	ToId   int    `json:"to_id"`
-	RoomId int    `json:"room_id"`
-	Type   string `json:"type,omitempty"`
+	FromId         int    `json:"from_id"`
+	ToId           int    `json:"to_id"`
+	RoomId         int    `json:"room_id"`
+	CallType       int    `json:"call_type"`        // 1: voice, 2: video
+	FromUserName   string `json:"from_user_name"`   // For frontend display
+	FromUserAvatar string `json:"from_user_avatar"` // For frontend display
 }
 
 type SubscribeMessage struct {

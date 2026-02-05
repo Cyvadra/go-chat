@@ -18,6 +18,8 @@ func (h *Handler) onConsumeTalkCall(ctx context.Context, body []byte, event stri
 		return
 	}
 
+	slog.Info("[CallEvent] Received call event", "event", event, "from_id", in.FromId, "to_id", in.ToId, "room_id", in.RoomId, "call_type", in.CallType)
+
 	pushEvent := ""
 	switch event {
 	case entity.SubEventImCallInvite:
@@ -31,15 +33,27 @@ func (h *Handler) onConsumeTalkCall(ctx context.Context, body []byte, event stri
 	}
 
 	data := Message(pushEvent, entity.ImCallPayload{
-		FromId: in.FromId,
-		ToId:   in.ToId,
-		RoomId: in.RoomId,
-		Type:   in.Type,
+		FromUserId:     in.FromId,
+		ToUserId:       in.ToId,
+		RoomId:         in.RoomId,
+		CallType:       in.CallType,
+		FromUserName:   in.FromUserName,
+		FromUserAvatar: in.FromUserAvatar,
 	})
 
-	for _, session := range h.serv.SessionManager().GetSessions(int64(in.ToId)) {
+	sessions := h.serv.SessionManager().GetSessions(int64(in.ToId))
+	slog.Info("[CallEvent] Found sessions for target user", "to_id", in.ToId, "session_count", len(sessions))
+
+	if len(sessions) == 0 {
+		slog.Warn("[CallEvent] No active sessions found for target user", "to_id", in.ToId, "event", event)
+	}
+
+	for _, session := range sessions {
+		slog.Info("[CallEvent] Writing to session", "to_id", in.ToId, "conn_id", session.ConnId(), "event", pushEvent)
 		if err := session.Write(data); err != nil {
-			slog.Error("session write call message error", "error", err)
+			slog.Error("[CallEvent] session write call message error", "error", err, "to_id", in.ToId, "conn_id", session.ConnId())
+		} else {
+			slog.Info("[CallEvent] Successfully wrote call event to session", "to_id", in.ToId, "conn_id", session.ConnId(), "event", pushEvent)
 		}
 	}
 }
