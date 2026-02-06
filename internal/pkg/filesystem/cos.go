@@ -33,7 +33,7 @@ func NewCosFilesystem(config CosSystemConfig) *CosFilesystem {
 	}
 }
 
-func (m CosFilesystem) getHost(bucketName string) string {
+func (m CosFilesystem) getHost4Download(bucketName string) string {
 	if m.config.CosDomain != "" {
 		return fmt.Sprintf("%s", m.config.CosDomain)
 	}
@@ -41,7 +41,15 @@ func (m CosFilesystem) getHost(bucketName string) string {
 	return fmt.Sprintf("%s.cos.%s.myqcloud.com", bucketName, m.config.Region)
 }
 
-func (m CosFilesystem) getClient(bucketName string) *cos.Client {
+func (m CosFilesystem) getHost4Upload(bucketName string) string {
+	if m.config.CosDomain != "" {
+		return fmt.Sprintf("%s", m.config.CosDomain)
+	}
+
+	return fmt.Sprintf("%s.cos.%s.myqcloud.com", bucketName, m.config.Region)
+}
+
+func (m CosFilesystem) getClient4Download(bucketName string) *cos.Client {
 	scheme := "https"
 	if m.config.CosDomain != "" {
 		if !m.config.CosDomainSSL {
@@ -51,7 +59,25 @@ func (m CosFilesystem) getClient(bucketName string) *cos.Client {
 		scheme = "http"
 	}
 
-	bucketUrlStr := fmt.Sprintf("%s://%s", scheme, m.getHost(bucketName))
+	bucketUrlStr := fmt.Sprintf("%s://%s", scheme, m.getHost4Download(bucketName))
+	u, _ := url.Parse(bucketUrlStr)
+	b := &cos.BaseURL{BucketURL: u}
+
+	// Create client
+	return cos.NewClient(b, m.httpClient)
+}
+
+func (m CosFilesystem) getClient4Upload(bucketName string) *cos.Client {
+	scheme := "https"
+	if m.config.CosDomain != "" {
+		if !m.config.CosDomainSSL {
+			scheme = "http"
+		}
+	} else if !m.config.SSL {
+		scheme = "http"
+	}
+
+	bucketUrlStr := fmt.Sprintf("%s://%s", scheme, m.getHost4Upload(bucketName))
 	u, _ := url.Parse(bucketUrlStr)
 	b := &cos.BaseURL{BucketURL: u}
 
@@ -72,7 +98,7 @@ func (m CosFilesystem) BucketPrivateName() string {
 }
 
 func (m CosFilesystem) Stat(bucketName string, objectName string) (*FileStatInfo, error) {
-	client := m.getClient(bucketName)
+	client := m.getClient4Download(bucketName)
 	resp, err := client.Object.Head(context.Background(), objectName, nil)
 	if err != nil {
 		return nil, err
@@ -91,7 +117,7 @@ func (m CosFilesystem) Stat(bucketName string, objectName string) (*FileStatInfo
 }
 
 func (m CosFilesystem) Write(bucketName string, objectName string, stream []byte) error {
-	client := m.getClient(bucketName)
+	client := m.getClient4Upload(bucketName)
 	_, err := client.Object.Put(context.Background(), objectName, strings.NewReader(string(stream)), nil)
 	return err
 }
@@ -101,24 +127,24 @@ func (m CosFilesystem) Copy(bucketName string, srcObjectName, objectName string)
 }
 
 func (m CosFilesystem) CopyObject(srcBucketName string, srcObjectName, dstBucketName string, dstObjectName string) error {
-	client := m.getClient(dstBucketName)
+	client := m.getClient4Upload(dstBucketName)
 
 	// Source URL for COS Copy
 	// source URL format: <bucket-name>.cos.<region>.myqcloud.com/<key>
-	srcUrl := fmt.Sprintf("%s/%s", m.getHost(srcBucketName), srcObjectName)
+	srcUrl := fmt.Sprintf("%s/%s", m.getHost4Download(srcBucketName), srcObjectName)
 
 	_, _, err := client.Object.Copy(context.Background(), dstObjectName, srcUrl, nil)
 	return err
 }
 
 func (m CosFilesystem) Delete(bucketName string, objectName string) error {
-	client := m.getClient(bucketName)
+	client := m.getClient4Upload(bucketName)
 	_, err := client.Object.Delete(context.Background(), objectName)
 	return err
 }
 
 func (m CosFilesystem) GetObject(bucketName string, objectName string) ([]byte, error) {
-	client := m.getClient(bucketName)
+	client := m.getClient4Download(bucketName)
 	resp, err := client.Object.Get(context.Background(), objectName, nil)
 	if err != nil {
 		return nil, err
@@ -129,7 +155,7 @@ func (m CosFilesystem) GetObject(bucketName string, objectName string) ([]byte, 
 }
 
 func (m CosFilesystem) PublicUrl(bucketName, objectName string) string {
-	client := m.getClient(bucketName)
+	client := m.getClient4Download(bucketName)
 	// For public bucket, we can generate a presigned URL or just the direct URL.
 	// We'll use presigned generic method as typical for consistency, or ObjectUrl.
 	// But usually PublicUrl implies no signature.
@@ -142,7 +168,7 @@ func (m CosFilesystem) PublicUrl(bucketName, objectName string) string {
 }
 
 func (m CosFilesystem) PrivateUrl(bucketName, objectName string, filename string, expire time.Duration) string {
-	client := m.getClient(bucketName)
+	client := m.getClient4Download(bucketName)
 
 	opt := &cos.PresignedURLOptions{
 		Query:  &url.Values{},
@@ -159,7 +185,7 @@ func (m CosFilesystem) PrivateUrl(bucketName, objectName string, filename string
 }
 
 func (m CosFilesystem) InitiateMultipartUpload(bucketName, objectName string) (string, error) {
-	client := m.getClient(bucketName)
+	client := m.getClient4Upload(bucketName)
 	v, _, err := client.Object.InitiateMultipartUpload(context.Background(), objectName, nil)
 	if err != nil {
 		return "", err
@@ -168,7 +194,7 @@ func (m CosFilesystem) InitiateMultipartUpload(bucketName, objectName string) (s
 }
 
 func (m CosFilesystem) PutObjectPart(bucketName, objectName string, uploadID string, index int, data io.Reader, size int64) (ObjectPart, error) {
-	client := m.getClient(bucketName)
+	client := m.getClient4Upload(bucketName)
 	// COS part number 1-10000
 	partNumber := index
 
@@ -188,7 +214,7 @@ func (m CosFilesystem) PutObjectPart(bucketName, objectName string, uploadID str
 }
 
 func (m CosFilesystem) CompleteMultipartUpload(bucketName, objectName, uploadID string, parts []ObjectPart) error {
-	client := m.getClient(bucketName)
+	client := m.getClient4Upload(bucketName)
 
 	opt := &cos.CompleteMultipartUploadOptions{}
 	for _, part := range parts {
@@ -203,7 +229,7 @@ func (m CosFilesystem) CompleteMultipartUpload(bucketName, objectName, uploadID 
 }
 
 func (m CosFilesystem) AbortMultipartUpload(bucketName, objectName, uploadID string) error {
-	client := m.getClient(bucketName)
+	client := m.getClient4Upload(bucketName)
 	_, err := client.Object.AbortMultipartUpload(context.Background(), objectName, uploadID)
 	return err
 }
