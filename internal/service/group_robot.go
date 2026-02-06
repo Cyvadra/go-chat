@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/repository/model"
 	"github.com/gzydong/go-chat/internal/repository/repo"
 	"github.com/gzydong/go-chat/internal/service/message"
@@ -35,10 +34,10 @@ type GroupRobotService struct {
 }
 
 type WebhookMessageRequest struct {
-	MsgType  string                 `json:"msgtype"` // text, markdown, image
-	Text     *WebhookTextMessage    `json:"text,omitempty"`
+	MsgType  string                  `json:"msgtype"` // text, markdown, image
+	Text     *WebhookTextMessage     `json:"text,omitempty"`
 	Markdown *WebhookMarkdownMessage `json:"markdown,omitempty"`
-	Image    *WebhookImageMessage   `json:"image,omitempty"`
+	Image    *WebhookImageMessage    `json:"image,omitempty"`
 }
 
 type WebhookTextMessage struct {
@@ -106,7 +105,7 @@ func (g *GroupRobotService) DeleteRobot(ctx context.Context, robotId int, userId
 
 func (g *GroupRobotService) UpdateRobot(ctx context.Context, robotId int, robotName string, description string) error {
 	updates := make(map[string]interface{})
-	
+
 	if robotName != "" {
 		updates["robot_name"] = robotName
 	}
@@ -139,27 +138,22 @@ func (g *GroupRobotService) SendWebhookMessage(ctx context.Context, webhookUrl s
 
 	// 解析消息内容
 	var content string
-	var msgType int
-	
 	switch req.MsgType {
 	case "text":
 		if req.Text == nil {
 			return errors.New("文本消息内容不能为空")
 		}
 		content = req.Text.Content
-		msgType = entity.ChatMsgTypeText
 	case "markdown":
 		if req.Markdown == nil {
 			return errors.New("Markdown消息内容不能为空")
 		}
 		content = req.Markdown.Content
-		msgType = entity.ChatMsgTypeMixed
 	case "image":
 		if req.Image == nil {
 			return errors.New("图片消息内容不能为空")
 		}
 		content = req.Image.Base64
-		msgType = entity.ChatMsgTypeImage
 	default:
 		return errors.New("不支持的消息类型")
 	}
@@ -191,6 +185,6 @@ func (g *GroupRobotService) GetRobotMessages(ctx context.Context, robotId int, l
 	if limit > 100 {
 		limit = 100
 	}
-	
+
 	return g.GroupRobotRepo.GetMessages(ctx, robotId, limit)
 }

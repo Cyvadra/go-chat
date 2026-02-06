@@ -148,10 +148,10 @@ func (i *InviteCode) DisableCode(ctx context.Context, code string) error {
 // GetInviteStats 获取用户邀请统计
 func (i *InviteCode) GetInviteStats(ctx context.Context, userId int) (map[string]int, error) {
 	var stats struct {
-		TotalCodes       int
-		AvailableCodes   int
-		UsedCodes        int
-		TotalInvitations int
+		TotalCodes       int64
+		AvailableCodes   int64
+		UsedCodes        int64
+		TotalInvitations int64
 	}
 
 	// 总邀请码数
@@ -191,6 +191,6 @@ func (i *InviteCode) GetInviteStats(ctx context.Context, userId int) (map[string
 		"total_codes":       int(stats.TotalCodes),
 		"available_codes":   int(stats.AvailableCodes),
 		"used_codes":        int(stats.UsedCodes),
-		"total_invitations": stats.TotalInvitations,
+		"total_invitations": int(stats.TotalInvitations),
 	}, nil
 }

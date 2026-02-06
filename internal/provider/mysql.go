@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm/schema"
 
 	"github.com/gzydong/go-chat/config"
+	"github.com/gzydong/go-chat/internal/repository/model"
 )
 
 func NewMySQLClient(conf *config.Config) *gorm.DB {
@@ -41,8 +42,20 @@ func NewMySQLClient(conf *config.Config) *gorm.DB {
 	}
 
 	if db.Error != nil {
-		panic(fmt.Errorf("database error :%v", err))
+		panic(fmt.Errorf("database error :%v", db.Error))
 	}
+
+	// 自动迁移数据库表
+	_ = db.AutoMigrate(
+		&model.InviteCode{},
+		&model.OAuthUser{},
+		&model.SysMenu{},
+		&model.SysRole{},
+		&model.SysResource{},
+		&model.SysAdminTotp{},
+		&model.GroupRobot{},
+		&model.GroupRobotMessage{},
+	)
 
 	sqlDB, _ := db.DB()
 
