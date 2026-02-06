@@ -46,7 +46,7 @@ func (s *Session) SessionCreate(ctx context.Context, in *web.TalkSessionCreateRe
 
 	// Agent identifier for session tracking (currently not used, reserved for future client type tracking)
 	agent := ""
-	
+
 	// 判断对方是否是自己
 	if in.TalkMode == entity.ChatPrivateMode && int(in.ToFromId) == uid {
 		return nil, entity.ErrPermissionDenied
@@ -160,16 +160,19 @@ func (s *Session) SessionDelete(ctx context.Context, in *web.TalkSessionDeleteRe
 //	@Security		Bearer
 func (s *Session) SessionTop(ctx context.Context, in *web.TalkSessionTopRequest) (*web.TalkSessionTopResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
-	if err := s.TalkSessionService.Top(ctx, &service.TalkSessionTopOpt{
+	isTop, err := s.TalkSessionService.Top(ctx, &service.TalkSessionTopOpt{
 		UserId:   uid,
 		TalkMode: int(in.TalkMode),
 		ToFromId: int(in.ToFromId),
 		Action:   int(in.Action),
-	}); err != nil {
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	return &web.TalkSessionTopResponse{}, nil
+	return &web.TalkSessionTopResponse{
+		IsTop: int32(isTop),
+	}, nil
 }
 
 // SessionDisturb 会话免打扰接口
@@ -185,16 +188,44 @@ func (s *Session) SessionTop(ctx context.Context, in *web.TalkSessionTopRequest)
 //	@Security		Bearer
 func (s *Session) SessionDisturb(ctx context.Context, in *web.TalkSessionDisturbRequest) (*web.TalkSessionDisturbResponse, error) {
 	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
-	if err := s.TalkSessionService.Disturb(ctx, &service.TalkSessionDisturbOpt{
+	isDisturb, err := s.TalkSessionService.Disturb(ctx, &service.TalkSessionDisturbOpt{
 		UserId:   uid,
 		TalkMode: int(in.TalkMode),
 		ToFromId: int(in.ToFromId),
 		Action:   int(in.Action),
-	}); err != nil {
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	return &web.TalkSessionDisturbResponse{}, nil
+	return &web.TalkSessionDisturbResponse{
+		IsDisturb: int32(isDisturb),
+	}, nil
+}
+
+// SessionDetail 会话详情接口
+//
+//	@Summary		会话详情
+//	@Description	获取聊天会话的详细设置信息
+//	@Tags			会话
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.TalkSessionDetailRequest	true	"会话详情请求"
+//	@Success		200		{object}	web.TalkSessionDetailResponse
+//	@Router			/api/v1/talk/session-detail [post]
+//	@Security		Bearer
+func (s *Session) SessionDetail(ctx context.Context, in *web.TalkSessionDetailRequest) (*web.TalkSessionDetailResponse, error) {
+	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
+
+	detail, err := s.TalkSessionService.SessionDetail(ctx, uid, int(in.TalkMode), int(in.ToFromId))
+	if err != nil {
+		return nil, err
+	}
+
+	return &web.TalkSessionDetailResponse{
+		IsTop:     int32(detail.IsTop),
+		IsDisturb: int32(detail.IsDisturb),
+	}, nil
 }
 
 // SessionList 会话列表接口

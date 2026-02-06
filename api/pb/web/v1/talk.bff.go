@@ -20,6 +20,8 @@ type ITalkHandler interface {
 	SessionTop(ctx context.Context, in *TalkSessionTopRequest) (*TalkSessionTopResponse, error)
 	// 会话免打扰接口
 	SessionDisturb(ctx context.Context, in *TalkSessionDisturbRequest) (*TalkSessionDisturbResponse, error)
+	// 会话详情接口
+	SessionDetail(ctx context.Context, in *TalkSessionDetailRequest) (*TalkSessionDetailResponse, error)
 	// 会话列表接口
 	SessionList(ctx context.Context, in *TalkSessionListRequest) (*TalkSessionListResponse, error)
 	// 会话未读数清除接口
@@ -73,6 +75,15 @@ func RegisterTalkHandler(r gin.IRoutes, interceptor interface {
 		}
 
 		return handler.SessionDisturb(ctx.Request.Context(), &in)
+	}))
+
+	r.POST("/api/v1/talk/session-detail", interceptor.Do(func(ctx *gin.Context) (any, error) {
+		var in TalkSessionDetailRequest
+		if err := interceptor.ShouldProto(ctx, &in); err != nil {
+			return nil, err
+		}
+
+		return handler.SessionDetail(ctx.Request.Context(), &in)
 	}))
 
 	r.POST("/api/v1/talk/session-list", interceptor.Do(func(ctx *gin.Context) (any, error) {

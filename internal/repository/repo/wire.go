@@ -35,4 +35,6 @@ var ProviderSet = wire.NewSet(
 	NewSysResource,
 	NewSysMenu,
 	NewSysAdminTotp,
+	NewInviteCode,
+	NewGroupRobot,
 )

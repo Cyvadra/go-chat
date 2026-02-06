@@ -56,6 +56,22 @@ service Auth {
       body: "*"
     };
   }
+
+  // 邮箱验证码登录接口
+  rpc EmailLogin(AuthEmailLoginRequest) returns (AuthEmailLoginResponse){
+    option (google.api.http) = {
+      post: "/api/v1/auth/email-login"
+      body: "*"
+    };
+  }
+
+  // Token 刷新接口
+  rpc RefreshToken(AuthRefreshTokenRequest) returns (AuthRefreshTokenResponse){
+    option (google.api.http) = {
+      post: "/api/v1/auth/refresh-token"
+      body: "*"
+    };
+  }
 }
 
 
@@ -92,10 +108,25 @@ message AuthRegisterRequest{
   string platform = 4 [(buf.validate.field).string = {in:["web", "windows", "mac"]}];
   // 短信验证码
   string sms_code = 5 [(buf.validate.field).string.len = 6];
+  // 邀请码
+  string invite_code = 6 [(buf.validate.field).string.min_len = 1, (google.api.field_behavior) = REQUIRED];
 }
 
 // 注册接口响应参数
 message AuthRegisterResponse{
+  // Token 类型
+  string type = 1 [(google.api.field_behavior) = REQUIRED];
+  // token
+  string access_token = 2 [(google.api.field_behavior) = REQUIRED];
+  // 过期时间
+  int32 expires_in = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Token 刷新接口请求参数
+message AuthRefreshTokenRequest{}
+
+// Token 刷新接口响应参数
+message AuthRefreshTokenResponse{
   // Token 类型
   string type = 1 [(google.api.field_behavior) = REQUIRED];
   // token
@@ -153,4 +184,24 @@ message AuthOAuthBindRequest{
 
 message AuthOAuthBindResponse{
   Authorize authorize = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// 邮箱登录请求参数
+message AuthEmailLoginRequest{
+  // 邮箱
+  string email = 1 [(buf.validate.field).string.min_len = 1, (google.api.field_behavior) = REQUIRED];
+  // 邮箱验证码
+  string email_code = 2 [(buf.validate.field).string.len = 6, (google.api.field_behavior) = REQUIRED];
+  // 登录平台
+  string platform = 3 [(buf.validate.field).string = {in:["web", "windows", "mac"]}, (google.api.field_behavior) = REQUIRED];
+}
+
+// 邮箱登录响应参数
+message AuthEmailLoginResponse{
+  // Token 类型
+  string type = 1 [(google.api.field_behavior) = REQUIRED];
+  // token
+  string access_token = 2 [(google.api.field_behavior) = REQUIRED];
+  // 过期时间
+  int32 expires_in = 3 [(google.api.field_behavior) = REQUIRED];
 }

@@ -39,6 +39,14 @@ service Talk {
       body: "*"
     };
   }
+  
+  // 会话详情接口
+  rpc SessionDetail(TalkSessionDetailRequest) returns (TalkSessionDetailResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/talk/session-detail"
+      body: "*"
+    };
+  }
 
   // 会话列表接口
   rpc SessionList(TalkSessionListRequest) returns (TalkSessionListResponse) {
@@ -115,7 +123,9 @@ message TalkSessionTopRequest{
 }
 
 // 会话置顶接口响应参数
-message TalkSessionTopResponse{}
+message TalkSessionTopResponse{
+  int32 is_top = 1 [(google.api.field_behavior) = REQUIRED];
+}
 
 // 会话免打扰接口请求参数
 message TalkSessionDisturbRequest{
@@ -125,7 +135,21 @@ message TalkSessionDisturbRequest{
 }
 
 // 会话免打扰接口响应参数
-message TalkSessionDisturbResponse{}
+message TalkSessionDisturbResponse{
+  int32 is_disturb = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// 会话详情接口请求参数
+message TalkSessionDetailRequest{
+  int32 talk_mode = 1 [(buf.validate.field).int32 = {in:[1, 2]}];
+  int32 to_from_id = 2 [(buf.validate.field).int32.gte = 1];
+}
+
+// 会话详情接口响应参数
+message TalkSessionDetailResponse{
+  int32 is_top = 1 [(google.api.field_behavior) = REQUIRED];
+  int32 is_disturb = 2 [(google.api.field_behavior) = REQUIRED];
+}
 
 // 会话列表接口请求参数
 message TalkSessionListRequest{}

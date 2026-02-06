@@ -15,6 +15,9 @@ var ProviderSet = wire.NewSet(
 	wire.Struct(new(SmsService), "*"),
 	wire.Bind(new(ISmsService), new(*SmsService)),
 
+	wire.Struct(new(EmailService), "*"),
+	wire.Bind(new(IEmailService), new(*EmailService)),
+
 	wire.Struct(new(TalkService), "*"),
 	wire.Bind(new(ITalkService), new(*TalkService)),
 
@@ -71,6 +74,18 @@ var ProviderSet = wire.NewSet(
 
 	wire.Struct(new(AuthService), "*"),
 	wire.Bind(new(IAuthService), new(*AuthService)),
+
+	wire.Struct(new(InviteCodeService), "*"),
+	wire.Bind(new(IInviteCodeService), new(*InviteCodeService)),
+
+	wire.Struct(new(MockWalletService), "*"),
+	wire.Bind(new(IWalletService), new(*MockWalletService)),
+
+	wire.Struct(new(MockKYCService), "*"),
+	wire.Bind(new(IKYCService), new(*MockKYCService)),
+
+	wire.Struct(new(GroupRobotService), "*"),
+	wire.Bind(new(IGroupRobotService), new(*GroupRobotService)),
 
 	wire.Struct(new(message.Service), "*"),
 	wire.Bind(new(message.IService), new(*message.Service)),

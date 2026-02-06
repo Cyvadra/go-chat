@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gzydong/go-chat/internal/pkg/core/errorx"
+	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/gzydong/go-chat/internal/pkg/encrypt/aesutil"
 	"github.com/gzydong/go-chat/internal/pkg/encrypt/rsautil"
 	"github.com/gzydong/go-chat/internal/pkg/jwtutil"
@@ -35,8 +36,10 @@ type Auth struct {
 	OAuthUsersRepo      *repo.OAuthUsers
 	UsersRepo           *repo.Users
 	SmsService          service.ISmsService
+	EmailService        service.IEmailService
 	UserService         service.IUserService
 	ArticleClassService service.IArticleClassService
+	InviteCodeService   service.IInviteCodeService
 	Rsa                 rsautil.IRsa
 	OauthService        service.IOAuthService
 	AesUtil             aesutil.IAesUtil
@@ -114,6 +117,20 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 		return nil, errorx.New(400, "手机号格式不对")
 	}
 
+	// 验证邀请码
+	if in.InviteCode == "" {
+		return nil, errorx.New(400, "邀请码不能为空")
+	}
+
+	valid, err := a.InviteCodeService.ValidateInviteCode(ctx, in.InviteCode)
+	if err != nil {
+		return nil, err
+	}
+
+	if !valid {
+		return nil, errorx.New(400, "邀请码无效或已过期")
+	}
+
 	// 验证短信验证码是否正确
 	if !a.SmsService.Verify(ctx, entity.SmsRegisterChannel, in.Mobile, in.SmsCode) {
 		return nil, entity.ErrSmsCodeError
@@ -133,6 +150,14 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 
 	if err != nil {
 		return nil, err
+	}
+
+	// 使用邀请码
+	if err := a.InviteCodeService.UseInviteCode(ctx, in.InviteCode, user.Id); err != nil {
+		logger.ErrorWithFields("使用邀请码失败", err, map[string]interface{}{
+			"invite_code": in.InviteCode,
+			"user_id":     user.Id,
+		})
 	}
 
 	a.SmsService.Delete(ctx, entity.SmsRegisterChannel, in.Mobile)
@@ -337,4 +362,110 @@ type BindTokenInfo struct {
 	Id        int32  `json:"id"`
 	Type      string `json:"type"`
 	Timestamp int64  `json:"timestamp"`
+}
+
+// EmailLogin 邮箱验证码登录
+//
+//	@Summary		邮箱登录
+//	@Description	使用邮箱和验证码进行身份验证
+//	@Tags			认证
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		web.AuthEmailLoginRequest	true	"邮箱登录请求"
+//	@Success		200		{object}	web.AuthEmailLoginResponse
+//	@Router			/api/v1/auth/email-login [post]
+func (a *Auth) EmailLogin(ctx context.Context, in *web.AuthEmailLoginRequest) (*web.AuthEmailLoginResponse, error) {
+	if in.Email == "" {
+		return nil, errorx.New(400, "邮箱不能为空")
+	}
+
+	// 验证邮箱验证码是否正确
+	if !a.EmailService.Verify(ctx, entity.EmailLoginChannel, in.Email, in.EmailCode) {
+		return nil, errorx.New(400, "邮箱验证码错误或已过期")
+	}
+
+	// 根据邮箱查找用户
+	user, err := a.UsersRepo.FindByEmail(ctx, in.Email)
+	if err != nil {
+		return nil, errorx.New(400, "该邮箱尚未注册")
+	}
+
+	// 记录登录事件
+	ip := ""
+	userAgent := ""
+
+	data := jsonutil.Marshal(queue.UserLoginRequest{
+		UserId:   int32(user.Id),
+		IpAddr:   ip,
+		Platform: in.Platform,
+		Agent:    userAgent,
+		LoginAt:  time.Now().Format(time.DateTime),
+	})
+
+	if err := a.Redis.Publish(ctx, entity.LoginTopic, data).Err(); err != nil {
+		logger.ErrorWithFields(
+			"投递登录消息异常", err,
+			queue.UserLoginRequest{
+				UserId:   int32(user.Id),
+				IpAddr:   ip,
+				Platform: in.Platform,
+				Agent:    userAgent,
+				LoginAt:  time.Now().Format(time.DateTime),
+			},
+		)
+	}
+
+	// 删除验证码
+	a.EmailService.Delete(ctx, entity.EmailLoginChannel, in.Email)
+
+	// 生成授权token
+	authorize, err := a.authorize(user.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &web.AuthEmailLoginResponse{
+		Type:        authorize.Type,
+		AccessToken: authorize.AccessToken,
+		ExpiresIn:   authorize.ExpiresIn,
+	}, nil
+}
+
+// RefreshToken 刷新 Token
+//
+//	@Summary		刷新 Token
+//	@Description	刷新用户访问令牌
+//	@Tags			认证
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	web.AuthRefreshTokenResponse
+//	@Router			/api/v1/auth/refresh-token [post]
+//	@Security		Bearer
+func (a *Auth) RefreshToken(ctx context.Context, in *web.AuthRefreshTokenRequest) (*web.AuthRefreshTokenResponse, error) {
+	uid := middleware.FormContextAuthId[entity.WebClaims](ctx)
+	if uid == 0 {
+		return nil, errorx.New(401, "未授权")
+	}
+
+	// 刷新为 72 小时
+	expiresIn := int32(72 * 3600)
+	token, err := jwtutil.NewTokenWithClaims(
+		[]byte(a.Config.Jwt.Secret), entity.WebClaims{
+			UserId: int32(uid),
+		},
+		func(c *jwt.RegisteredClaims) {
+			c.Issuer = entity.JwtIssuerWeb
+		},
+		jwtutil.WithTokenExpiresAt(time.Duration(expiresIn)*time.Second),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &web.AuthRefreshTokenResponse{
+		AccessToken: token,
+		ExpiresIn:   expiresIn,
+		Type:        "Bearer",
+	}, nil
 }

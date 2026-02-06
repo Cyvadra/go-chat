@@ -22,8 +22,9 @@ type ITalkSessionService interface {
 	List(ctx context.Context, uid int) ([]*model.SearchTalkSession, error)
 	Create(ctx context.Context, opt *TalkSessionCreateOpt) (*model.TalkSession, error)
 	Delete(ctx context.Context, uid int, talkMode int, toFromId int) error
-	Top(ctx context.Context, opt *TalkSessionTopOpt) error
-	Disturb(ctx context.Context, opt *TalkSessionDisturbOpt) error
+	Top(ctx context.Context, opt *TalkSessionTopOpt) (int, error)
+	Disturb(ctx context.Context, opt *TalkSessionDisturbOpt) (int, error)
+	SessionDetail(ctx context.Context, uid int, talkMode int, toFromId int) (*model.TalkSession, error)
 	BatchAddList(ctx context.Context, uid int, values map[string]int)
 }
 
@@ -118,12 +119,13 @@ type TalkSessionTopOpt struct {
 }
 
 // Top 会话置顶
-func (s *TalkSessionService) Top(ctx context.Context, opt *TalkSessionTopOpt) error {
+func (s *TalkSessionService) Top(ctx context.Context, opt *TalkSessionTopOpt) (int, error) {
+	isTop := lo.Ternary(opt.Action == 1, model.Yes, model.No)
 	_, err := s.TalkSessionRepo.UpdateByWhere(ctx, map[string]any{
-		"is_top":     lo.Ternary(opt.Action == 1, model.Yes, model.No),
+		"is_top":     isTop,
 		"updated_at": time.Now(),
 	}, "user_id = ? and talk_mode = ? and to_from_id = ?", opt.UserId, opt.TalkMode, opt.ToFromId)
-	return err
+	return isTop, err
 }
 
 type TalkSessionDisturbOpt struct {
@@ -134,12 +136,18 @@ type TalkSessionDisturbOpt struct {
 }
 
 // Disturb 会话免打扰
-func (s *TalkSessionService) Disturb(ctx context.Context, opt *TalkSessionDisturbOpt) error {
+func (s *TalkSessionService) Disturb(ctx context.Context, opt *TalkSessionDisturbOpt) (int, error) {
+	isDisturb := lo.Ternary(opt.Action == 1, model.Yes, model.No)
 	_, err := s.TalkSessionRepo.UpdateByWhere(ctx, map[string]any{
-		"is_disturb": lo.Ternary(opt.Action == 1, model.Yes, model.No),
+		"is_disturb": isDisturb,
 		"updated_at": time.Now(),
 	}, "user_id = ? and talk_mode = ? and to_from_id = ?", opt.UserId, opt.TalkMode, opt.ToFromId)
-	return err
+	return isDisturb, err
+}
+
+// SessionDetail 会话详情
+func (s *TalkSessionService) SessionDetail(ctx context.Context, uid int, talkMode int, toFromId int) (*model.TalkSession, error) {
+	return s.TalkSessionRepo.FindByWhere(ctx, "user_id = ? and talk_mode = ? and to_from_id = ?", uid, talkMode, toFromId)
 }
 
 // BatchAddList 批量添加会话列表

@@ -32,6 +32,17 @@ func (u *Users) IsMobileExist(ctx context.Context, mobile string) bool {
 	return exist
 }
 
+// FindByEmail 邮箱查询
+func (u *Users) FindByEmail(ctx context.Context, email string) (*model.Users, error) {
+	return u.Repo.FindByWhere(ctx, "email = ?", email)
+}
+
+// IsEmailExist 判断邮箱是否存在
+func (u *Users) IsEmailExist(ctx context.Context, email string) bool {
+	exist, _ := u.Repo.IsExist(ctx, "email = ?", email)
+	return exist
+}
+
 func (u *Users) FindByIdWithCache(ctx context.Context, id int) (*model.Users, error) {
 	return u.tableCache.GetOrSet(ctx, id, func(ctx context.Context) (*model.Users, error) {
 		return u.Repo.FindById(ctx, id)

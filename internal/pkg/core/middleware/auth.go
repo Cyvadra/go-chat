@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"slices"
 	"strings"
 	"time"
 
@@ -59,12 +58,12 @@ func NewJwtMiddleware[T IClaims](
 	return func(c *gin.Context) {
 		token := GetAuthToken(c)
 
-		//c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": 401, "message": "授权异常，请登录后操作!"})
-		//return
 		if token == "" {
-			if slices.Contains(option.ExclusionPaths, c.Request.URL.Path) {
-				c.Next()
-				return
+			for _, path := range option.ExclusionPaths {
+				if strings.HasSuffix(c.Request.URL.Path, path) {
+					c.Next()
+					return
+				}
 			}
 
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": 401, "message": "授权异常，请登录后操作!"})

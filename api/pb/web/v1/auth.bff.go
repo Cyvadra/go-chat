@@ -24,6 +24,10 @@ type IAuthHandler interface {
 	OauthBind(ctx context.Context, in *AuthOAuthBindRequest) (*AuthOAuthBindResponse, error)
 	// 第三方登录接口
 	OauthLogin(ctx context.Context, in *AuthOauthLoginRequest) (*AuthOauthLoginResponse, error)
+	// 邮箱验证码登录接口
+	EmailLogin(ctx context.Context, in *AuthEmailLoginRequest) (*AuthEmailLoginResponse, error)
+	// Token 刷新接口
+	RefreshToken(ctx context.Context, in *AuthRefreshTokenRequest) (*AuthRefreshTokenResponse, error)
 }
 
 // RegisterAuthHandler 注册服务路由处理器
@@ -91,6 +95,24 @@ func RegisterAuthHandler(r gin.IRoutes, interceptor interface {
 		}
 
 		return handler.OauthLogin(ctx.Request.Context(), &in)
+	}))
+
+	r.POST("/api/v1/auth/email-login", interceptor.Do(func(ctx *gin.Context) (any, error) {
+		var in AuthEmailLoginRequest
+		if err := interceptor.ShouldProto(ctx, &in); err != nil {
+			return nil, err
+		}
+
+		return handler.EmailLogin(ctx.Request.Context(), &in)
+	}))
+
+	r.POST("/api/v1/auth/refresh-token", interceptor.Do(func(ctx *gin.Context) (any, error) {
+		var in AuthRefreshTokenRequest
+		if err := interceptor.ShouldProto(ctx, &in); err != nil {
+			return nil, err
+		}
+
+		return handler.RefreshToken(ctx.Request.Context(), &in)
 	}))
 
 }
