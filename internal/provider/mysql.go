@@ -46,7 +46,7 @@ func NewMySQLClient(conf *config.Config) *gorm.DB {
 	}
 
 	// 自动迁移数据库表
-	_ = db.AutoMigrate(
+	err = db.AutoMigrate(
 		&model.InviteCode{},
 		&model.OAuthUser{},
 		&model.SysMenu{},
@@ -56,6 +56,9 @@ func NewMySQLClient(conf *config.Config) *gorm.DB {
 		&model.GroupRobot{},
 		&model.GroupRobotMessage{},
 	)
+	if err != nil {
+		panic(fmt.Errorf("database error :%v", err))
+	}
 
 	sqlDB, _ := db.DB()
 
