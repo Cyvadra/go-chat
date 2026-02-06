@@ -16,6 +16,10 @@ var ProviderSet = wire.NewSet(
 	wire.Struct(new(v1.Organize), "*"),
 	wire.Struct(new(v1.Upload), "*"),
 	wire.Struct(new(v1.Emoticon), "*"),
+	wire.Struct(new(v1.Invite), "*"),
+	wire.Struct(new(v1.KYC), "*"),
+	wire.Struct(new(v1.Wallet), "*"),
+	wire.Struct(new(v1.GroupRobot), "*"),
 	v1.NewTrtc,
 
 	wire.Struct(new(contact.Contact), "*"),

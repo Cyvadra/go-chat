@@ -3,6 +3,9 @@ package v1
 import (
 	"context"
 
+	pb "github.com/gzydong/go-chat/api/pb/web/v1"
+	"github.com/gzydong/go-chat/internal/entity"
+	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/gzydong/go-chat/internal/service"
 )
 
@@ -11,8 +14,8 @@ type Invite struct {
 }
 
 // GenerateInviteCode 生成邀请码
-func (i *Invite) GenerateInviteCode(ctx context.Context, req *InviteGenerateRequest) (*InviteGenerateResponse, error) {
-	userId := GetContextUserId(ctx)
+func (i *Invite) GenerateInviteCode(ctx context.Context, req *pb.InviteGenerateRequest) (*pb.InviteGenerateResponse, error) {
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
 	expireDays := req.ExpireDays
 	if expireDays <= 0 {
@@ -24,12 +27,12 @@ func (i *Invite) GenerateInviteCode(ctx context.Context, req *InviteGenerateRequ
 		maxUsage = 1 // 默认1次
 	}
 
-	inviteCode, err := i.InviteCodeService.GenerateInviteCode(ctx, int(userId), int(expireDays), int(maxUsage))
+	inviteCode, err := i.InviteCodeService.GenerateInviteCode(ctx, int(session.UserId), int(expireDays), int(maxUsage))
 	if err != nil {
 		return nil, err
 	}
 
-	return &InviteGenerateResponse{
+	return &pb.InviteGenerateResponse{
 		Code:          inviteCode.Code,
 		ExpireAt:      inviteCode.ExpireAt.Format("2006-01-02 15:04:05"),
 		MaxUsageCount: int32(inviteCode.MaxUsageCount),
@@ -37,17 +40,17 @@ func (i *Invite) GenerateInviteCode(ctx context.Context, req *InviteGenerateRequ
 }
 
 // GetMyInviteCodes 获取我的邀请码列表
-func (i *Invite) GetMyInviteCodes(ctx context.Context, req *InviteListRequest) (*InviteListResponse, error) {
-	userId := GetContextUserId(ctx)
+func (i *Invite) GetMyInviteCodes(ctx context.Context, req *pb.InviteListRequest) (*pb.InviteListResponse, error) {
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
-	codes, err := i.InviteCodeService.GetUserInviteCodes(ctx, int(userId))
+	codes, err := i.InviteCodeService.GetUserInviteCodes(ctx, int(session.UserId))
 	if err != nil {
 		return nil, err
 	}
 
-	items := make([]*InviteCodeItem, 0, len(codes))
+	items := make([]*pb.InviteCodeItem, 0, len(codes))
 	for _, code := range codes {
-		items = append(items, &InviteCodeItem{
+		items = append(items, &pb.InviteCodeItem{
 			Id:            int32(code.Id),
 			Code:          code.Code,
 			Status:        int32(code.Status),
@@ -58,21 +61,21 @@ func (i *Invite) GetMyInviteCodes(ctx context.Context, req *InviteListRequest) (
 		})
 	}
 
-	return &InviteListResponse{
+	return &pb.InviteListResponse{
 		Items: items,
 	}, nil
 }
 
 // GetInviteStats 获取邀请统计
-func (i *Invite) GetInviteStats(ctx context.Context, req *InviteStatsRequest) (*InviteStatsResponse, error) {
-	userId := GetContextUserId(ctx)
+func (i *Invite) GetInviteStats(ctx context.Context, req *pb.InviteStatsRequest) (*pb.InviteStatsResponse, error) {
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
-	stats, err := i.InviteCodeService.GetInviteStats(ctx, int(userId))
+	stats, err := i.InviteCodeService.GetInviteStats(ctx, int(session.UserId))
 	if err != nil {
 		return nil, err
 	}
 
-	return &InviteStatsResponse{
+	return &pb.InviteStatsResponse{
 		TotalCodes:       int32(stats["total_codes"]),
 		AvailableCodes:   int32(stats["available_codes"]),
 		UsedCodes:        int32(stats["used_codes"]),
@@ -81,62 +84,12 @@ func (i *Invite) GetInviteStats(ctx context.Context, req *InviteStatsRequest) (*
 }
 
 // DisableInviteCode 禁用邀请码
-func (i *Invite) DisableInviteCode(ctx context.Context, req *InviteDisableRequest) (*InviteDisableResponse, error) {
-	userId := GetContextUserId(ctx)
+func (i *Invite) DisableInviteCode(ctx context.Context, req *pb.InviteDisableRequest) (*pb.InviteDisableResponse, error) {
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
 
-	if err := i.InviteCodeService.DisableInviteCode(ctx, req.Code, int(userId)); err != nil {
+	if err := i.InviteCodeService.DisableInviteCode(ctx, req.Code, int(session.UserId)); err != nil {
 		return nil, err
 	}
 
-	return &InviteDisableResponse{}, nil
-}
-
-// Request and Response types (these would normally be generated from proto)
-type InviteGenerateRequest struct {
-	ExpireDays int32 `json:"expire_days"`
-	MaxUsage   int32 `json:"max_usage"`
-}
-
-type InviteGenerateResponse struct {
-	Code          string `json:"code"`
-	ExpireAt      string `json:"expire_at"`
-	MaxUsageCount int32  `json:"max_usage_count"`
-}
-
-type InviteListRequest struct{}
-
-type InviteListResponse struct {
-	Items []*InviteCodeItem `json:"items"`
-}
-
-type InviteCodeItem struct {
-	Id            int32  `json:"id"`
-	Code          string `json:"code"`
-	Status        int32  `json:"status"`
-	ExpireAt      string `json:"expire_at"`
-	MaxUsageCount int32  `json:"max_usage_count"`
-	UsageCount    int32  `json:"usage_count"`
-	CreatedAt     string `json:"created_at"`
-}
-
-type InviteStatsRequest struct{}
-
-type InviteStatsResponse struct {
-	TotalCodes       int32 `json:"total_codes"`
-	AvailableCodes   int32 `json:"available_codes"`
-	UsedCodes        int32 `json:"used_codes"`
-	TotalInvitations int32 `json:"total_invitations"`
-}
-
-type InviteDisableRequest struct {
-	Code string `json:"code"`
-}
-
-type InviteDisableResponse struct{}
-
-// GetContextUserId 从上下文获取用户ID (helper function - should exist in the codebase)
-func GetContextUserId(ctx context.Context) int32 {
-	// This is a simplified version - the actual implementation should extract from JWT
-	// For now, we'll use a placeholder
-	return 0
+	return &pb.InviteDisableResponse{}, nil
 }

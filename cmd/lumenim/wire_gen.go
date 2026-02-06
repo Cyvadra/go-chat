@@ -56,20 +56,32 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 		UsersRepo:      users,
 		OAuthUsersRepo: oAuthUsers,
 	}
+	emailClient := provider.NewEmailClient(c)
+	templateService := &service.TemplateService{}
 	common := &v1.Common{
-		Config:      c,
-		UsersRepo:   users,
-		SmsService:  smsService,
-		UserService: userService,
+		Config:          c,
+		UsersRepo:       users,
+		SmsService:      smsService,
+		UserService:     userService,
+		EmailClient:     emailClient,
+		TemplateService: templateService,
 	}
 	jwtTokenStorage := cache.NewJwtTokenStorage(client)
 	redisLock := cache.NewRedisLock(client)
 	robot := repo.NewRobot(db)
+	emailStorage := cache.NewEmailStorage(client)
+	emailService := &service.EmailService{
+		Storage: emailStorage,
+	}
 	source := repo.NewSource(db, client)
 	articleClass := repo.NewArticleClass(db)
 	articleClassService := &service.ArticleClassService{
 		Source:       source,
 		ArticleClass: articleClass,
+	}
+	inviteCode := repo.NewInviteCode(db)
+	inviteCodeService := &service.InviteCodeService{
+		InviteCodeRepo: inviteCode,
 	}
 	iRsa := provider.NewRsa(c)
 	httpClient := provider.NewHttpClient()
@@ -93,8 +105,10 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 		OAuthUsersRepo:      oAuthUsers,
 		UsersRepo:           users,
 		SmsService:          smsService,
+		EmailService:        emailService,
 		UserService:         userService,
 		ArticleClassService: articleClassService,
+		InviteCodeService:   inviteCodeService,
 		Rsa:                 iRsa,
 		OauthService:        oAuthService,
 		AesUtil:             iAesUtil,
@@ -367,6 +381,27 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 		AuthService:    authService,
 		MessageService: messageService,
 	}
+	invite := &v1.Invite{
+		InviteCodeService: inviteCodeService,
+	}
+	mockKYCService := &service.MockKYCService{}
+	kyc := &v1.KYC{
+		KYCService: mockKYCService,
+	}
+	mockWalletService := &service.MockWalletService{}
+	wallet := &v1.Wallet{
+		WalletService: mockWalletService,
+	}
+	groupRobot := repo.NewGroupRobot(db)
+	groupRobotService := &service.GroupRobotService{
+		GroupRobotRepo:  groupRobot,
+		GroupRepo:       repoGroup,
+		GroupMemberRepo: groupMember,
+		MessageService:  messageService,
+	}
+	v1GroupRobot := &v1.GroupRobot{
+		GroupRobotService: groupRobotService,
+	}
 	webV1 := &web.V1{
 		Common:       common,
 		Auth:         auth,
@@ -389,6 +424,10 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 		ArticleClass: class,
 		ArticleTag:   tag,
 		Message:      publish,
+		Invite:       invite,
+		KYC:          kyc,
+		Wallet:       wallet,
+		GroupRobot:   v1GroupRobot,
 	}
 	webHandler := &web.Handler{
 		V1:       webV1,

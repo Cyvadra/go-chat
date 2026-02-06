@@ -113,4 +113,6 @@ type CosSystemConfig struct {
 	BucketPublic  string `json:"bucket_public" yaml:"bucket_public"`
 	BucketPrivate string `json:"bucket_private" yaml:"bucket_private"`
 	Region        string `json:"region" yaml:"region"`
+	CosDomain     string `json:"cos_domain" yaml:"cos_domain"`
+	CosDomainSSL  bool   `json:"cos_domain_ssl_enabled" yaml:"cos_domain_ssl_enabled"`
 }

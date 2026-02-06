@@ -8,6 +8,7 @@ import (
 	web2 "github.com/gzydong/go-chat/api/pb/web/v1"
 	_ "github.com/gzydong/go-chat/docs" // Import generated docs
 	"github.com/gzydong/go-chat/internal/apis/handler/web"
+	v1 "github.com/gzydong/go-chat/internal/apis/handler/web/v1"
 	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/gzydong/go-chat/internal/pkg/jwtutil"
@@ -73,6 +74,7 @@ func RegisterWebRoute(secret string, router *gin.Engine, handler *web.Handler, s
 	web2.RegisterGroupVoteHandler(api, resp, handler.V1.GroupVote)
 	web2.RegisterGroupNoticeHandler(api, resp, handler.V1.GroupNotice)
 	web2.RegisterMessageHandler(api, resp, handler.V1.TalkMessage)
+	web2.RegisterInviteHandler(api, resp, handler.V1.Invite)
 
 	registerCustomApiRouter(resp, api, handler)
 }
@@ -117,5 +119,145 @@ func registerCustomApiRouter(resp *Interceptor, api gin.IRoutes, handler *web.Ha
 
 	api.GET("/api/v1/trtc/user-sig", HandlerFunc(resp, func(c *gin.Context) (any, error) {
 		return handler.V1.Trtc.GetSignature(c)
+	}))
+
+	// KYC routes
+	api.POST("/api/v1/kyc/status", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		return handler.V1.KYC.GetKYCStatus(c.Request.Context(), &v1.KYCStatusRequest{})
+	}))
+
+	api.POST("/api/v1/kyc/submit", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.KYCSubmitRequestData
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.KYC.SubmitKYC(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/kyc/detail", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		return handler.V1.KYC.GetKYCDetail(c.Request.Context(), &v1.KYCDetailRequest{})
+	}))
+
+	api.POST("/api/v1/kyc/upload-idcard", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.KYCUploadIDCardRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.KYC.UploadIDCard(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/kyc/upload-face", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.KYCUploadFaceRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.KYC.UploadFaceImage(c.Request.Context(), &req)
+	}))
+
+	// Wallet routes
+	api.POST("/api/v1/wallet/balance", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		return handler.V1.Wallet.GetBalance(c.Request.Context(), &v1.WalletBalanceRequest{})
+	}))
+
+	api.POST("/api/v1/wallet/recharge", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.WalletRechargeRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.Wallet.Recharge(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/wallet/transfer", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.WalletTransferRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.Wallet.Transfer(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/wallet/history", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.WalletHistoryRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.Wallet.GetTransactionHistory(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/wallet/red-envelope/send", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.WalletSendRedEnvelopeRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.Wallet.SendRedEnvelope(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/wallet/red-envelope/receive", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.WalletReceiveRedEnvelopeRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.Wallet.ReceiveRedEnvelope(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/wallet/red-envelope/detail", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.WalletRedEnvelopeDetailRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.Wallet.GetRedEnvelopeDetail(c.Request.Context(), &req)
+	}))
+
+	// GroupRobot routes
+	api.POST("/api/v1/group/robot/create", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.GroupRobotCreateRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.GroupRobot.CreateRobot(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/group/robot/list", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.GroupRobotListRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.GroupRobot.GetRobotList(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/group/robot/delete", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.GroupRobotDeleteRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.GroupRobot.DeleteRobot(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/group/robot/update", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.GroupRobotUpdateRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.GroupRobot.UpdateRobot(c.Request.Context(), &req)
+	}))
+
+	api.POST("/api/v1/group/robot/messages", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.GroupRobotMessagesRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.GroupRobot.GetRobotMessages(c.Request.Context(), &req)
+	}))
+
+	// Webhook route (note: this doesn't require auth, so might need special handling)
+	api.POST("/api/v1/webhook/robot/:webhook_url", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		webhookUrl := c.Param("webhook_url")
+		var req v1.WebhookSendRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		// Get headers
+		req.Timestamp = c.GetHeader("timestamp")
+		req.Signature = c.GetHeader("signature")
+		return handler.V1.GroupRobot.SendWebhookMessage(c.Request.Context(), webhookUrl, &req)
 	}))
 }

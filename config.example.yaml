@@ -124,6 +124,8 @@ filesystem:
     bucket_private: "im-private-125xxxxx"
     region: "ap-guangzhou"
     ssl: true
+    cos_domain: "abc.example.com"
+    cos_domain_ssl_enabled: true
 
 # 邮件配置
 email:

@@ -4,7 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/pkg/core/errorx"
+	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/gzydong/go-chat/internal/service"
 )
 
@@ -22,7 +24,8 @@ type Wallet struct {
 //	@Success		200	{object}	WalletBalanceResponse
 //	@Router			/api/v1/wallet/balance [post]
 func (w *Wallet) GetBalance(ctx context.Context, req *WalletBalanceRequest) (*WalletBalanceResponse, error) {
-	userId := GetWalletContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	balance, err := w.WalletService.GetBalance(ctx, int(userId))
 	if err != nil {
@@ -45,7 +48,8 @@ func (w *Wallet) GetBalance(ctx context.Context, req *WalletBalanceRequest) (*Wa
 //	@Success		200		{object}	WalletRechargeResponse
 //	@Router			/api/v1/wallet/recharge [post]
 func (w *Wallet) Recharge(ctx context.Context, req *WalletRechargeRequest) (*WalletRechargeResponse, error) {
-	userId := GetWalletContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.Amount <= 0 {
 		return nil, errorx.New(400, "充值金额必须大于0")
@@ -76,7 +80,8 @@ func (w *Wallet) Recharge(ctx context.Context, req *WalletRechargeRequest) (*Wal
 //	@Success		200		{object}	WalletTransferResponse
 //	@Router			/api/v1/wallet/transfer [post]
 func (w *Wallet) Transfer(ctx context.Context, req *WalletTransferRequest) (*WalletTransferResponse, error) {
-	userId := GetWalletContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.Amount <= 0 {
 		return nil, errorx.New(400, "转账金额必须大于0")
@@ -111,7 +116,8 @@ func (w *Wallet) Transfer(ctx context.Context, req *WalletTransferRequest) (*Wal
 //	@Success		200		{object}	WalletHistoryResponse
 //	@Router			/api/v1/wallet/history [post]
 func (w *Wallet) GetTransactionHistory(ctx context.Context, req *WalletHistoryRequest) (*WalletHistoryResponse, error) {
-	userId := GetWalletContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.Page <= 0 {
 		req.Page = 1
@@ -166,7 +172,8 @@ func (w *Wallet) GetTransactionHistory(ctx context.Context, req *WalletHistoryRe
 //	@Success		200		{object}	WalletSendRedEnvelopeResponse
 //	@Router			/api/v1/wallet/red-envelope/send [post]
 func (w *Wallet) SendRedEnvelope(ctx context.Context, req *WalletSendRedEnvelopeRequest) (*WalletSendRedEnvelopeResponse, error) {
-	userId := GetWalletContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.Amount <= 0 {
 		return nil, errorx.New(400, "红包金额必须大于0")
@@ -211,7 +218,8 @@ func (w *Wallet) SendRedEnvelope(ctx context.Context, req *WalletSendRedEnvelope
 //	@Success		200		{object}	WalletReceiveRedEnvelopeResponse
 //	@Router			/api/v1/wallet/red-envelope/receive [post]
 func (w *Wallet) ReceiveRedEnvelope(ctx context.Context, req *WalletReceiveRedEnvelopeRequest) (*WalletReceiveRedEnvelopeResponse, error) {
-	userId := GetWalletContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.EnvelopeId == "" {
 		return nil, errorx.New(400, "红包ID不能为空")
@@ -340,7 +348,7 @@ type WalletSendRedEnvelopeRequest struct {
 	ChatId   int32   `json:"chat_id"`
 	Amount   float64 `json:"amount"`
 	Count    int32   `json:"count"`
-	Type     string  `json:"type"`     // normal, lucky
+	Type     string  `json:"type"` // normal, lucky
 	Greeting string  `json:"greeting"`
 	Password string  `json:"password"`
 }
@@ -370,17 +378,17 @@ type WalletRedEnvelopeDetailRequest struct {
 }
 
 type WalletRedEnvelopeDetailResponse struct {
-	EnvelopeId    string                      `json:"envelope_id"`
-	SenderId      int32                       `json:"sender_id"`
-	SenderName    string                      `json:"sender_name"`
-	Amount        float64                     `json:"amount"`
-	Count         int32                       `json:"count"`
-	Type          string                      `json:"type"`
-	Greeting      string                      `json:"greeting"`
-	Status        string                      `json:"status"`
-	ReceivedCount int32                       `json:"received_count"`
+	EnvelopeId    string                       `json:"envelope_id"`
+	SenderId      int32                        `json:"sender_id"`
+	SenderName    string                       `json:"sender_name"`
+	Amount        float64                      `json:"amount"`
+	Count         int32                        `json:"count"`
+	Type          string                       `json:"type"`
+	Greeting      string                       `json:"greeting"`
+	Status        string                       `json:"status"`
+	ReceivedCount int32                        `json:"received_count"`
 	ReceivedList  []*WalletRedEnvelopeReceiver `json:"received_list"`
-	CreatedAt     string                      `json:"created_at"`
+	CreatedAt     string                       `json:"created_at"`
 }
 
 type WalletRedEnvelopeReceiver struct {
@@ -388,10 +396,4 @@ type WalletRedEnvelopeReceiver struct {
 	UserName   string  `json:"user_name"`
 	Amount     float64 `json:"amount"`
 	ReceivedAt string  `json:"received_at"`
-}
-
-// GetWalletContextUserId helper function
-func GetWalletContextUserId(ctx context.Context) int32 {
-	// Placeholder - should extract from JWT context
-	return 0
 }

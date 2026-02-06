@@ -4,7 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/pkg/core/errorx"
+	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/gzydong/go-chat/internal/service"
 )
 
@@ -22,7 +24,8 @@ type KYC struct {
 //	@Success		200	{object}	KYCStatusResponse
 //	@Router			/api/v1/kyc/status [post]
 func (k *KYC) GetKYCStatus(ctx context.Context, req *KYCStatusRequest) (*KYCStatusResponse, error) {
-	userId := GetKYCContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	status, err := k.KYCService.GetKYCStatus(ctx, int(userId))
 	if err != nil {
@@ -51,7 +54,8 @@ func (k *KYC) GetKYCStatus(ctx context.Context, req *KYCStatusRequest) (*KYCStat
 //	@Success		200		{object}	KYCSubmitResponse
 //	@Router			/api/v1/kyc/submit [post]
 func (k *KYC) SubmitKYC(ctx context.Context, req *KYCSubmitRequestData) (*KYCSubmitResponse, error) {
-	userId := GetKYCContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	// 验证必填字段
 	if req.RealName == "" {
@@ -99,7 +103,8 @@ func (k *KYC) SubmitKYC(ctx context.Context, req *KYCSubmitRequestData) (*KYCSub
 //	@Success		200	{object}	KYCDetailResponse
 //	@Router			/api/v1/kyc/detail [post]
 func (k *KYC) GetKYCDetail(ctx context.Context, req *KYCDetailRequest) (*KYCDetailResponse, error) {
-	userId := GetKYCContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	detail, err := k.KYCService.GetKYCDetail(ctx, int(userId))
 	if err != nil {
@@ -132,7 +137,8 @@ func (k *KYC) GetKYCDetail(ctx context.Context, req *KYCDetailRequest) (*KYCDeta
 //	@Success		200		{object}	KYCUploadIDCardResponse
 //	@Router			/api/v1/kyc/upload-idcard [post]
 func (k *KYC) UploadIDCard(ctx context.Context, req *KYCUploadIDCardRequest) (*KYCUploadIDCardResponse, error) {
-	userId := GetKYCContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.Side != "front" && req.Side != "back" {
 		return nil, errorx.New(400, "side必须为front或back")
@@ -162,7 +168,8 @@ func (k *KYC) UploadIDCard(ctx context.Context, req *KYCUploadIDCardRequest) (*K
 //	@Success		200		{object}	KYCUploadFaceResponse
 //	@Router			/api/v1/kyc/upload-face [post]
 func (k *KYC) UploadFaceImage(ctx context.Context, req *KYCUploadFaceRequest) (*KYCUploadFaceResponse, error) {
-	userId := GetKYCContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.ImageUrl == "" {
 		return nil, errorx.New(400, "图片URL不能为空")
@@ -178,11 +185,6 @@ func (k *KYC) UploadFaceImage(ctx context.Context, req *KYCUploadFaceRequest) (*
 }
 
 // Helper functions
-
-func GetKYCContextUserId(ctx context.Context) int32 {
-	// Placeholder - should extract from JWT context
-	return 0
-}
 
 func maskIDCard(idCard string) string {
 	if len(idCard) < 8 {

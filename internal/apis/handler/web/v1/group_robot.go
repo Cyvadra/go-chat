@@ -3,7 +3,9 @@ package v1
 import (
 	"context"
 
+	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/pkg/core/errorx"
+	"github.com/gzydong/go-chat/internal/pkg/core/middleware"
 	"github.com/gzydong/go-chat/internal/service"
 )
 
@@ -22,7 +24,8 @@ type GroupRobot struct {
 //	@Success		200		{object}	GroupRobotCreateResponse
 //	@Router			/api/v1/group/robot/create [post]
 func (g *GroupRobot) CreateRobot(ctx context.Context, req *GroupRobotCreateRequest) (*GroupRobotCreateResponse, error) {
-	userId := GetGroupRobotContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.GroupId <= 0 {
 		return nil, errorx.New(400, "群组ID无效")
@@ -94,7 +97,8 @@ func (g *GroupRobot) GetRobotList(ctx context.Context, req *GroupRobotListReques
 //	@Success		200		{object}	GroupRobotDeleteResponse
 //	@Router			/api/v1/group/robot/delete [post]
 func (g *GroupRobot) DeleteRobot(ctx context.Context, req *GroupRobotDeleteRequest) (*GroupRobotDeleteResponse, error) {
-	userId := GetGroupRobotContextUserId(ctx)
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
 
 	if req.RobotId <= 0 {
 		return nil, errorx.New(400, "机器人ID无效")
@@ -206,11 +210,6 @@ func (g *GroupRobot) GetRobotMessages(ctx context.Context, req *GroupRobotMessag
 }
 
 // Helper functions
-
-func GetGroupRobotContextUserId(ctx context.Context) int32 {
-	// Placeholder - should extract from JWT context
-	return 0
-}
 
 // Request and Response types
 

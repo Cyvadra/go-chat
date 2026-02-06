@@ -33,12 +33,25 @@ func NewCosFilesystem(config CosSystemConfig) *CosFilesystem {
 	}
 }
 
-func (m CosFilesystem) getClient(bucketName string) *cos.Client {
-	// Pattern: https://<bucket-name>.cos.<region>.myqcloud.com
-	// We assume bucketName provided in config or args is the full bucket name or we might need to handle it.
-	// Usually users provide "example-1250000000".
+func (m CosFilesystem) getHost(bucketName string) string {
+	if m.config.CosDomain != "" {
+		return fmt.Sprintf("%s", m.config.CosDomain)
+	}
 
-	bucketUrlStr := fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bucketName, m.config.Region)
+	return fmt.Sprintf("%s.cos.%s.myqcloud.com", bucketName, m.config.Region)
+}
+
+func (m CosFilesystem) getClient(bucketName string) *cos.Client {
+	scheme := "https"
+	if m.config.CosDomain != "" {
+		if !m.config.CosDomainSSL {
+			scheme = "http"
+		}
+	} else if !m.config.SSL {
+		scheme = "http"
+	}
+
+	bucketUrlStr := fmt.Sprintf("%s://%s", scheme, m.getHost(bucketName))
 	u, _ := url.Parse(bucketUrlStr)
 	b := &cos.BaseURL{BucketURL: u}
 
@@ -92,7 +105,7 @@ func (m CosFilesystem) CopyObject(srcBucketName string, srcObjectName, dstBucket
 
 	// Source URL for COS Copy
 	// source URL format: <bucket-name>.cos.<region>.myqcloud.com/<key>
-	srcUrl := fmt.Sprintf("%s.cos.%s.myqcloud.com/%s", srcBucketName, m.config.Region, srcObjectName)
+	srcUrl := fmt.Sprintf("%s/%s", m.getHost(srcBucketName), srcObjectName)
 
 	_, _, err := client.Object.Copy(context.Background(), dstObjectName, srcUrl, nil)
 	return err
