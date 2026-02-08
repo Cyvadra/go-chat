@@ -147,7 +147,7 @@ func (g *GroupRobot) UpdateRobot(ctx context.Context, req *GroupRobotUpdateReque
 //	@Param			webhook_url	path		string					true	"Webhook URL"
 //	@Param			timestamp	header		string					true	"时间戳"
 //	@Param			signature	header		string					true	"签名"
-//	@Param			request		body		WebhookMessageRequest	true	"消息内容"
+//	@Param			request		body		service.WebhookMessageRequest	true	"消息内容"
 //	@Success		200			{object}	WebhookMessageResponse
 //	@Router			/api/v1/webhook/robot/{webhook_url} [post]
 func (g *GroupRobot) SendWebhookMessage(ctx context.Context, webhookUrl string, req *WebhookSendRequest) (*WebhookMessageResponse, error) {
