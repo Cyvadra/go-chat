@@ -16,7 +16,7 @@ type IWalletService interface {
 	Recharge(ctx context.Context, userId int, amount float64, payMethod string) (*RechargeResult, error)
 
 	// Transfer 转账
-	Transfer(ctx context.Context, fromUserId int, toUserId int, amount float64, remark string) (*TransferResult, error)
+	Transfer(ctx context.Context, fromUserId int, toUserId int, amount float64, remark string, password string) (*TransferResult, error)
 
 	// GetTransactionHistory 获取交易记录
 	GetTransactionHistory(ctx context.Context, userId int, startDate, endDate time.Time, page, pageSize int) (*TransactionHistoryResult, error)
@@ -29,6 +29,9 @@ type IWalletService interface {
 
 	// GetRedEnvelopeDetail 获取红包详情
 	GetRedEnvelopeDetail(ctx context.Context, envelopeId string) (*RedEnvelopeDetail, error)
+
+	// VerifyPaymentPassword 验证支付密码
+	VerifyPaymentPassword(ctx context.Context, userId int, password string) (bool, error)
 }
 
 // MockWalletService 钱包服务的Mock实现（用于开发测试）
@@ -147,7 +150,16 @@ func (m *MockWalletService) Recharge(ctx context.Context, userId int, amount flo
 	}, nil
 }
 
-func (m *MockWalletService) Transfer(ctx context.Context, fromUserId int, toUserId int, amount float64, remark string) (*TransferResult, error) {
+func (m *MockWalletService) Transfer(ctx context.Context, fromUserId int, toUserId int, amount float64, remark string, password string) (*TransferResult, error) {
+	// Verify payment password first
+	valid, err := m.VerifyPaymentPassword(ctx, fromUserId, password)
+	if err != nil {
+		return nil, err
+	}
+	if !valid {
+		return nil, &PasswordError{Message: "支付密码错误"}
+	}
+
 	// Mock data
 	return &TransferResult{
 		TransferId: "TRF" + time.Now().Format("20060102150405"),
@@ -193,6 +205,15 @@ func (m *MockWalletService) GetTransactionHistory(ctx context.Context, userId in
 }
 
 func (m *MockWalletService) SendRedEnvelope(ctx context.Context, req *SendRedEnvelopeRequest) (*RedEnvelopeResult, error) {
+	// Verify payment password first
+	valid, err := m.VerifyPaymentPassword(ctx, req.SenderId, req.Password)
+	if err != nil {
+		return nil, err
+	}
+	if !valid {
+		return nil, &PasswordError{Message: "支付密码错误"}
+	}
+
 	// Mock data
 	return &RedEnvelopeResult{
 		EnvelopeId: "RED" + time.Now().Format("20060102150405"),
@@ -252,4 +273,19 @@ func (m *MockWalletService) GetRedEnvelopeDetail(ctx context.Context, envelopeId
 		},
 		CreatedAt: time.Now().Add(-10 * time.Minute),
 	}, nil
+}
+
+func (m *MockWalletService) VerifyPaymentPassword(ctx context.Context, userId int, password string) (bool, error) {
+	// Mock implementation - 简单验证（实际应该查询数据库验证密码hash）
+	// For testing purposes, accept "123456" as the correct password
+	return password == "123456", nil
+}
+
+// PasswordError represents payment password verification error
+type PasswordError struct {
+	Message string
+}
+
+func (e *PasswordError) Error() string {
+	return e.Message
 }

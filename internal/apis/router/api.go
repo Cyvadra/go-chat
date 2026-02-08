@@ -163,6 +163,14 @@ func registerCustomApiRouter(resp *Interceptor, api gin.IRoutes, handler *web.Ha
 		return handler.V1.Wallet.GetBalance(c.Request.Context(), &v1.WalletBalanceRequest{})
 	}))
 
+	api.POST("/api/v1/wallet/verify-password", HandlerFunc(resp, func(c *gin.Context) (any, error) {
+		var req v1.WalletVerifyPasswordRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			return nil, err
+		}
+		return handler.V1.Wallet.VerifyPaymentPassword(c.Request.Context(), &req)
+	}))
+
 	api.POST("/api/v1/wallet/recharge", HandlerFunc(resp, func(c *gin.Context) (any, error) {
 		var req v1.WalletRechargeRequest
 		if err := c.ShouldBindJSON(&req); err != nil {

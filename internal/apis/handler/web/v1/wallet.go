@@ -69,6 +69,34 @@ func (w *Wallet) Recharge(ctx context.Context, req *WalletRechargeRequest) (*Wal
 	}, nil
 }
 
+// VerifyPaymentPassword 验证支付密码
+//
+//	@Summary		验证支付密码
+//	@Description	验证用户支付密码
+//	@Tags			钱包
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		WalletVerifyPasswordRequest	true	"验证密码请求"
+//	@Success		200		{object}	WalletVerifyPasswordResponse
+//	@Router			/api/v1/wallet/verify-password [post]
+func (w *Wallet) VerifyPaymentPassword(ctx context.Context, req *WalletVerifyPasswordRequest) (*WalletVerifyPasswordResponse, error) {
+	session, _ := middleware.FormContext[entity.WebClaims](ctx)
+	userId := session.UserId
+
+	if req.Password == "" {
+		return nil, errorx.New(400, "支付密码不能为空")
+	}
+
+	valid, err := w.WalletService.VerifyPaymentPassword(ctx, int(userId), req.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &WalletVerifyPasswordResponse{
+		Valid: valid,
+	}, nil
+}
+
 // Transfer 转账
 //
 //	@Summary		转账
@@ -91,7 +119,11 @@ func (w *Wallet) Transfer(ctx context.Context, req *WalletTransferRequest) (*Wal
 		return nil, errorx.New(400, "收款用户ID无效")
 	}
 
-	result, err := w.WalletService.Transfer(ctx, int(userId), int(req.ToUserId), req.Amount, req.Remark)
+	if req.Password == "" {
+		return nil, errorx.New(400, "支付密码不能为空")
+	}
+
+	result, err := w.WalletService.Transfer(ctx, int(userId), int(req.ToUserId), req.Amount, req.Remark, req.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -304,10 +336,19 @@ type WalletRechargeResponse struct {
 	CreatedAt string  `json:"created_at"`
 }
 
+type WalletVerifyPasswordRequest struct {
+	Password string `json:"password"`
+}
+
+type WalletVerifyPasswordResponse struct {
+	Valid bool `json:"valid"`
+}
+
 type WalletTransferRequest struct {
 	ToUserId int32   `json:"to_user_id"`
 	Amount   float64 `json:"amount"`
 	Remark   string  `json:"remark"`
+	Password string  `json:"password"`
 }
 
 type WalletTransferResponse struct {
