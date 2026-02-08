@@ -21,6 +21,19 @@ type Interceptor struct{}
 
 func (i *Interceptor) ShouldProto(ctx *gin.Context, in any) error {
 	if err := ctx.ShouldBind(in); err != nil {
+		// For empty proto messages (like AuthRefreshTokenRequest),
+		// EOF or empty body errors are acceptable
+		if err.Error() == "EOF" || err.Error() == "unexpected end of JSON input" {
+			// Check if this is a proto message with no fields
+			if v, ok := in.(proto.Message); ok {
+				// If it's an empty proto message, we can skip the bind error
+				// and proceed to validation
+				if err := protovalidate.Validate(v); err != nil {
+					return errorx.New(400, err.Error())
+				}
+				return nil
+			}
+		}
 		return errorx.New(400, err.Error())
 	}
 
