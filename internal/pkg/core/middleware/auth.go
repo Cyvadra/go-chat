@@ -72,6 +72,12 @@ func NewJwtMiddleware[T IClaims](
 
 		claims, err := jwtutil.ParseWithClaims[T](secret, token)
 		if err != nil {
+			for _, path := range option.ExclusionPaths {
+				if strings.HasSuffix(c.Request.URL.Path, path) {
+					c.Next()
+					return
+				}
+			}
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": 401, "message": err.Error()})
 			return
 		}

@@ -44,8 +44,12 @@ func RegisterWebRoute(secret string, router *gin.Engine, handler *web.Handler, s
 				"/api/v1/auth/forget",
 				"/api/v1/auth/email-login",
 				"/api/v1/auth/refresh-token",
+				"/api/v1/auth/oauth",
+				"/api/v1/auth/oauth/bind",
+				"/api/v1/auth/oauth/login",
 				"/api/v1/common/send-email",
 				"/api/v1/common/send-sms",
+				"/api/v1/common/send-test",
 			}
 		},
 	)
@@ -57,8 +61,8 @@ func RegisterWebRoute(secret string, router *gin.Engine, handler *web.Handler, s
 	// Swagger documentation route
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	web2.RegisterAuthHandler(router, resp, handler.V1.Auth)
-	web2.RegisterCommonHandler(router, resp, handler.V1.Common)
+	web2.RegisterAuthHandler(api, resp, handler.V1.Auth)
+	web2.RegisterCommonHandler(api, resp, handler.V1.Common)
 	web2.RegisterUserHandler(api, resp, handler.V1.User)
 	web2.RegisterEmoticonHandler(api, resp, handler.V1.Emoticon)
 	web2.RegisterOrganizeHandler(api, resp, handler.V1.Organize)
