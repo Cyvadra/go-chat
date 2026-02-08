@@ -176,7 +176,7 @@ type onSendVideoMessage struct {
 		Url      string `json:"url" binding:"required"`
 		Duration int    `json:"duration" binding:"required"`
 		Size     int    `json:"size" binding:"required"`
-		Cover    string `json:"cover" binding:"required"`
+		Cover    string `json:"cover"`
 	} `json:"body" binding:"required"`
 }
 
