@@ -125,6 +125,7 @@ func (x *CommonSendSmsResponse) GetSmsCode() string {
 type CommonSendEmailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Channel       string                 `protobuf:"bytes,2,opt,name=channel,proto3" json:"channel,omitempty"` // 可选的渠道标识：login, register, forget_account, etc.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -162,6 +163,13 @@ func (*CommonSendEmailRequest) Descriptor() ([]byte, []int) {
 func (x *CommonSendEmailRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
+	}
+	return ""
+}
+
+func (x *CommonSendEmailRequest) GetChannel() string {
+	if x != nil {
+		return x.Channel
 	}
 	return ""
 }
@@ -295,9 +303,10 @@ const file_web_v1_common_proto_rawDesc = "" +
 	"\achannel\x18\x02 \x01(\tBB\xbaH?r=R\x05loginR\bregisterR\x0eforget_accountR\x0echange_accountR\n" +
 	"oauth_bindR\achannel\"2\n" +
 	"\x15CommonSendSmsResponse\x12\x19\n" +
-	"\bsms_code\x18\x01 \x01(\tR\asmsCode\"7\n" +
+	"\bsms_code\x18\x01 \x01(\tR\asmsCode\"Q\n" +
 	"\x16CommonSendEmailRequest\x12\x1d\n" +
-	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x06R\x05email\"\x19\n" +
+	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x06R\x05email\x12\x18\n" +
+	"\achannel\x18\x02 \x01(\tR\achannel\"\x19\n" +
 	"\x17CommonSendEmailResponse\"6\n" +
 	"\x15CommonSendTestRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x06R\x05email\"\x18\n" +

@@ -965,7 +965,9 @@ components:
             type: object
             properties:
                 auth:
-                    $ref: '#/components/schemas/AccessToken'
+                    allOf:
+                        - $ref: '#/components/schemas/AccessToken'
+                    description: 授权信息
                 username:
                     type: string
                     description: 用户名
@@ -1215,7 +1217,9 @@ components:
                     type: string
                     description: 名称
                 meta:
-                    $ref: '#/components/schemas/Meta'
+                    allOf:
+                        - $ref: '#/components/schemas/Meta'
+                    description: 元数据
                 children:
                     type: array
                     items:

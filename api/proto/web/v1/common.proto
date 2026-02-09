@@ -47,6 +47,7 @@ message CommonSendSmsResponse{
 // 发送邮件验证码接口请求参数
 message CommonSendEmailRequest{
   string email = 1  [(buf.validate.field).string.min_len = 6];
+  string channel = 2; // 可选的渠道标识：login, register, forget_account, etc.
 }
 
 // 发送邮件验证码接口响应参数

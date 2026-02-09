@@ -98,18 +98,22 @@ message AuthLoginResponse{
 
 // 注册接口请求参数
 message AuthRegisterRequest{
-  // 登录手机号
+  // 昵称
   string nickname = 1 [(buf.validate.field).string = {min_len: 2, max_len: 20}];
-  // 登录手机号
-  string mobile = 2 [(buf.validate.field).string.len = 11];
+  // 手机号（可选）
+  string mobile = 2;
+  // 邮箱（可选）
+  string email = 7;
   // 登录密码
   string password = 3 [(buf.validate.field).string.min_len = 1];
   // 登录平台
   string platform = 4 [(buf.validate.field).string = {in:["web", "windows", "mac"]}];
-  // 短信验证码
-  string sms_code = 5 [(buf.validate.field).string.len = 6];
-  // 邀请码
-  string invite_code = 6 [(buf.validate.field).string.min_len = 1, (google.api.field_behavior) = REQUIRED];
+  // 短信验证码（手机注册时需要）
+  string sms_code = 5;
+  // 邀请码（可选）
+  string invite_code = 6;
+  // 邮箱验证码（邮箱注册时需要）
+  string email_code = 8;
 }
 
 // 注册接口响应参数
@@ -137,12 +141,12 @@ message AuthRefreshTokenResponse{
 
 // 找回密码接口请求参数
 message AuthForgetRequest{
-  // 手机号
-  string mobile = 1 [(buf.validate.field).string.len = 11, (google.api.field_behavior) = REQUIRED];
+  // 邮箱
+  string email = 1 [(buf.validate.field).string.email = true, (google.api.field_behavior) = REQUIRED];
   // 登录密码
   string password = 2 [(buf.validate.field).string.min_len = 1, (google.api.field_behavior) = REQUIRED];
-  // 短信验证码
-  string sms_code = 3 [(buf.validate.field).string.len = 6, (google.api.field_behavior) = REQUIRED];
+  // 邮箱验证码
+  string email_code = 3 [(buf.validate.field).string.len = 6, (google.api.field_behavior) = REQUIRED];
 }
 
 // 找回密码接口响应参数

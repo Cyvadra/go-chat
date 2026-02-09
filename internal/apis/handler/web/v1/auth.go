@@ -113,27 +113,56 @@ func (a *Auth) Login(ctx context.Context, in *web.AuthLoginRequest) (*web.AuthLo
 //	@Success		200		{object}	web.AuthRegisterResponse
 //	@Router			/api/v1/auth/register [post]
 func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.AuthRegisterResponse, error) {
-	if !utils.IsMobile(in.Mobile) {
+	// 至少需要手机号或邮箱其中一个
+	if in.Mobile == "" && in.Email == "" {
+		return nil, errorx.New(400, "手机号或邮箱至少需要提供一个")
+	}
+
+	// 检查是否允许手机号注册
+	if in.Mobile != "" && !a.Config.App.AllowPhoneRegistration {
+		return nil, entity.ErrPhoneRegistrationDisabled
+	}
+
+	if in.Mobile != "" && !utils.IsMobile(in.Mobile) {
 		return nil, errorx.New(400, "手机号格式不对")
 	}
 
-	// 验证邀请码
-	if in.InviteCode == "" {
-		return nil, errorx.New(400, "邀请码不能为空")
+	// 验证邀请码（如果配置要求）
+	if a.Config.App.RequireInviteCode {
+		if in.InviteCode == "" {
+			return nil, errorx.New(400, "邀请码不能为空")
+		}
+
+		valid, err := a.InviteCodeService.ValidateInviteCode(ctx, in.InviteCode)
+		if err != nil {
+			return nil, err
+		}
+
+		if !valid {
+			return nil, errorx.New(400, "邀请码无效或已过期")
+		}
 	}
 
-	valid, err := a.InviteCodeService.ValidateInviteCode(ctx, in.InviteCode)
-	if err != nil {
-		return nil, err
+	// 如果提供了手机号，验证短信验证码
+	if in.Mobile != "" {
+		if in.SmsCode == "" {
+			return nil, errorx.New(400, "短信验证码不能为空")
+		}
+		// 验证短信验证码是否正确
+		if !a.SmsService.Verify(ctx, entity.SmsRegisterChannel, in.Mobile, in.SmsCode) {
+			return nil, entity.ErrSmsCodeError
+		}
 	}
 
-	if !valid {
-		return nil, errorx.New(400, "邀请码无效或已过期")
-	}
-
-	// 验证短信验证码是否正确
-	if !a.SmsService.Verify(ctx, entity.SmsRegisterChannel, in.Mobile, in.SmsCode) {
-		return nil, entity.ErrSmsCodeError
+	// 如果提供了邮箱，验证邮箱验证码
+	if in.Email != "" {
+		if in.EmailCode == "" {
+			return nil, errorx.New(400, "邮箱验证码不能为空")
+		}
+		// 验证邮箱验证码是否正确
+		if !a.EmailService.Verify(ctx, entity.EmailRegisterChannel, in.Email, in.EmailCode) {
+			return nil, errorx.New(400, "邮箱验证码错误或已过期")
+		}
 	}
 
 	password, err := a.Rsa.Decrypt(in.Password)
@@ -144,6 +173,7 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 	user, err := a.UserService.Register(ctx, &service.UserRegisterOpt{
 		Nickname: in.Nickname,
 		Mobile:   in.Mobile,
+		Email:    in.Email,
 		Password: string(password),
 		Platform: in.Platform,
 	})
@@ -152,15 +182,25 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 		return nil, err
 	}
 
-	// 使用邀请码
-	if err := a.InviteCodeService.UseInviteCode(ctx, in.InviteCode, user.Id); err != nil {
-		logger.ErrorWithFields("使用邀请码失败", err, map[string]interface{}{
-			"invite_code": in.InviteCode,
-			"user_id":     user.Id,
-		})
+	// 使用邀请码（如果提供了）
+	if in.InviteCode != "" {
+		if err := a.InviteCodeService.UseInviteCode(ctx, in.InviteCode, user.Id); err != nil {
+			logger.ErrorWithFields("使用邀请码失败", err, map[string]interface{}{
+				"invite_code": in.InviteCode,
+				"user_id":     user.Id,
+			})
+		}
 	}
 
-	a.SmsService.Delete(ctx, entity.SmsRegisterChannel, in.Mobile)
+	// 删除短信验证码（如果使用了）
+	if in.Mobile != "" && in.SmsCode != "" {
+		a.SmsService.Delete(ctx, entity.SmsRegisterChannel, in.Mobile)
+	}
+
+	// 删除邮箱验证码（如果使用了）
+	if in.Email != "" && in.EmailCode != "" {
+		a.EmailService.Delete(ctx, entity.EmailRegisterChannel, in.Email)
+	}
 
 	authorize, err := a.authorize(user.Id)
 	if err != nil {
@@ -177,7 +217,7 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 // Forget 找回密码
 //
 //	@Summary		找回密码
-//	@Description	使用短信验证码重置用户密码
+//	@Description	使用邮箱验证码重置用户密码
 //	@Tags			认证
 //	@Accept			json
 //	@Produce		json
@@ -185,13 +225,13 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 //	@Success		200		{object}	web.AuthForgetResponse
 //	@Router			/api/v1/auth/forget [post]
 func (a *Auth) Forget(ctx context.Context, in *web.AuthForgetRequest) (*web.AuthForgetResponse, error) {
-	if !utils.IsMobile(in.Mobile) {
-		return nil, errorx.New(400, "手机号格式不对")
+	if !utils.IsEmail(in.Email) {
+		return nil, errorx.New(400, "邮箱格式不正确")
 	}
 
-	// 验证短信验证码是否正确
-	if !a.SmsService.Verify(ctx, entity.SmsForgetAccountChannel, in.Mobile, in.SmsCode) {
-		return nil, entity.ErrSmsCodeError
+	// 验证邮箱验证码是否正确
+	if !a.EmailService.Verify(ctx, entity.EmailForgetAccountChannel, in.Email, in.EmailCode) {
+		return nil, errorx.New(400, "邮箱验证码错误")
 	}
 
 	password, err := a.Rsa.Decrypt(in.Password)
@@ -200,14 +240,14 @@ func (a *Auth) Forget(ctx context.Context, in *web.AuthForgetRequest) (*web.Auth
 	}
 
 	if _, err := a.UserService.Forget(ctx, &service.UserForgetOpt{
-		Mobile:   in.Mobile,
-		Password: string(password),
-		SmsCode:  in.SmsCode,
+		Email:     in.Email,
+		Password:  string(password),
+		EmailCode: in.EmailCode,
 	}); err != nil {
 		return nil, err
 	}
 
-	a.SmsService.Delete(ctx, entity.SmsForgetAccountChannel, in.Mobile)
+	a.EmailService.Delete(ctx, entity.EmailForgetAccountChannel, in.Email)
 
 	return &web.AuthForgetResponse{}, nil
 }

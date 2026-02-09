@@ -4,7 +4,7 @@ CREATE TABLE `admin` (
  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户密码',
  `avatar` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户头像',
  `gender` tinyint unsigned NOT NULL DEFAULT '3' COMMENT '用户性别[1:男;2:女;3:未知;]',
- `mobile` varchar(11) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '手机号',
+ `mobile` varchar(32) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '手机号',
  `email` varchar(30) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户邮箱',
  `motto` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户座右铭',
  `last_login_at` datetime NOT NULL COMMENT '最后一次登录时间',
@@ -358,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `organize_dept`
     `dept_name`  varchar(64)      NOT NULL DEFAULT '' COMMENT '部门名称',
     `order_num`  int unsigned     NOT NULL DEFAULT '1' COMMENT '显示顺序',
     `leader`     varchar(64)      NOT NULL COMMENT '负责人',
-    `phone`      varchar(11)      NOT NULL COMMENT '联系电话',
+    `phone`      varchar(32)      NOT NULL COMMENT '联系电话',
     `email`      varchar(64)      NOT NULL COMMENT '邮箱',
     `status`     tinyint          NOT NULL DEFAULT '1' COMMENT '部门状态[1:正常;2:停用]',
     `is_deleted` tinyint unsigned NOT NULL DEFAULT '2' COMMENT '是否删除[1:是;2:否;]',
@@ -500,7 +500,7 @@ CREATE TABLE IF NOT EXISTS `talk_user_message`
 
 CREATE TABLE `users` (
  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
- `mobile` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
+ `mobile` varchar(32) NOT NULL DEFAULT '' COMMENT '手机号',
  `nickname` varchar(64) NOT NULL DEFAULT '' COMMENT '用户昵称',
  `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '用户头像',
  `gender` tinyint unsigned NOT NULL DEFAULT '3' COMMENT '用户性别[1:男 ;2:女;3:未知]',

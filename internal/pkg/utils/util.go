@@ -33,3 +33,8 @@ func IsMobile(value string) bool {
 	matched, _ := regexp.MatchString("^1[3456789][0-9]{9}$", value)
 	return matched
 }
+
+func IsEmail(value string) bool {
+	matched, _ := regexp.MatchString(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`, value)
+	return matched
+}

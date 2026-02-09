@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gzydong/go-chat/internal/pkg/email"
 	"github.com/gzydong/go-chat/internal/pkg/strutil"
 	"github.com/gzydong/go-chat/internal/repository/cache"
 )
@@ -21,7 +22,8 @@ type IEmailService interface {
 }
 
 type EmailService struct {
-	Storage *cache.EmailStorage
+	Storage     *cache.EmailStorage
+	EmailClient *email.Client
 }
 
 // Verify 验证邮箱验证码是否正确
@@ -43,29 +45,10 @@ func (e *EmailService) Send(ctx context.Context, channel string, email string) (
 		return "", err
 	}
 
-	// Send email via SMTP or third-party email service
-	// Integration options:
-	// 1. SMTP (e.g., Gmail, Office 365)
-	// 2. SendGrid: https://sendgrid.com/
-	// 3. Mailgun: https://www.mailgun.com/
-	// 4. Amazon SES: https://aws.amazon.com/ses/
-	// 5. Aliyun DirectMail: https://www.aliyun.com/product/directmail
-	//
-	// Example implementation with SMTP:
-	// import "net/smtp"
-	//
-	// auth := smtp.PlainAuth("", "sender@example.com", "password", "smtp.example.com")
-	// to := []string{email}
-	// msg := []byte(fmt.Sprintf("To: %s\r\n" +
-	//     "Subject: 验证码\r\n" +
-	//     "\r\n" +
-	//     "您的验证码是: %s\r\n", email, code))
-	// err := smtp.SendMail("smtp.example.com:587", auth, "sender@example.com", to, msg)
-	// if err != nil {
-	//     return "", fmt.Errorf("failed to send email: %v", err)
-	// }
+	// Email sending is handled by the caller (handler) to allow template customization
+	// This service only manages the verification code storage
 
-	// For development/testing: log the code instead of sending
+	// For development/testing: log the code
 	fmt.Printf("Email verification code for %s (channel: %s): %s\n", email, channel, code)
 
 	return code, nil

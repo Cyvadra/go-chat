@@ -32,25 +32,39 @@ type UserService struct {
 type UserRegisterOpt struct {
 	Nickname string
 	Mobile   string
+	Email    string
 	Password string
 	Platform string
 }
 
 // Register 注册用户
 func (s *UserService) Register(ctx context.Context, opt *UserRegisterOpt) (*model.Users, error) {
-	if s.UsersRepo.IsMobileExist(ctx, opt.Mobile) {
-		return nil, errors.New("账号已存在! ")
+	// 检查手机号是否已存在
+	if opt.Mobile != "" && s.UsersRepo.IsMobileExist(ctx, opt.Mobile) {
+		return nil, errors.New("手机号已被注册")
+	}
+
+	// 检查邮箱是否已存在
+	if opt.Email != "" {
+		if user, _ := s.UsersRepo.FindByEmail(ctx, opt.Email); user != nil && user.Id > 0 {
+			return nil, errors.New("邮箱已被注册")
+		}
 	}
 
 	user := &model.Users{
-		Mobile:    lo.ToPtr(opt.Mobile),
 		Nickname:  opt.Nickname,
+		Email:     opt.Email,
 		Gender:    model.UsersGenderDefault,
 		Password:  encrypt.HashPassword(opt.Password),
 		IsRobot:   model.No,
 		Status:    model.UsersStatusNormal,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
+	}
+
+	// 设置手机号（如果提供）
+	if opt.Mobile != "" {
+		user.Mobile = lo.ToPtr(opt.Mobile)
 	}
 
 	if err := s.UsersRepo.Create(ctx, user); err != nil {
@@ -84,14 +98,14 @@ func (s *UserService) Login(ctx context.Context, mobile string, password string)
 
 // UserForgetOpt ForgetRequest 账号找回接口验证
 type UserForgetOpt struct {
-	Mobile   string
-	Password string
-	SmsCode  string
+	Email     string
+	Password  string
+	EmailCode string
 }
 
 // Forget 账号找回
 func (s *UserService) Forget(ctx context.Context, opt *UserForgetOpt) (bool, error) {
-	user, err := s.UsersRepo.FindByMobile(ctx, opt.Mobile)
+	user, err := s.UsersRepo.FindByEmail(ctx, opt.Email)
 	if err != nil || user.Id == 0 {
 		return false, errors.New("账号不存在! ")
 	}

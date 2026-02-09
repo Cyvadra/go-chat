@@ -4,6 +4,10 @@ app:
   debug: false
   admin_email:
     -
+  # 是否允许手机号注册 (默认: false - 不允许)
+  allow_phone_registration: false
+  # 是否需要邀请码才能注册 (默认: false - 不需要)
+  require_invite_code: false
     # 不知道怎么生成的可以看这个网站 http://www.usey.cn/rsa?bits=2048
   public_key: |
     -----BEGIN PUBLIC KEY-----

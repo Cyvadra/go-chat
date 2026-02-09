@@ -8,7 +8,6 @@ import (
 	"github.com/gzydong/go-chat/config"
 	"github.com/gzydong/go-chat/internal/entity"
 	"github.com/gzydong/go-chat/internal/pkg/email"
-	"github.com/gzydong/go-chat/internal/pkg/strutil"
 	"github.com/gzydong/go-chat/internal/repository/repo"
 	"github.com/gzydong/go-chat/internal/service"
 )
@@ -19,6 +18,7 @@ type Common struct {
 	Config          *config.Config
 	UsersRepo       *repo.Users
 	SmsService      service.ISmsService
+	EmailService    service.IEmailService
 	UserService     service.IUserService
 	EmailClient     *email.Client
 	TemplateService service.ITemplateService
@@ -35,6 +35,11 @@ type Common struct {
 //	@Success		200		{object}	web.CommonSendSmsResponse
 //	@Router			/api/v1/common/send-sms [post]
 func (c *Common) SendSms(ctx context.Context, in *web.CommonSendSmsRequest) (*web.CommonSendSmsResponse, error) {
+	// 检查手机号注册是否被允许
+	if in.Channel == entity.SmsRegisterChannel && !c.Config.App.AllowPhoneRegistration {
+		return nil, entity.ErrPhoneRegistrationDisabled
+	}
+
 	switch in.Channel {
 	// 需要判断账号是否存在
 	case entity.SmsLoginChannel, entity.SmsForgetAccountChannel:
@@ -78,18 +83,23 @@ func (c *Common) SendSms(ctx context.Context, in *web.CommonSendSmsRequest) (*we
 //	@Success		200		{object}	web.CommonSendEmailResponse
 //	@Router			/api/v1/common/send-email [post]
 func (c *Common) SendEmail(ctx context.Context, req *web.CommonSendEmailRequest) (*web.CommonSendEmailResponse, error) {
-	// Generate 6-digit verification code
-	code := strutil.GenValidateCode(6)
+	// Determine the channel based on request
+	channel := entity.EmailVerifyChannel
+	if req.Channel != "" {
+		channel = req.Channel
+	}
 
-	// Store verification code in cache (reusing SMS storage mechanism)
-	_, err := c.SmsService.Send(ctx, "email_verify", req.Email)
+	// Send verification code using EmailService
+	code, err := c.EmailService.Send(ctx, channel, req.Email)
 	if err != nil {
 		return nil, err
 	}
 
 	// Prepare email template data
 	templateData := map[string]string{
-		"code": code,
+		"code":         code,
+		"service_name": "邮箱验证",
+		"domain":       "https://im.gzydong.com",
 	}
 
 	// Render email template

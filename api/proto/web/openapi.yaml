@@ -6,17 +6,17 @@ info:
     title: ""
     version: "3"
 paths:
-    /api/v1/article-annex/delete:
+    /api/v1/auth/email-login:
         post:
             tags:
-                - ArticleAnnex
-            description: 文章附件删除接口
-            operationId: ArticleAnnex_Delete
+                - Auth
+            description: 邮箱验证码登录接口
+            operationId: Auth_EmailLogin
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/ArticleAnnexDeleteRequest'
+                            $ref: '#/components/schemas/AuthEmailLoginRequest'
                 required: true
             responses:
                 "200":
@@ -24,432 +24,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ArticleAnnexDeleteResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article-annex/forever-delete:
-        post:
-            tags:
-                - ArticleAnnex
-            description: 文章附件永久删除接口
-            operationId: ArticleAnnex_ForeverDelete
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleAnnexForeverDeleteRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleAnnexForeverDeleteResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article-annex/recover:
-        post:
-            tags:
-                - ArticleAnnex
-            description: 文章附件恢复删除接口
-            operationId: ArticleAnnex_Recover
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleAnnexRecoverRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleAnnexRecoverResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article-annex/recover-list:
-        post:
-            tags:
-                - ArticleAnnex
-            description: 文章附件回收站列表接口
-            operationId: ArticleAnnex_RecoverList
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleAnnexRecoverListRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleAnnexRecoverListResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/asterisk:
-        post:
-            tags:
-                - Article
-            description: 收藏/取消收藏文章接口
-            operationId: Article_Asterisk
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleAsteriskRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleAsteriskResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/classify/delete:
-        post:
-            tags:
-                - ArticleClass
-            description: 文章分类删除接口
-            operationId: ArticleClass_Delete
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleClassDeleteRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleClassDeleteResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/classify/edit:
-        post:
-            tags:
-                - ArticleClass
-            description: 文章分类编辑接口
-            operationId: ArticleClass_Edit
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleClassEditRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleClassEditResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/classify/list:
-        post:
-            tags:
-                - ArticleClass
-            description: 获取文章分类列表接口
-            operationId: ArticleClass_List
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleClassListRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleClassListResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/classify/sort:
-        post:
-            tags:
-                - ArticleClass
-            description: 文章分类排序接口
-            operationId: ArticleClass_Sort
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleClassSortRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleClassSortResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/delete:
-        post:
-            tags:
-                - Article
-            description: 删除文章接口
-            operationId: Article_Delete
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleDeleteRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleDeleteResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/detail:
-        post:
-            tags:
-                - Article
-            description: 获取文章详情接口
-            operationId: Article_Detail
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleDetailRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleDetailResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/editor:
-        post:
-            tags:
-                - Article
-            description: 文章编辑接口
-            operationId: Article_Edit
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleEditRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleEditResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/forever-delete:
-        post:
-            tags:
-                - Article
-            description: 永久删除文章接口
-            operationId: Article_ForeverDelete
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleForeverDeleteRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleForeverDeleteResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/list:
-        post:
-            tags:
-                - Article
-            description: 获取文章列表接口
-            operationId: Article_List
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleListRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleListResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/move:
-        post:
-            tags:
-                - Article
-            description: 移动文章分类接口
-            operationId: Article_Move
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleMoveRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleMoveResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/recover:
-        post:
-            tags:
-                - Article
-            description: 恢复文章接口
-            operationId: Article_Recover
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleRecoverRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleRecoverResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/recover-list:
-        post:
-            tags:
-                - Article
-            description: 获取回收站文章列表接口
-            operationId: Article_RecoverList
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleRecoverListRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleRecoverListResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/article/tags:
-        post:
-            tags:
-                - Article
-            description: 设置文章标签接口
-            operationId: Article_SetTags
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ArticleTagsRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ArticleTagsResponse'
+                                $ref: '#/components/schemas/AuthEmailLoginResponse'
                 default:
                     description: Default error response
                     content:
@@ -581,6 +156,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/auth/refresh-token:
+        post:
+            tags:
+                - Auth
+            description: Token 刷新接口
+            operationId: Auth_RefreshToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AuthRefreshTokenRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AuthRefreshTokenResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/auth/register:
         post:
             tags:
@@ -662,7 +262,7 @@ paths:
         post:
             tags:
                 - Common
-            description: 发送测试接口
+            description: 俺们就开始的那
             operationId: Common_Test
             requestBody:
                 content:
@@ -1808,6 +1408,106 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/invite/disable:
+        post:
+            tags:
+                - Invite
+            description: 禁用邀请码
+            operationId: Invite_DisableInviteCode
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/InviteDisableRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/InviteDisableResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/invite/generate:
+        post:
+            tags:
+                - Invite
+            description: 生成邀请码
+            operationId: Invite_GenerateInviteCode
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/InviteGenerateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/InviteGenerateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/invite/list:
+        post:
+            tags:
+                - Invite
+            description: 获取我的邀请码列表
+            operationId: Invite_GetMyInviteCodes
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/InviteListRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/InviteListResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/invite/stats:
+        post:
+            tags:
+                - Invite
+            description: 获取邀请统计
+            operationId: Invite_GetInviteStats
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/InviteStatsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/InviteStatsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/message/delete:
         post:
             tags:
@@ -2056,6 +1756,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/talk/session-detail:
+        post:
+            tags:
+                - Talk
+            description: 会话详情接口
+            operationId: Talk_SessionDetail
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TalkSessionDetailRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TalkSessionDetailResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/talk/session-disturb:
         post:
             tags:
@@ -2283,460 +2008,41 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        ArticleAnnexDeleteRequest:
-            type: object
-            properties:
-                annexId:
-                    type: integer
-                    format: int32
-            description: 文章附件删除接口请求参数
-        ArticleAnnexDeleteResponse:
-            type: object
-            properties: {}
-            description: 文章附件删除接口响应参数
-        ArticleAnnexForeverDeleteRequest:
-            type: object
-            properties:
-                annexId:
-                    type: integer
-                    format: int32
-            description: 文章附件永久删除接口请求参数
-        ArticleAnnexForeverDeleteResponse:
-            type: object
-            properties: {}
-            description: 文章附件永久删除接口响应参数
-        ArticleAnnexRecoverListRequest:
-            type: object
-            properties:
-                page:
-                    type: integer
-                    format: int32
-            description: 文章附件回收站列表接口请求参数
-        ArticleAnnexRecoverListResponse:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ArticleAnnexRecoverListResponse_Item'
-                paginate:
-                    $ref: '#/components/schemas/Paginate'
-            description: 文章附件回收站列表接口响应参数
-        ArticleAnnexRecoverListResponse_Item:
-            type: object
-            properties:
-                annexId:
-                    type: integer
-                    format: int32
-                annexName:
-                    type: string
-                articleId:
-                    type: integer
-                    format: int32
-                articleTitle:
-                    type: string
-                createdAt:
-                    type: string
-                deletedAt:
-                    type: string
-                day:
-                    type: integer
-                    format: int32
-        ArticleAnnexRecoverRequest:
-            type: object
-            properties:
-                annexId:
-                    type: integer
-                    format: int32
-            description: 文章附件恢复删除接口请求参数
-        ArticleAnnexRecoverResponse:
-            type: object
-            properties: {}
-            description: 文章附件恢复删除接口响应参数
-        ArticleAsteriskRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    description: 文章ID
-                    format: int32
-                action:
-                    type: integer
-                    description: 操作方式 1:收藏 2:取消收藏
-                    format: int32
-        ArticleAsteriskResponse:
-            type: object
-            properties: {}
-        ArticleClassDeleteRequest:
+        AuthEmailLoginRequest:
             required:
-                - classifyId
+                - email
+                - emailCode
+                - platform
             type: object
             properties:
-                classifyId:
-                    type: integer
-                    format: int32
-            description: 文章分类删除接口请求参数
-        ArticleClassDeleteResponse:
-            type: object
-            properties: {}
-            description: 文章分类删除接口响应参数
-        ArticleClassEditRequest:
+                email:
+                    type: string
+                    description: 邮箱
+                emailCode:
+                    type: string
+                    description: 邮箱验证码
+                platform:
+                    type: string
+                    description: 登录平台
+            description: 邮箱登录请求参数
+        AuthEmailLoginResponse:
             required:
-                - name
+                - type
+                - accessToken
+                - expiresIn
             type: object
             properties:
-                classifyId:
-                    type: integer
-                    format: int32
-                name:
+                type:
                     type: string
-            description: 文章分类编辑接口请求参数
-        ArticleClassEditResponse:
-            required:
-                - classifyId
-            type: object
-            properties:
-                classifyId:
-                    type: integer
-                    format: int32
-            description: 文章分类编辑接口响应参数
-        ArticleClassListRequest:
-            type: object
-            properties: {}
-            description: 文章分类列表接口请求参数
-        ArticleClassListResponse:
-            required:
-                - items
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ArticleClassListResponse_Item'
-            description: 文章分类列表接口响应参数
-        ArticleClassListResponse_Item:
-            required:
-                - id
-                - className
-                - isDefault
-                - count
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int32
-                className:
+                    description: Token 类型
+                accessToken:
                     type: string
-                isDefault:
+                    description: token
+                expiresIn:
                     type: integer
+                    description: 过期时间
                     format: int32
-                count:
-                    type: integer
-                    format: int32
-        ArticleClassSortRequest:
-            required:
-                - classifyIds
-            type: object
-            properties:
-                classifyIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int32
-                    description: 排序后的分类ID列表
-            description: 文章分类排序接口请求参数
-        ArticleClassSortResponse:
-            type: object
-            properties: {}
-            description: 文章分类排序接口响应参数
-        ArticleDeleteRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-            description: 文章删除接口请求参数
-        ArticleDeleteResponse:
-            type: object
-            properties: {}
-            description: 文章删除接口响应参数
-        ArticleDetailRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-            description: 文章详情接口请求参数
-        ArticleDetailResponse:
-            required:
-                - articleId
-                - classifyId
-                - title
-                - mdContent
-                - isAsterisk
-                - createdAt
-                - updatedAt
-                - tagIds
-                - annexList
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-                classifyId:
-                    type: integer
-                    format: int32
-                title:
-                    type: string
-                mdContent:
-                    type: string
-                isAsterisk:
-                    type: integer
-                    format: int32
-                createdAt:
-                    type: string
-                updatedAt:
-                    type: string
-                tagIds:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ArticleDetailResponse_Tag'
-                    description: 标签列表
-                annexList:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ArticleDetailResponse_AnnexFile'
-                    description: 附件列表
-            description: 文章详情接口响应参数
-        ArticleDetailResponse_AnnexFile:
-            required:
-                - annexId
-                - annexName
-                - annexSize
-                - createdAt
-            type: object
-            properties:
-                annexId:
-                    type: integer
-                    format: int32
-                annexName:
-                    type: string
-                annexSize:
-                    type: integer
-                    format: int32
-                createdAt:
-                    type: string
-        ArticleDetailResponse_Tag:
-            required:
-                - id
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: int32
-        ArticleEditRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    description: 文章ID
-                    format: int32
-                classifyId:
-                    type: integer
-                    description: 分类ID
-                    format: int32
-                title:
-                    type: string
-                    description: 标题
-                abstract:
-                    type: string
-                    description: 摘要
-                mdContent:
-                    type: string
-                    description: 内容
-            description: 文章编辑接口请求参数
-        ArticleEditResponse:
-            required:
-                - articleId
-                - title
-                - abstract
-                - image
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-                title:
-                    type: string
-                abstract:
-                    type: string
-                image:
-                    type: string
-            description: 文章编辑接口响应参数
-        ArticleForeverDeleteRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-        ArticleForeverDeleteResponse:
-            type: object
-            properties: {}
-        ArticleListRequest:
-            type: object
-            properties:
-                keyword:
-                    type: string
-                findType:
-                    type: integer
-                    description: 查找类型 1:关键字查询 2:分类查询 3:标签查询 4:最近修改
-                    format: int32
-                classifyId:
-                    type: integer
-                    format: int32
-                tagId:
-                    type: integer
-                    format: int32
-            description: 文章列表接口请求参数
-        ArticleListResponse:
-            required:
-                - items
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ArticleListResponse_Item'
-            description: 文章列表请求接口响应参数
-        ArticleListResponse_Item:
-            required:
-                - articleId
-                - classifyId
-                - tagsId
-                - title
-                - className
-                - image
-                - isAsterisk
-                - status
-                - createdAt
-                - updatedAt
-                - abstract
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-                classifyId:
-                    type: integer
-                    format: int32
-                tagsId:
-                    type: string
-                title:
-                    type: string
-                className:
-                    type: string
-                image:
-                    type: string
-                isAsterisk:
-                    type: integer
-                    format: int32
-                status:
-                    type: integer
-                    format: int32
-                createdAt:
-                    type: string
-                updatedAt:
-                    type: string
-                abstract:
-                    type: string
-        ArticleMoveRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-                classifyId:
-                    type: integer
-                    format: int32
-            description: 文章移动分类接口请求参数
-        ArticleMoveResponse:
-            type: object
-            properties: {}
-            description: 文章移动分类接口响应参数
-        ArticleRecoverListRequest:
-            type: object
-            properties:
-                page:
-                    type: integer
-                    format: int32
-            description: 文章附件回收站列表接口请求参数
-        ArticleRecoverListResponse:
-            required:
-                - items
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ArticleRecoverListResponse_Item'
-            description: 文章附件回收站列表接口响应参数
-        ArticleRecoverListResponse_Item:
-            required:
-                - articleId
-                - classifyId
-                - classifyName
-                - title
-                - abstract
-                - image
-                - createdAt
-                - deletedAt
-                - day
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-                classifyId:
-                    type: integer
-                    format: int32
-                classifyName:
-                    type: string
-                title:
-                    type: string
-                abstract:
-                    type: string
-                image:
-                    type: string
-                createdAt:
-                    type: string
-                deletedAt:
-                    type: string
-                day:
-                    type: integer
-                    format: int32
-        ArticleRecoverRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-        ArticleRecoverResponse:
-            type: object
-            properties: {}
-        ArticleTagsRequest:
-            type: object
-            properties:
-                articleId:
-                    type: integer
-                    format: int32
-                tagIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int32
-        ArticleTagsResponse:
-            type: object
-            properties: {}
+            description: 邮箱登录响应参数
         AuthForgetRequest:
             required:
                 - mobile
@@ -2853,15 +2159,40 @@ components:
             properties:
                 uri:
                     type: string
+        AuthRefreshTokenRequest:
+            type: object
+            properties: {}
+            description: Token 刷新接口请求参数
+        AuthRefreshTokenResponse:
+            required:
+                - type
+                - accessToken
+                - expiresIn
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: Token 类型
+                accessToken:
+                    type: string
+                    description: token
+                expiresIn:
+                    type: integer
+                    description: 过期时间
+                    format: int32
+            description: Token 刷新接口响应参数
         AuthRegisterRequest:
             type: object
             properties:
                 nickname:
                     type: string
-                    description: 登录手机号
+                    description: 昵称
                 mobile:
                     type: string
-                    description: 登录手机号
+                    description: 手机号（可选）
+                email:
+                    type: string
+                    description: 邮箱（可选）
                 password:
                     type: string
                     description: 登录密码
@@ -2870,7 +2201,13 @@ components:
                     description: 登录平台
                 smsCode:
                     type: string
-                    description: 短信验证码
+                    description: 短信验证码（手机注册时需要）
+                inviteCode:
+                    type: string
+                    description: 邀请码（可选）
+                emailCode:
+                    type: string
+                    description: 邮箱验证码（邮箱注册时需要）
             description: 注册接口请求参数
         AuthRegisterResponse:
             required:
@@ -2908,6 +2245,8 @@ components:
             type: object
             properties:
                 email:
+                    type: string
+                channel:
                     type: string
             description: 发送邮件验证码接口请求参数
         CommonSendEmailResponse:
@@ -2959,6 +2298,8 @@ components:
                     format: int32
                 remark:
                     type: string
+                applyReason:
+                    type: string
             description: 添加联系人申请接口请求参数
         ContactApplyCreateResponse:
             type: object
@@ -3000,6 +2341,7 @@ components:
                 - nickname
                 - avatar
                 - createdAt
+                - applyReason
             type: object
             properties:
                 id:
@@ -3018,6 +2360,8 @@ components:
                 avatar:
                     type: string
                 createdAt:
+                    type: string
+                applyReason:
                     type: string
         ContactApplyUnreadNumRequest:
             type: object
@@ -4039,6 +3383,99 @@ components:
             type: object
             properties: {}
             description: 提交群组投票接口响应参数
+        InviteCodeItem:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                code:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                expireAt:
+                    type: string
+                maxUsageCount:
+                    type: integer
+                    format: int32
+                usageCount:
+                    type: integer
+                    format: int32
+                createdAt:
+                    type: string
+            description: 邀请码信息
+        InviteDisableRequest:
+            required:
+                - code
+            type: object
+            properties:
+                code:
+                    type: string
+            description: 禁用邀请码请求
+        InviteDisableResponse:
+            type: object
+            properties: {}
+            description: 禁用邀请码响应
+        InviteGenerateRequest:
+            type: object
+            properties:
+                expireDays:
+                    type: integer
+                    description: 有效期天数，默认365天
+                    format: int32
+                maxUsage:
+                    type: integer
+                    description: 最大使用次数，默认1次
+                    format: int32
+            description: 生成邀请码请求
+        InviteGenerateResponse:
+            required:
+                - code
+                - expireAt
+                - maxUsageCount
+            type: object
+            properties:
+                code:
+                    type: string
+                expireAt:
+                    type: string
+                maxUsageCount:
+                    type: integer
+                    format: int32
+            description: 生成邀请码响应
+        InviteListRequest:
+            type: object
+            properties: {}
+            description: 获取邀请码列表请求
+        InviteListResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/InviteCodeItem'
+            description: 获取邀请码列表响应
+        InviteStatsRequest:
+            type: object
+            properties: {}
+            description: 获取邀请统计请求
+        InviteStatsResponse:
+            type: object
+            properties:
+                totalCodes:
+                    type: integer
+                    format: int32
+                availableCodes:
+                    type: integer
+                    format: int32
+                usedCodes:
+                    type: integer
+                    format: int32
+                totalInvitations:
+                    type: integer
+                    format: int32
+            description: 获取邀请统计响应
         MessageDeleteRequest:
             required:
                 - talkMode
@@ -4308,18 +3745,6 @@ components:
                 sort:
                     type: integer
                     format: int32
-        Paginate:
-            type: object
-            properties:
-                page:
-                    type: integer
-                    format: int32
-                size:
-                    type: integer
-                    format: int32
-                total:
-                    type: integer
-                    format: int32
         Status:
             type: object
             properties:
@@ -4428,6 +3853,29 @@ components:
             type: object
             properties: {}
             description: 会话删除接口响应参数
+        TalkSessionDetailRequest:
+            type: object
+            properties:
+                talkMode:
+                    type: integer
+                    format: int32
+                toFromId:
+                    type: integer
+                    format: int32
+            description: 会话详情接口请求参数
+        TalkSessionDetailResponse:
+            required:
+                - isTop
+                - isDisturb
+            type: object
+            properties:
+                isTop:
+                    type: integer
+                    format: int32
+                isDisturb:
+                    type: integer
+                    format: int32
+            description: 会话详情接口响应参数
         TalkSessionDisturbRequest:
             type: object
             properties:
@@ -4442,8 +3890,13 @@ components:
                     format: int32
             description: 会话免打扰接口请求参数
         TalkSessionDisturbResponse:
+            required:
+                - isDisturb
             type: object
-            properties: {}
+            properties:
+                isDisturb:
+                    type: integer
+                    format: int32
             description: 会话免打扰接口响应参数
         TalkSessionItem:
             required:
@@ -4519,8 +3972,13 @@ components:
                     format: int32
             description: 会话置顶接口请求参数
         TalkSessionTopResponse:
+            required:
+                - isTop
             type: object
-            properties: {}
+            properties:
+                isTop:
+                    type: integer
+                    format: int32
             description: 会话置顶接口响应参数
         UserDetailRequest:
             type: object
@@ -4681,12 +4139,6 @@ components:
                 email:
                     type: string
 tags:
-    - name: Article
-      description: 文章服务
-    - name: ArticleAnnex
-      description: 文章附件服务
-    - name: ArticleClass
-      description: 文章分类服务
     - name: Auth
       description: Wen 授权服务
     - name: Common
@@ -4707,6 +4159,8 @@ tags:
       description: 群组公告服务
     - name: GroupVote
       description: 群组投票服务
+    - name: Invite
+      description: 邀请码服务
     - name: Message
       description: 消息服务
     - name: Organize

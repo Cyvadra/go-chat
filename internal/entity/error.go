@@ -18,6 +18,7 @@ var (
 	ErrAccountBinded             = errorx.New(100010, "该账号已绑定其他第三方账号！")
 	ErrStateInvalid              = errorx.New(100011, "State 状态无效")
 	ErrOauthTypeInvalid          = errorx.New(100012, "不支持的第三方登录类型")
+	ErrPhoneRegistrationDisabled = errorx.New(100013, "手机号注册功能已关闭")
 	ErrGroupDismissed            = errorx.New(110001, "群组已解散")
 	ErrGroupMemberLimit          = errorx.New(110002, "群成员数量已达到上限")
 	ErrGroupNotExist             = errorx.New(110003, "群组不存在")

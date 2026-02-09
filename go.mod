@@ -48,6 +48,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.6.0
 	gorm.io/gorm v1.31.0
+	github.com/swaggo/swag v1.16.6
 )
 
 require (
@@ -121,7 +122,6 @@ require (
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/stoewer/go-strcase v1.3.1 // indirect
-	github.com/swaggo/swag v1.16.6 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tinylib/msgp v1.3.0 // indirect

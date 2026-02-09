@@ -51,17 +51,23 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 	smsService := &service.SmsService{
 		Storage: smsStorage,
 	}
+	emailStorage := cache.NewEmailStorage(client)
+	emailClient := provider.NewEmailClient(c)
+	emailService := &service.EmailService{
+		Storage:     emailStorage,
+		EmailClient: emailClient,
+	}
 	oAuthUsers := repo.NewOAuthUsers(db)
 	userService := &service.UserService{
 		UsersRepo:      users,
 		OAuthUsersRepo: oAuthUsers,
 	}
-	emailClient := provider.NewEmailClient(c)
 	templateService := &service.TemplateService{}
 	common := &v1.Common{
 		Config:          c,
 		UsersRepo:       users,
 		SmsService:      smsService,
+		EmailService:    emailService,
 		UserService:     userService,
 		EmailClient:     emailClient,
 		TemplateService: templateService,
@@ -69,10 +75,6 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 	jwtTokenStorage := cache.NewJwtTokenStorage(client)
 	redisLock := cache.NewRedisLock(client)
 	robot := repo.NewRobot(db)
-	emailStorage := cache.NewEmailStorage(client)
-	emailService := &service.EmailService{
-		Storage: emailStorage,
-	}
 	source := repo.NewSource(db, client)
 	articleClass := repo.NewArticleClass(db)
 	articleClassService := &service.ArticleClassService{

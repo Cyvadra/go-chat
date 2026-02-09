@@ -154,18 +154,22 @@ func (x *AuthLoginResponse) GetExpiresIn() int32 {
 // 注册接口请求参数
 type AuthRegisterRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 登录手机号
+	// 昵称
 	Nickname string `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	// 登录手机号
+	// 手机号（可选）
 	Mobile string `protobuf:"bytes,2,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	// 邮箱（可选）
+	Email string `protobuf:"bytes,7,opt,name=email,proto3" json:"email,omitempty"`
 	// 登录密码
 	Password string `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
 	// 登录平台
 	Platform string `protobuf:"bytes,4,opt,name=platform,proto3" json:"platform,omitempty"`
-	// 短信验证码
+	// 短信验证码（手机注册时需要）
 	SmsCode string `protobuf:"bytes,5,opt,name=sms_code,json=smsCode,proto3" json:"sms_code,omitempty"`
-	// 邀请码
-	InviteCode    string `protobuf:"bytes,6,opt,name=invite_code,json=inviteCode,proto3" json:"invite_code,omitempty"`
+	// 邀请码（可选）
+	InviteCode string `protobuf:"bytes,6,opt,name=invite_code,json=inviteCode,proto3" json:"invite_code,omitempty"`
+	// 邮箱验证码（邮箱注册时需要）
+	EmailCode     string `protobuf:"bytes,8,opt,name=email_code,json=emailCode,proto3" json:"email_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -214,6 +218,13 @@ func (x *AuthRegisterRequest) GetMobile() string {
 	return ""
 }
 
+func (x *AuthRegisterRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 func (x *AuthRegisterRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
@@ -238,6 +249,13 @@ func (x *AuthRegisterRequest) GetSmsCode() string {
 func (x *AuthRegisterRequest) GetInviteCode() string {
 	if x != nil {
 		return x.InviteCode
+	}
+	return ""
+}
+
+func (x *AuthRegisterRequest) GetEmailCode() string {
+	if x != nil {
+		return x.EmailCode
 	}
 	return ""
 }
@@ -410,12 +428,12 @@ func (x *AuthRefreshTokenResponse) GetExpiresIn() int32 {
 // 找回密码接口请求参数
 type AuthForgetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 手机号
-	Mobile string `protobuf:"bytes,1,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	// 邮箱
+	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	// 登录密码
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	// 短信验证码
-	SmsCode       string `protobuf:"bytes,3,opt,name=sms_code,json=smsCode,proto3" json:"sms_code,omitempty"`
+	// 邮箱验证码
+	EmailCode     string `protobuf:"bytes,3,opt,name=email_code,json=emailCode,proto3" json:"email_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -450,9 +468,9 @@ func (*AuthForgetRequest) Descriptor() ([]byte, []int) {
 	return file_web_v1_auth_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *AuthForgetRequest) GetMobile() string {
+func (x *AuthForgetRequest) GetEmail() string {
 	if x != nil {
-		return x.Mobile
+		return x.Email
 	}
 	return ""
 }
@@ -464,9 +482,9 @@ func (x *AuthForgetRequest) GetPassword() string {
 	return ""
 }
 
-func (x *AuthForgetRequest) GetSmsCode() string {
+func (x *AuthForgetRequest) GetEmailCode() string {
 	if x != nil {
-		return x.SmsCode
+		return x.EmailCode
 	}
 	return ""
 }
@@ -1021,15 +1039,18 @@ const file_web_v1_auth_proto_rawDesc = "" +
 	"\x04type\x18\x01 \x01(\tB\x04\xe2A\x01\x02R\x04type\x12'\n" +
 	"\faccess_token\x18\x02 \x01(\tB\x04\xe2A\x01\x02R\vaccessToken\x12#\n" +
 	"\n" +
-	"expires_in\x18\x03 \x01(\x05B\x04\xe2A\x01\x02R\texpiresIn\"\x8c\x02\n" +
+	"expires_in\x18\x03 \x01(\x05B\x04\xe2A\x01\x02R\texpiresIn\"\xa0\x02\n" +
 	"\x13AuthRegisterRequest\x12%\n" +
-	"\bnickname\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x02\x18\x14R\bnickname\x12 \n" +
-	"\x06mobile\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x98\x01\vR\x06mobile\x12#\n" +
+	"\bnickname\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x02\x18\x14R\bnickname\x12\x16\n" +
+	"\x06mobile\x18\x02 \x01(\tR\x06mobile\x12\x14\n" +
+	"\x05email\x18\a \x01(\tR\x05email\x12#\n" +
 	"\bpassword\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bpassword\x124\n" +
-	"\bplatform\x18\x04 \x01(\tB\x18\xbaH\x15r\x13R\x03webR\awindowsR\x03macR\bplatform\x12#\n" +
-	"\bsms_code\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x98\x01\x06R\asmsCode\x12,\n" +
-	"\vinvite_code\x18\x06 \x01(\tB\v\xe2A\x01\x02\xbaH\x04r\x02\x10\x01R\n" +
-	"inviteCode\"~\n" +
+	"\bplatform\x18\x04 \x01(\tB\x18\xbaH\x15r\x13R\x03webR\awindowsR\x03macR\bplatform\x12\x19\n" +
+	"\bsms_code\x18\x05 \x01(\tR\asmsCode\x12\x1f\n" +
+	"\vinvite_code\x18\x06 \x01(\tR\n" +
+	"inviteCode\x12\x1d\n" +
+	"\n" +
+	"email_code\x18\b \x01(\tR\temailCode\"~\n" +
 	"\x14AuthRegisterResponse\x12\x18\n" +
 	"\x04type\x18\x01 \x01(\tB\x04\xe2A\x01\x02R\x04type\x12'\n" +
 	"\faccess_token\x18\x02 \x01(\tB\x04\xe2A\x01\x02R\vaccessToken\x12#\n" +
@@ -1040,11 +1061,12 @@ const file_web_v1_auth_proto_rawDesc = "" +
 	"\x04type\x18\x01 \x01(\tB\x04\xe2A\x01\x02R\x04type\x12'\n" +
 	"\faccess_token\x18\x02 \x01(\tB\x04\xe2A\x01\x02R\vaccessToken\x12#\n" +
 	"\n" +
-	"expires_in\x18\x03 \x01(\x05B\x04\xe2A\x01\x02R\texpiresIn\"\x8b\x01\n" +
-	"\x11AuthForgetRequest\x12$\n" +
-	"\x06mobile\x18\x01 \x01(\tB\f\xe2A\x01\x02\xbaH\x05r\x03\x98\x01\vR\x06mobile\x12'\n" +
-	"\bpassword\x18\x02 \x01(\tB\v\xe2A\x01\x02\xbaH\x04r\x02\x10\x01R\bpassword\x12'\n" +
-	"\bsms_code\x18\x03 \x01(\tB\f\xe2A\x01\x02\xbaH\x05r\x03\x98\x01\x06R\asmsCode\"\x14\n" +
+	"expires_in\x18\x03 \x01(\x05B\x04\xe2A\x01\x02R\texpiresIn\"\x8c\x01\n" +
+	"\x11AuthForgetRequest\x12!\n" +
+	"\x05email\x18\x01 \x01(\tB\v\xe2A\x01\x02\xbaH\x04r\x02`\x01R\x05email\x12'\n" +
+	"\bpassword\x18\x02 \x01(\tB\v\xe2A\x01\x02\xbaH\x04r\x02\x10\x01R\bpassword\x12+\n" +
+	"\n" +
+	"email_code\x18\x03 \x01(\tB\f\xe2A\x01\x02\xbaH\x05r\x03\x98\x01\x06R\temailCode\"\x14\n" +
 	"\x12AuthForgetResponse\"K\n" +
 	"\x10AuthOauthRequest\x127\n" +
 	"\n" +
