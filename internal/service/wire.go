@@ -78,9 +78,9 @@ var ProviderSet = wire.NewSet(
 	wire.Struct(new(InviteCodeService), "*"),
 	wire.Bind(new(IInviteCodeService), new(*InviteCodeService)),
 
-	// InMemoryRedEnvelopeService uses wire.Value because its internal state
-	// (map, mutex) must be initialized via constructor, not zero-value struct.
-	wire.Value(NewInMemoryRedEnvelopeService()),
+	// InMemoryRedEnvelopeService uses a constructor function because its internal state
+	// (map, mutex) must be initialized, not zero-value struct.
+	NewInMemoryRedEnvelopeService,
 	wire.Bind(new(IRedEnvelopeService), new(*InMemoryRedEnvelopeService)),
 
 	wire.Struct(new(MockWalletService), "*"),

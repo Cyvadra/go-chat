@@ -388,7 +388,10 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 	kyc := &v1.KYC{
 		KYCService: mockKYCService,
 	}
-	mockWalletService := &service.MockWalletService{}
+	inMemoryRedEnvelopeService := service.NewInMemoryRedEnvelopeService()
+	mockWalletService := &service.MockWalletService{
+		RedEnvelopeService: inMemoryRedEnvelopeService,
+	}
 	wallet := &v1.Wallet{
 		WalletService: mockWalletService,
 	}
@@ -577,9 +580,13 @@ func NewCronInjector(c *config.Config) *mission.CronProvider {
 		DB:         db,
 		Filesystem: iFilesystem,
 	}
-	mockWalletService := &service.MockWalletService{}
+	inMemoryRedEnvelopeService := service.NewInMemoryRedEnvelopeService()
+	mockWalletService := &service.MockWalletService{
+		RedEnvelopeService: inMemoryRedEnvelopeService,
+	}
 	expireRedEnvelope := &cron.ExpireRedEnvelope{
-		WalletService: mockWalletService,
+		WalletService:      mockWalletService,
+		RedEnvelopeService: inMemoryRedEnvelopeService,
 	}
 	crontab := &cron.Crontab{
 		ClearArticle:      clearArticle,
