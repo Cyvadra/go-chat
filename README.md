@@ -1,81 +1,181 @@
-# Lumen-IM 服务端（golang）
+# Lumen IM Backend
 
-## 项目简介
+基于 Go 语言开发的即时通讯系统后端服务。
 
+## 快速开始
 
-Lumen IM 是一个网页版即时聊天系统，界面简约、美观、操作简单且容易进行二次开发。
+### 前置要求
 
-##### 使用技术
+- Go >= 1.25.0
+- MySQL >= 5.7
+- Redis >= 6.0
+- NSQ (消息队列)
 
-- Golang 1.23+
-- MySQL 8.0+
-- Redis 5.0+
-- Minio
+### 安装
 
-##### 功能介绍
+```bash
+# 1. 安装依赖
+go mod download
+make install
 
-- 支持 WebSocket 通信
-- 支持私聊及群聊以及房间聊天场景
-- 支持服务水平扩展
-- 支持聊天消息类型有 文本、代码块、 图片及其它类型文件
-- 支持聊天消息撤回、删除或批量删除、转发消息（逐条转发、合并转发）及群投票功能
+# 2. 配置环境
+make conf
+vim config.yaml
 
-[查看前端代码](https://github.com/gzydong/LumenIM)
+# 3. 初始化数据库
+mysql -u root -p -e "CREATE DATABASE go_chat CHARACTER SET utf8mb4"
 
-## 项目预览
-
-- 地址： [https://im.gzydong.com](https://im.gzydong.com)
-- 账号： 13800000001 或 13800000002
-- 密码： admin123
-
-## 项目安装
-
-1. 下载源码
-
-```git
-$ git clone https://github.com/gzydong/go-chat.git
+# 4. 运行服务
+make dev
 ```
 
-1. 拷贝项目根目录下 config.example.yaml 文件为 config.yaml 并正确配置相关参数
+### 开发命令
 
-``` bash
-$ cp config.example.yaml config.yaml # 请务必正确配置相关参数
+```bash
+make install     # 安装开发工具
+make conf        # 创建配置文件
+make generate    # 生成代码
+make dev         # 运行所有服务
+make build       # 构建可执行文件
+make lint        # 代码检查
+make test        # 运行测试
 ```
 
-3. 安装依赖包
+### 服务端口
 
-``` bash
-$ go mod tidy
+- HTTP API: `9501`
+- WebSocket: `9502`
+- TCP: `9505`
+
+## 邮件服务配置
+
+系统支持两种邮件发送方式：
+
+### 方式一：本地 SMTP（推荐）
+
+```yaml
+email:
+  use_local: true
+  local_host: localhost
+  local_port: 25
+  username: noreply@yourdomain.com
+  fromname: "Lumen IM"
 ```
 
-4. 安装相关依赖命令行工具
+需要在服务器上安装并配置 Postfix：
 
-``` bash
-$ make install
+```bash
+# Ubuntu/Debian
+sudo apt-get install postfix
+sudo systemctl start postfix
 ```
 
-5. 初始化数据库
+### 方式二：外部 SMTP
 
-``` bash
-$ go run ./cmd/lumenim migrate
+```yaml
+email:
+  use_local: false
+  host: smtp.163.com
+  port: 465
+  username: your_email@163.com
+  password: your_smtp_password
+  fromname: "Lumen IM"
 ```
 
-6. 开发环境下启动服务
+## 项目结构
 
-``` bash
-# 打开两个终端，分别运行下面两个命令
-
-$ go run ./cmd/lumenim http      # 本地启动 http 服务
-$ go run ./cmd/lumenim comet    # 本地启动 websocket 服务
-$ go run ./cmd/lumenim queue     # 启动异步队列
-$ go run ./cmd/lumenim crontab      # 启动定时任务
-$ go run ./cmd/lumenim temp test    # 自定义脚本
+```
+backend/
+├── api/              # API 定义（Proto）
+├── cmd/              # 应用程序入口
+│   └── lumenim/      # 主程序
+├── config/           # 配置结构定义
+├── internal/         # 内部代码
+│   ├── apis/         # API 处理器
+│   ├── logic/        # 业务逻辑
+│   ├── service/      # 服务层
+│   ├── repository/   # 数据访问层
+│   └── pkg/          # 内部工具包
+├── docs/             # Swagger 文档
+├── bin/              # 编译输出
+├── config.yaml       # 配置文件
+└── Makefile          # 构建脚本
 ```
 
-7. 编译后运行
+## 详细文档
 
-``` bash
-$ make build                   # 执行编译命令
+完整的部署和配置指南请查看：
 
-# 执行后可在 ./bin 目录下看到 lumenim
+📖 **[部署文档 (DEPLOY.md)](./DEPLOY.md)**
+
+包含：
+- 详细的环境配置
+- 本地 SMTP 服务器配置
+- 生产环境部署指南
+- Nginx 反向代理配置
+- 性能优化建议
+- 常见问题解决
+
+## API 文档
+
+启动服务后访问：
+
+- Swagger UI: `http://localhost:9501/swagger/index.html`
+- API JSON: `http://localhost:9501/swagger/doc.json`
+
+## 技术栈
+
+- **Web 框架**: Gin
+- **ORM**: GORM
+- **缓存**: Redis
+- **消息队列**: NSQ
+- **WebSocket**: Gorilla WebSocket
+- **认证**: JWT
+- **依赖注入**: Wire
+- **配置**: Viper
+
+## 开发
+
+### 代码生成
+
+```bash
+# 生成 Wire 依赖注入代码
+make generate
+
+# 生成 API 文档
+swag init -g cmd/lumenim/main.go -o docs
 ```
+
+### 运行单个服务
+
+```bash
+make dev-http      # HTTP API 服务
+make dev-comet     # WebSocket 服务
+make dev-queue     # 队列处理服务
+make dev-crontab   # 定时任务服务
+```
+
+## 生产环境
+
+### 构建
+
+```bash
+make build
+# 输出: bin/lumenim
+```
+
+### 部署
+
+详见 [DEPLOY.md](./DEPLOY.md) 中的生产环境部署章节。
+
+## 许可证
+
+[查看 LICENSE 文件]
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+---
+
+**注意**: 首次部署请务必查看 [DEPLOY.md](./DEPLOY.md) 了解详细配置说明。

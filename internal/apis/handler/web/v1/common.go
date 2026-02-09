@@ -99,7 +99,8 @@ func (c *Common) SendEmail(ctx context.Context, req *web.CommonSendEmailRequest)
 	templateData := map[string]string{
 		"code":         code,
 		"service_name": "邮箱验证",
-		"domain":       "https://im.gzydong.com",
+		"company_name": "小火箭 IM",
+		"domain":       "https://xhj.im",
 	}
 
 	// Render email template
@@ -140,7 +141,7 @@ func (c *Common) Test(ctx context.Context, req *web.CommonSendTestRequest) (*web
 	// This is a test endpoint for internal testing purposes
 	// Log the request for debugging
 	fmt.Printf("Test endpoint called with email: %s\n", req.Email)
-	
+
 	// Return empty response indicating success
 	return &web.CommonSendTestResponse{}, nil
 }
