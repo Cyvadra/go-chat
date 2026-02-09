@@ -175,21 +175,11 @@ func (m *Message) HistoryRecords(ctx context.Context, in *web.MessageHistoryReco
 		cursor = records[length-1].Sequence
 	}
 
+	// 补充红包消息的状态信息
+	items := m.enrichRedEnvelopeStatus(ctx, uid, records)
+
 	return &web.MessageHistoryRecordsResponse{
-		Items: lo.Map(records, func(item *model.TalkMessageRecord, _ int) *web.MessageRecord {
-			return &web.MessageRecord{
-				FromId:    int32(item.FromId),
-				MsgId:     item.MsgId,
-				Sequence:  int32(item.Sequence),
-				MsgType:   int32(item.MsgType),
-				Nickname:  item.Nickname,
-				Avatar:    item.Avatar,
-				IsRevoked: int32(item.IsRevoked),
-				SendTime:  item.SendTime.Format(time.DateTime),
-				Extra:     lo.Ternary(item.IsRevoked == model.Yes, "{}", item.Extra),
-				Quote:     item.Quote,
-			}
-		}),
+		Items:  items,
 		Cursor: int32(cursor),
 	}, nil
 }
@@ -213,22 +203,59 @@ func (m *Message) ForwardRecords(ctx context.Context, in *web.MessageForwardReco
 		return nil, err
 	}
 
+	// 补充红包消息的状态信息
+	items := m.enrichRedEnvelopeStatus(ctx, uid, records)
+
 	return &web.MessageRecordsClearResponse{
-		Items: lo.Map(records, func(item *model.TalkMessageRecord, _ int) *web.MessageRecord {
-			return &web.MessageRecord{
-				FromId:    int32(item.FromId),
-				MsgId:     item.MsgId,
-				Sequence:  int32(item.Sequence),
-				MsgType:   int32(item.MsgType),
-				Nickname:  item.Nickname,
-				Avatar:    item.Avatar,
-				IsRevoked: int32(item.IsRevoked),
-				SendTime:  item.SendTime.Format(time.DateTime),
-				Extra:     lo.Ternary(item.IsRevoked == model.Yes, "{}", item.Extra),
-				Quote:     item.Quote,
-			}
-		}),
+		Items: items,
 	}, nil
+}
+
+// enrichRedEnvelopeStatus 补充红包消息的状态信息
+func (m *Message) enrichRedEnvelopeStatus(ctx context.Context, userId int, records []*model.TalkMessageRecord) []*web.MessageRecord {
+	return lo.Map(records, func(item *model.TalkMessageRecord, _ int) *web.MessageRecord {
+		extra := lo.Ternary(item.IsRevoked == model.Yes, "{}", item.Extra)
+
+		// 如果是红包消息且未撤回，补充状态信息
+		if item.MsgType == entity.ChatMsgTypeRedEnvelope && item.IsRevoked == model.No {
+			var redEnvelopeData model.TalkRecordExtraRedEnvelope
+			if err := jsonutil.Unmarshal(item.Extra, &redEnvelopeData); err == nil && redEnvelopeData.EnvelopeId != "" {
+				// 获取红包状态
+				if status, err := m.RedEnvelopeService.GetStatus(ctx, redEnvelopeData.EnvelopeId, userId); err == nil {
+					// 合并状态信息到原有的红包数据
+					enrichedData := map[string]interface{}{
+						"envelope_id":    redEnvelopeData.EnvelopeId,
+						"amount":         redEnvelopeData.Amount,
+						"count":          redEnvelopeData.Count,
+						"type":           redEnvelopeData.Type,
+						"greeting":       redEnvelopeData.Greeting,
+						"status":         status.Status,
+						"status_text":    status.StatusText,
+						"has_received":   status.HasReceived,
+						"received_amt":   status.ReceivedAmt,
+						"is_best":        status.IsBest,
+						"best_user_id":   status.BestUserId,
+						"best_user_name": status.BestUserName,
+						"best_amount":    status.BestAmount,
+					}
+					extra = jsonutil.Encode(enrichedData)
+				}
+			}
+		}
+
+		return &web.MessageRecord{
+			FromId:    int32(item.FromId),
+			MsgId:     item.MsgId,
+			Sequence:  int32(item.Sequence),
+			MsgType:   int32(item.MsgType),
+			Nickname:  item.Nickname,
+			Avatar:    item.Avatar,
+			IsRevoked: int32(item.IsRevoked),
+			SendTime:  item.SendTime.Format(time.DateTime),
+			Extra:     extra,
+			Quote:     item.Quote,
+		}
+	})
 }
 
 // Revoke 撤回消息接口

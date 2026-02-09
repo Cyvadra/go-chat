@@ -181,6 +181,7 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 		GroupService:       groupService,
 		AuthService:        authService,
 	}
+	inMemoryRedEnvelopeService := service.NewInMemoryRedEnvelopeService()
 	iFilesystem := provider.NewFilesystem(c)
 	talkUserMessage := repo.NewTalkRecordFriend(db)
 	talkGroupMessage := repo.NewTalkRecordGroup(db)
@@ -203,6 +204,7 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 	talkMessage := &talk.Message{
 		TalkService:          talkService,
 		AuthService:          authService,
+		RedEnvelopeService:   inMemoryRedEnvelopeService,
 		Filesystem:           iFilesystem,
 		GroupMemberRepo:      groupMember,
 		TalkRecordFriendRepo: talkUserMessage,
@@ -388,7 +390,6 @@ func NewHttpInjector(c *config.Config) *apis.Provider {
 	kyc := &v1.KYC{
 		KYCService: mockKYCService,
 	}
-	inMemoryRedEnvelopeService := service.NewInMemoryRedEnvelopeService()
 	mockWalletService := &service.MockWalletService{
 		RedEnvelopeService: inMemoryRedEnvelopeService,
 	}
