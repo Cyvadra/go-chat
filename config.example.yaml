@@ -133,11 +133,19 @@ filesystem:
 
 # 邮件配置
 email:
-  host: smtp.163.com
-  port: 465
-  username: xxxxx
-  password: xxxxx
-  fromname: "Lumen IM 在线聊天"
+  # 设置为 true 使用服务器自身的SMTP服务，false 使用外部SMTP服务器
+  use_local: true
+
+  # 使用本地SMTP服务器发送邮件（推荐）
+  local_host: localhost    # 本地SMTP服务器地址，默认 localhost
+  local_port: 25           # 本地SMTP服务器端口，默认 25
+  username: noreply@xhj.im  # 发件人邮箱地址（使用本地SMTP时作为From地址）
+  fromname: "小火箭 IM"      # 发送人名称
+  
+  # 以下配置仅在 use_local 为 false 时使用（外部SMTP服务器）
+  host: smtp.163.com       # 外部SMTP服务器地址
+  port: 465                # 外部SMTP服务器端口
+  password: xxxxx          # 外部SMTP服务器密码
 
 oauth:
   github:
