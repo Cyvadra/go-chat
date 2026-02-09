@@ -98,6 +98,7 @@ type RedEnvelopeResult struct {
 	Type       string    `json:"type"`
 	Status     string    `json:"status"` // available, finished, expired
 	CreatedAt  time.Time `json:"created_at"`
+	ExpiredAt  time.Time `json:"expired_at"` // 过期时间（24小时后）
 }
 
 // ReceiveRedEnvelopeResult 领取红包结果
@@ -111,17 +112,18 @@ type ReceiveRedEnvelopeResult struct {
 
 // RedEnvelopeDetail 红包详情
 type RedEnvelopeDetail struct {
-	EnvelopeId   string                  `json:"envelope_id"`
-	SenderId     int                     `json:"sender_id"`
-	SenderName   string                  `json:"sender_name"`
-	Amount       float64                 `json:"amount"`
-	Count        int                     `json:"count"`
-	Type         string                  `json:"type"`
-	Greeting     string                  `json:"greeting"`
-	Status       string                  `json:"status"`
+	EnvelopeId    string                 `json:"envelope_id"`
+	SenderId      int                    `json:"sender_id"`
+	SenderName    string                 `json:"sender_name"`
+	Amount        float64                `json:"amount"`
+	Count         int                    `json:"count"`
+	Type          string                 `json:"type"`
+	Greeting      string                 `json:"greeting"`
+	Status        string                 `json:"status"`
 	ReceivedCount int                    `json:"received_count"`
-	ReceivedList []*RedEnvelopeReceiver  `json:"received_list"`
-	CreatedAt    time.Time               `json:"created_at"`
+	ReceivedList  []*RedEnvelopeReceiver `json:"received_list"`
+	CreatedAt     time.Time              `json:"created_at"`
+	ExpiredAt     time.Time              `json:"expired_at"` // 过期时间（24小时后）
 }
 
 // RedEnvelopeReceiver 红包领取记录
@@ -215,20 +217,41 @@ func (m *MockWalletService) SendRedEnvelope(ctx context.Context, req *SendRedEnv
 	}
 
 	// Mock data
+	now := time.Now()
 	return &RedEnvelopeResult{
-		EnvelopeId: "RED" + time.Now().Format("20060102150405"),
+		EnvelopeId: "RED" + now.Format("20060102150405"),
 		SenderId:   req.SenderId,
 		Amount:     req.Amount,
 		Count:      req.Count,
 		Type:       req.Type,
 		Status:     "available",
-		CreatedAt:  time.Now(),
+		CreatedAt:  now,
+		ExpiredAt:  now.Add(24 * time.Hour), // 24小时后过期
 	}, nil
 }
 
 func (m *MockWalletService) ReceiveRedEnvelope(ctx context.Context, envelopeId string, userId int) (*ReceiveRedEnvelopeResult, error) {
+	// 检查红包是否过期 (使用 Mock 数据)
+	// 注意：在实际应用中，应该从数据库查询红包的真实信息，包括创建时间和过期时间
+	detail, err := m.GetRedEnvelopeDetail(ctx, envelopeId)
+	if err != nil {
+		return nil, err
+	}
+
+	// 检查是否过期
+	if time.Now().After(detail.ExpiredAt) {
+		return &ReceiveRedEnvelopeResult{
+			EnvelopeId: envelopeId,
+			UserId:     userId,
+			Amount:     0,
+			Status:     "expired",
+			ReceivedAt: time.Now(),
+		}, nil
+	}
+
 	// Mock data - 随机金额（拼手气红包）
-	amount := 10.00 // 简化版本，实际应根据红包类型计算
+	// 实际应用中应根据红包类型、剩余金额和剩余份数计算
+	amount := 10.00
 
 	return &ReceiveRedEnvelopeResult{
 		EnvelopeId: envelopeId,
@@ -241,6 +264,15 @@ func (m *MockWalletService) ReceiveRedEnvelope(ctx context.Context, envelopeId s
 
 func (m *MockWalletService) GetRedEnvelopeDetail(ctx context.Context, envelopeId string) (*RedEnvelopeDetail, error) {
 	// Mock data
+	createdAt := time.Now().Add(-10 * time.Minute)
+	expiredAt := createdAt.Add(24 * time.Hour)
+	
+	// 检查是否已过期
+	status := "available"
+	if time.Now().After(expiredAt) {
+		status = "expired"
+	}
+	
 	return &RedEnvelopeDetail{
 		EnvelopeId:    envelopeId,
 		SenderId:      1001,
@@ -249,7 +281,7 @@ func (m *MockWalletService) GetRedEnvelopeDetail(ctx context.Context, envelopeId
 		Count:         10,
 		Type:          "lucky",
 		Greeting:      "恭喜发财，大吉大利！",
-		Status:        "available",
+		Status:        status,
 		ReceivedCount: 3,
 		ReceivedList: []*RedEnvelopeReceiver{
 			{
@@ -271,7 +303,8 @@ func (m *MockWalletService) GetRedEnvelopeDetail(ctx context.Context, envelopeId
 				ReceivedAt: time.Now().Add(-1 * time.Minute),
 			},
 		},
-		CreatedAt: time.Now().Add(-10 * time.Minute),
+		CreatedAt: createdAt,
+		ExpiredAt: expiredAt,
 	}, nil
 }
 

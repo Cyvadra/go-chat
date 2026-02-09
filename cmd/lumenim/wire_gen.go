@@ -577,9 +577,14 @@ func NewCronInjector(c *config.Config) *mission.CronProvider {
 		DB:         db,
 		Filesystem: iFilesystem,
 	}
+	mockWalletService := &service.MockWalletService{}
+	expireRedEnvelope := &cron.ExpireRedEnvelope{
+		WalletService: mockWalletService,
+	}
 	crontab := &cron.Crontab{
-		ClearArticle: clearArticle,
-		ClearTmpFile: clearTmpFile,
+		ClearArticle:      clearArticle,
+		ClearTmpFile:      clearTmpFile,
+		ExpireRedEnvelope: expireRedEnvelope,
 	}
 	cronProvider := &mission.CronProvider{
 		Config:  c,
