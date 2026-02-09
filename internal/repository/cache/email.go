@@ -66,3 +66,18 @@ func (e *EmailStorage) name(channel string, email string) string {
 func (e *EmailStorage) failName(channel string, email string) string {
 	return fmt.Sprintf("im:auth:email_fail:%s:%s", channel, encrypt.Md5(email))
 }
+
+func (e *EmailStorage) sendTimeName(email string) string {
+	return fmt.Sprintf("im:auth:email_send_time:%s", encrypt.Md5(email))
+}
+
+// CanSend 检查邮箱是否可以发送验证码（距离上次发送是否超过60秒）
+func (e *EmailStorage) CanSend(ctx context.Context, email string) bool {
+	ttl := e.redis.TTL(ctx, e.sendTimeName(email)).Val()
+	return ttl <= 0 // TTL <= 0 表示key不存在或已过期，可以发送
+}
+
+// SetSendTime 记录邮箱验证码发送时间，60秒内不允许重复发送
+func (e *EmailStorage) SetSendTime(ctx context.Context, email string) error {
+	return e.redis.Set(ctx, e.sendTimeName(email), time.Now().Unix(), 60*time.Second).Err()
+}

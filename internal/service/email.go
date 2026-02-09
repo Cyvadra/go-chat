@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -38,10 +39,20 @@ func (e *EmailService) Delete(ctx context.Context, channel string, email string)
 
 // Send 发送邮箱验证码
 func (e *EmailService) Send(ctx context.Context, channel string, email string) (string, error) {
+	// 检查是否在60秒内已发送过验证码
+	if !e.Storage.CanSend(ctx, email) {
+		return "", errors.New("验证码发送过于频繁，请60秒后再试")
+	}
+
 	code := strutil.GenValidateCode(6)
 
 	// 添加发送记录
 	if err := e.Storage.Set(ctx, channel, email, code, 15*time.Minute); err != nil {
+		return "", err
+	}
+
+	// 记录发送时间，60秒内不允许重复发送
+	if err := e.Storage.SetSendTime(ctx, email); err != nil {
 		return "", err
 	}
 
