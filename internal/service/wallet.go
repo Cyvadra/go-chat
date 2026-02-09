@@ -35,7 +35,9 @@ type IWalletService interface {
 }
 
 // MockWalletService 钱包服务的Mock实现（用于开发测试）
-type MockWalletService struct{}
+type MockWalletService struct{
+	RedEnvelopeService IRedEnvelopeService
+}
 
 // RechargeResult 充值结果
 type RechargeResult struct {
@@ -216,95 +218,70 @@ func (m *MockWalletService) SendRedEnvelope(ctx context.Context, req *SendRedEnv
 		return nil, &PasswordError{Message: "支付密码错误"}
 	}
 
-	// Mock data
-	now := time.Now()
-	return &RedEnvelopeResult{
-		EnvelopeId: "RED" + now.Format("20060102150405"),
-		SenderId:   req.SenderId,
-		Amount:     req.Amount,
-		Count:      req.Count,
-		Type:       req.Type,
-		Status:     "available",
-		CreatedAt:  now,
-		ExpiredAt:  now.Add(24 * time.Hour), // 24小时后过期
-	}, nil
-}
-
-func (m *MockWalletService) ReceiveRedEnvelope(ctx context.Context, envelopeId string, userId int) (*ReceiveRedEnvelopeResult, error) {
-	// 检查红包是否过期 (使用 Mock 数据)
-	// 注意：在实际应用中，应该从数据库查询红包的真实信息，包括创建时间和过期时间
-	detail, err := m.GetRedEnvelopeDetail(ctx, envelopeId)
+	// 委托给红包服务
+	info, err := m.RedEnvelopeService.Create(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	// 检查是否过期
-	if time.Now().After(detail.ExpiredAt) {
-		return &ReceiveRedEnvelopeResult{
-			EnvelopeId: envelopeId,
-			UserId:     userId,
-			Amount:     0,
-			Status:     "expired",
-			ReceivedAt: time.Now(),
-		}, nil
+	return &RedEnvelopeResult{
+		EnvelopeId: info.EnvelopeId,
+		SenderId:   info.SenderId,
+		Amount:     info.Amount,
+		Count:      info.Count,
+		Type:       info.Type,
+		Status:     info.Status,
+		CreatedAt:  info.CreatedAt,
+		ExpiredAt:  info.ExpiredAt,
+	}, nil
+}
+
+func (m *MockWalletService) ReceiveRedEnvelope(ctx context.Context, envelopeId string, userId int) (*ReceiveRedEnvelopeResult, error) {
+	// 委托给红包服务
+	result, err := m.RedEnvelopeService.Receive(ctx, envelopeId, userId)
+	if err != nil {
+		return nil, err
 	}
 
-	// Mock data - 随机金额（拼手气红包）
-	// 实际应用中应根据红包类型、剩余金额和剩余份数计算
-	amount := 10.00
-
 	return &ReceiveRedEnvelopeResult{
-		EnvelopeId: envelopeId,
-		UserId:     userId,
-		Amount:     amount,
-		Status:     "success",
-		ReceivedAt: time.Now(),
+		EnvelopeId: result.EnvelopeId,
+		UserId:     result.UserId,
+		Amount:     result.Amount,
+		Status:     result.Status,
+		ReceivedAt: result.ReceivedAt,
 	}, nil
 }
 
 func (m *MockWalletService) GetRedEnvelopeDetail(ctx context.Context, envelopeId string) (*RedEnvelopeDetail, error) {
-	// Mock data
-	createdAt := time.Now().Add(-10 * time.Minute)
-	expiredAt := createdAt.Add(24 * time.Hour)
-	
-	// 检查是否已过期
-	status := "available"
-	if time.Now().After(expiredAt) {
-		status = "expired"
+	// 委托给红包服务
+	info, err := m.RedEnvelopeService.GetDetail(ctx, envelopeId)
+	if err != nil {
+		return nil, err
 	}
-	
+
+	receivers := make([]*RedEnvelopeReceiver, 0, len(info.ReceivedList))
+	for _, r := range info.ReceivedList {
+		receivers = append(receivers, &RedEnvelopeReceiver{
+			UserId:     r.UserId,
+			UserName:   r.UserName,
+			Amount:     r.Amount,
+			ReceivedAt: r.ReceivedAt,
+		})
+	}
+
 	return &RedEnvelopeDetail{
-		EnvelopeId:    envelopeId,
-		SenderId:      1001,
-		SenderName:    "张三",
-		Amount:        100.00,
-		Count:         10,
-		Type:          "lucky",
-		Greeting:      "恭喜发财，大吉大利！",
-		Status:        status,
-		ReceivedCount: 3,
-		ReceivedList: []*RedEnvelopeReceiver{
-			{
-				UserId:     1002,
-				UserName:   "李四",
-				Amount:     15.50,
-				ReceivedAt: time.Now().Add(-5 * time.Minute),
-			},
-			{
-				UserId:     1003,
-				UserName:   "王五",
-				Amount:     20.30,
-				ReceivedAt: time.Now().Add(-3 * time.Minute),
-			},
-			{
-				UserId:     1004,
-				UserName:   "赵六",
-				Amount:     8.80,
-				ReceivedAt: time.Now().Add(-1 * time.Minute),
-			},
-		},
-		CreatedAt: createdAt,
-		ExpiredAt: expiredAt,
+		EnvelopeId:    info.EnvelopeId,
+		SenderId:      info.SenderId,
+		SenderName:    info.SenderName,
+		Amount:        info.Amount,
+		Count:         info.Count,
+		Type:          info.Type,
+		Greeting:      info.Greeting,
+		Status:        info.Status,
+		ReceivedCount: info.ReceivedCount,
+		ReceivedList:  receivers,
+		CreatedAt:     info.CreatedAt,
+		ExpiredAt:     info.ExpiredAt,
 	}, nil
 }
 
