@@ -51,6 +51,14 @@ func Init(filePath string, level slog.Level, topic string) {
 	out = slog.New(handler).With("topic", topic)
 }
 
+func InfofContext(ctx context.Context, format string, args ...any) {
+	logf(ctx, slog.LevelInfo, format, args...)
+}
+
+func Infof(format string, args ...any) {
+	logf(context.Background(), slog.LevelInfo, format, args...)
+}
+
 func ErrorfContext(ctx context.Context, format string, args ...any) {
 	logf(ctx, slog.LevelError, format, args...)
 }

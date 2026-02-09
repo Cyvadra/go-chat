@@ -159,10 +159,13 @@ func (a *Auth) Register(ctx context.Context, in *web.AuthRegisterRequest) (*web.
 		if in.EmailCode == "" {
 			return nil, errorx.New(400, "邮箱验证码不能为空")
 		}
+		logger.InfofContext(ctx, "[Register] Verifying email code - email: %s, channel: %s, code: %s", in.Email, entity.EmailRegisterChannel, in.EmailCode)
 		// 验证邮箱验证码是否正确
 		if !a.EmailService.Verify(ctx, entity.EmailRegisterChannel, in.Email, in.EmailCode) {
+			logger.ErrorfContext(ctx, "[Register] Email verification failed - email: %s, channel: %s, code: %s", in.Email, entity.EmailRegisterChannel, in.EmailCode)
 			return nil, errorx.New(400, "邮箱验证码错误或已过期")
 		}
+		logger.InfofContext(ctx, "[Register] Email verification succeeded - email: %s", in.Email)
 	}
 
 	password, err := a.Rsa.Decrypt(in.Password)

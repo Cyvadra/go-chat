@@ -37,8 +37,11 @@ func (e *EmailStorage) Del(ctx context.Context, channel string, email string) er
 func (e *EmailStorage) Verify(ctx context.Context, channel string, email string, code string) bool {
 	value, err := e.Get(ctx, channel, email)
 	if err != nil || len(value) == 0 {
+		fmt.Printf("[EmailStorage.Verify] Failed to get code from Redis - channel: %s, email: %s, error: %v\n", channel, email, err)
 		return false
 	}
+
+	fmt.Printf("[EmailStorage.Verify] Retrieved code from Redis - channel: %s, email: %s, stored: %s, provided: %s, match: %v\n", channel, email, value, code, value == code)
 
 	if value == code {
 		return true
@@ -46,7 +49,9 @@ func (e *EmailStorage) Verify(ctx context.Context, channel string, email string,
 
 	// 3分钟内同一个邮箱验证码错误次数超过5次，删除验证码
 	num := e.redis.Incr(ctx, e.failName(channel, email)).Val()
+	fmt.Printf("[EmailStorage.Verify] Code mismatch - fail count: %d\n", num)
 	if num >= 5 {
+		fmt.Printf("[EmailStorage.Verify] Max failures reached, deleting code\n")
 		_, _ = e.redis.Pipelined(ctx, func(pipe redis.Pipeliner) error {
 			pipe.Del(ctx, e.name(channel, email))
 			pipe.Del(ctx, e.failName(channel, email))
