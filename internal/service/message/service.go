@@ -71,6 +71,10 @@ type IMessage interface {
 	CreateMixedMessage(ctx context.Context, option CreateMixedMessage) error
 	// CreateRTCCallMessage 音视频通话消息
 	CreateRTCCallMessage(ctx context.Context, option CreateRTCCallMessage) error
+	// CreateRedEnvelopeMessage 红包消息
+	CreateRedEnvelopeMessage(ctx context.Context, option CreateRedEnvelopeMessage) error
+	// CreateTransferMessage 转账消息
+	CreateTransferMessage(ctx context.Context, option CreateTransferMessage) error
 }
 
 type IService interface {
@@ -460,6 +464,38 @@ func (s *Service) CreateRTCCallMessage(ctx context.Context, option CreateRTCCall
 			Type:     option.Type,
 			Status:   option.Status,
 			Duration: option.Duration,
+		}),
+	})
+}
+
+func (s *Service) CreateRedEnvelopeMessage(ctx context.Context, option CreateRedEnvelopeMessage) error {
+	return s.CreateMessage(ctx, CreateMessageOption{
+		MsgId:    option.MsgId,
+		TalkMode: option.TalkMode,
+		FromId:   option.FromId,
+		ToFromId: option.ToFromId,
+		MsgType:  entity.ChatMsgTypeRedEnvelope,
+		Extra: jsonutil.Encode(model.TalkRecordExtraRedEnvelope{
+			EnvelopeId: option.EnvelopeId,
+			Amount:     option.Amount,
+			Count:      option.Count,
+			Type:       option.Type,
+			Greeting:   option.Greeting,
+		}),
+	})
+}
+
+func (s *Service) CreateTransferMessage(ctx context.Context, option CreateTransferMessage) error {
+	return s.CreateMessage(ctx, CreateMessageOption{
+		MsgId:    option.MsgId,
+		TalkMode: option.TalkMode,
+		FromId:   option.FromId,
+		ToFromId: option.ToFromId,
+		MsgType:  entity.ChatMsgTypeTransfer,
+		Extra: jsonutil.Encode(model.TalkRecordExtraTransfer{
+			TransferId: option.TransferId,
+			Amount:     option.Amount,
+			Remark:     option.Remark,
 		}),
 	})
 }

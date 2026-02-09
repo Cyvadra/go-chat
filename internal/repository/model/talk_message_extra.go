@@ -215,3 +215,19 @@ type TalkRecordExtraRTC struct {
 	Status   int `json:"status"`   // 通话状态 1:已取消 2:未接听 3:已拒绝 4:已接通/已结束
 	Duration int `json:"duration"` // 通话时长
 }
+
+// TalkRecordExtraRedEnvelope 红包消息
+type TalkRecordExtraRedEnvelope struct {
+	EnvelopeId string  `json:"envelope_id"` // 红包ID
+	Amount     float64 `json:"amount"`      // 红包金额（单位：分）
+	Count      int     `json:"count"`       // 红包个数
+	Type       string  `json:"type"`        // 红包类型 normal:普通红包 lucky:拼手气红包
+	Greeting   string  `json:"greeting"`    // 红包祝福语
+}
+
+// TalkRecordExtraTransfer 转账消息
+type TalkRecordExtraTransfer struct {
+	TransferId string  `json:"transfer_id"` // 转账ID
+	Amount     float64 `json:"amount"`      // 转账金额（单位：分）
+	Remark     string  `json:"remark"`      // 转账备注
+}

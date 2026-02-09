@@ -470,6 +470,78 @@ func (c *Publish) onSendRTCCall(ctx *gin.Context) error {
 	return nil
 }
 
+type onSendRedEnvelopeMessage struct {
+	BaseMessageRequest
+	Body struct {
+		EnvelopeId string  `json:"envelope_id" binding:"required"` // 红包ID
+		Amount     float64 `json:"amount" binding:"required"`      // 红包金额（单位：分）
+		Count      int     `json:"count" binding:"required"`       // 红包个数
+		Type       string  `json:"type" binding:"required"`        // 红包类型 normal:普通红包 lucky:拼手气红包
+		Greeting   string  `json:"greeting"`                       // 红包祝福语
+	} `json:"body" binding:"required"`
+}
+
+// 红包消息
+func (c *Publish) onSendRedEnvelope(ctx *gin.Context) error {
+	in := &onSendRedEnvelopeMessage{}
+	if err := ctx.ShouldBindBodyWith(in, binding.JSON); err != nil {
+		return errorx.New(400, err.Error())
+	}
+
+	uid := middleware.FormContextAuthId[entity.WebClaims](ctx.Request.Context())
+	err := c.MessageService.CreateRedEnvelopeMessage(ctx.Request.Context(), message.CreateRedEnvelopeMessage{
+		MsgId:      in.MsgId,
+		TalkMode:   in.TalkMode,
+		FromId:     uid,
+		ToFromId:   in.ToFromId,
+		EnvelopeId: in.Body.EnvelopeId,
+		Amount:     in.Body.Amount,
+		Count:      in.Body.Count,
+		Type:       in.Body.Type,
+		Greeting:   in.Body.Greeting,
+	})
+
+	if err != nil {
+		return ctx.Error(err)
+	}
+
+	return nil
+}
+
+type onSendTransferMessage struct {
+	BaseMessageRequest
+	Body struct {
+		TransferId string  `json:"transfer_id" binding:"required"` // 转账ID
+		Amount     float64 `json:"amount" binding:"required"`      // 转账金额（单位：分）
+		Remark     string  `json:"remark"`                         // 转账备注
+	} `json:"body" binding:"required"`
+}
+
+// 转账消息
+func (c *Publish) onSendTransfer(ctx *gin.Context) error {
+	in := &onSendTransferMessage{}
+	if err := ctx.ShouldBindBodyWith(in, binding.JSON); err != nil {
+		return errorx.New(400, err.Error())
+	}
+
+	uid := middleware.FormContextAuthId[entity.WebClaims](ctx.Request.Context())
+	err := c.MessageService.CreateTransferMessage(ctx.Request.Context(), message.CreateTransferMessage{
+		MsgId:      in.MsgId,
+		TalkMode:   in.TalkMode,
+		FromId:     uid,
+		ToFromId:   in.ToFromId,
+		TransferId: in.Body.TransferId,
+		Amount:     in.Body.Amount,
+		Remark:     in.Body.Remark,
+	})
+
+	if err != nil {
+		return ctx.Error(err)
+	}
+
+	return nil
+}
+
 func (c *Publish) transfer(ctx *gin.Context, typeValue string) error {
 	if mapping == nil {
 		mapping = make(map[string]func(ctx *gin.Context) error)
@@ -485,6 +557,8 @@ func (c *Publish) transfer(ctx *gin.Context, typeValue string) error {
 		mapping["forward"] = c.onSendForward
 		mapping["mixed"] = c.onMixedMessage
 		mapping["rtc"] = c.onSendRTCCall
+		mapping["red_envelope"] = c.onSendRedEnvelope
+		mapping["transfer"] = c.onSendTransfer
 	}
 
 	if call, ok := mapping[typeValue]; ok {
