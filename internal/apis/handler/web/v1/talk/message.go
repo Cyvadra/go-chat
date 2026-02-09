@@ -26,6 +26,7 @@ var _ web.IMessageHandler = (*Message)(nil)
 type Message struct {
 	TalkService          service.ITalkService
 	AuthService          service.IAuthService
+	RedEnvelopeService   service.IRedEnvelopeService
 	Filesystem           filesystem.IFilesystem
 	GroupMemberRepo      *repo.GroupMember
 	TalkRecordFriendRepo *repo.TalkUserMessage
@@ -93,21 +94,11 @@ func (m *Message) Records(ctx context.Context, in *web.MessageRecordsRequest) (*
 		cursor = records[length-1].Sequence
 	}
 
+	// 补充红包消息的状态信息
+	items := m.enrichRedEnvelopeStatus(ctx, uid, records)
+
 	return &web.MessageRecordsResponse{
-		Items: lo.Map(records, func(item *model.TalkMessageRecord, _ int) *web.MessageRecord {
-			return &web.MessageRecord{
-				FromId:    int32(item.FromId),
-				MsgId:     item.MsgId,
-				Sequence:  int32(item.Sequence),
-				MsgType:   int32(item.MsgType),
-				Nickname:  item.Nickname,
-				Avatar:    item.Avatar,
-				IsRevoked: int32(item.IsRevoked),
-				SendTime:  item.SendTime.Format(time.DateTime),
-				Extra:     lo.Ternary(item.IsRevoked == model.Yes, "{}", item.Extra),
-				Quote:     item.Quote,
-			}
-		}),
+		Items:  items,
 		Cursor: int32(cursor),
 	}, nil
 }
